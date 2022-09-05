@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Py.NK</title>
+</head>
+<body>
+    <div class="logo">
+        <span id="txt_logo">Py.NK</span>
+    </div>
+    <div clas="cadastro">
+        <span id="txt_cadastro">Cadastro</span>
+        <div class="input_nome">
+            <span id="txt_nome">Nome</span>
+            <input type="text" class="input_cadastro"> 
+        </div>
+        <div class="input_cpf">
+            <span id="txt_cpf">CPF</span>
+            <input type="text" class="input_cadastro"> 
+        </div>
+        <div class="input_endereco">
+            <span id="txt_endereco">Endereço</span>
+            <input type="text" class="input_cadastro"> 
+        </div>
+        <div class="input_data">
+            <span id="txt_data">Data nascimento</span>
+            <input type="date" class="input_cadastro"> 
+        </div>
+        <div class="input_genero">
+            <span id="txt_genere">Gênero</span>
+            <input list="genero" class="input_cadastro">
+            <datalist id="input_genero">
+                <option value="Masculino">
+                <option value="Feminino">
+                <option value="Outros">
+                <option value="Prefiro não informar"> 
+            </datalist>
+        </div>
+        <div class="input_senha">
+            <span id="txt_senha">Senha</span>
+            <input type="password" class="input_cadastro"> 
+        </div>
+        <button id="submit">Cadastrar</button>
+        <span>Ja possui uma conta?
+            <a href="login.html">Entrar.</a>
+        </span>
+    </div>
+</body>
+</html>
