@@ -134,6 +134,7 @@ body, input{
     border-radius: 49px;
     cursor: pointer;
     background-color: #B71258;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     color: white;
     text-transform: uppercase;
     font-weight: 600;
