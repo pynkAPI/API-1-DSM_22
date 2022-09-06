@@ -1,58 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Py.nk</title>
     <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
+
 <body>
     <div class="container">
         <div class="forms-container">
             <div class="cadastro-login">
-                <form action="" class="form-cadastro">
-            <h2 class="title">ABRA SUA CONTA</h2>
-            <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="text" placeholder="NOME COMPLETO">
-            </div>
-            <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="text" placeholder="ENDEREÇO">
-            </div>
-            <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="text" placeholder="CPF">
-            </div>
-            <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="date" placeholder="DATA DE NASCIMENTO">
-            </div>
-            <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input list="genero" placeholder="GÊNERO">
-                <datalist id="genero">
-                    <option value="FEMININO">
-                    <option value="MASCULINO">
-                    <option value="OUTROS">
-                </datalist>
-            </div>
-                <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="password" placeholder="SENHA">
-                </div>  
-                 <div>
-                    <input type="submit" value="CADASTRAR" class="btn solid">
-                 </div> 
+                <form action="login.html" method="POST" class="form-cadastro">
+                    <h2 class="title">ABRA SUA CONTA</h2>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" placeholder="NOME COMPLETO" name="name">
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" placeholder="ENDEREÇO" name="endereco">
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" placeholder="CPF" name="cpf">
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="date" placeholder="DATA DE NASCIMENTO" name="datanasc">
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input list="genero" placeholder="GÊNERO" name="genero">
+                        <datalist id="genero">
+                            <option value="FEMININO">
+                            <option value="MASCULINO">
+                            <option value="OUTROS">
+                        </datalist>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="SENHA" name="senha">
+                    </div>
+                    <div>
+                        <input type="submit" value="CADASTRAR" class="btn solid">
+                    </div>
                     <div>
                         <input type="submit" value="JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!" class="btnd solid">
                     </div>
                 </form>
-                   
-    </div>
-                    </div>
-
+            </div>
+        </div>
 </body>
+
 </html>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
     <title>Py.nk</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -23,7 +23,9 @@
                         <input type="password" placeholder="SENHA">
                         </div>   
                         <input type="submit" value="ENTRAR" class="btn solid">
+                        <a href="cadastro.html">Cadastrar</a>
                 </form>
+               
             </div>
         </div>    
     </div>
