@@ -6,21 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
     <title>Py.nk</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> 
 </head>
 <body>
     <div class="container">
         <div class="forms-container">
             <div class="cadastro-login">
-                <form action="" class="form-login">
+                <form action="{{ url_for('login') }}" method="POST" class="form-login">
                     <h2 class="title">FAÇA SEU LOGIN</h2>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="text" placeholder="CPF">
+                        <input type="text" placeholder="CPF" name="cpf">
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="SENHA">
+                        <input type="password" placeholder="SENHA" name="senha">
                         </div>   
                         <input type="submit" value="ENTRAR" class="btn solid">
                         <a href="cadastro.html">Cadastrar</a>
