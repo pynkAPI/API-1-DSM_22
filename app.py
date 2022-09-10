@@ -31,7 +31,7 @@ def home():
     return render_template('home.html')
 
 #Pagina de login
-@app.route("/cadastro.html", methods = ['POST', 'GET'])
+@app.route("/cadastroold.html", methods = ['POST', 'GET'])
 def cadastro():
     if request.method == "POST":
         #Variaveis vindas do FORM vindas do cadastro.html
@@ -41,8 +41,9 @@ def cadastro():
         datanascimento  = request.form['datanasc']
         genero          = request.form['genero']
         senha           = request.form['senha']
-        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],CampoFm=[cpf,nome,genero,endereco,senha,datanascimento])
-    return render_template('cadastro.html')
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],
+                       CampoFm=[cpf,nome,genero,endereco,senha,datanascimento])
+    return render_template('cadastroold.html')
 #------------------------------
 
 @app.route("/login", methods = ['POST', 'GET'])

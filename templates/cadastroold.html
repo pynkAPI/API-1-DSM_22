@@ -43,7 +43,9 @@
             </div>
             <div class="input_senha">
                 <span id="txt_senha">Senha</span>
-                <input type="password" class="input_cadastro" name="senha">
+                <input type="password" required class="input_cadastro" id="SenhaId" name="senha"><br>
+                <span id="txt_senhaR">Repetir Senha</span>
+                <input type="password" required class="input_cadastro" id="RepetirsenhaId" name="Repetirsenha">
             </div>
             <button id="submit">Cadastrar</button>
             <span>Ja possui uma conta?
@@ -54,3 +56,21 @@
 </body>
 
 </html>
+<script>
+let senha = document.getElementById('SenhaId');
+let senhaC = document.getElementById('RepetirsenhaId');
+
+function validarSenha() {
+  if (senha.value != senhaC.value) {
+    senhaC.setCustomValidity("Senhas diferentes!");
+    senhaC.reportValidity();
+    return false;
+  } else {
+    senhaC.setCustomValidity("");
+    return true;
+  }
+}
+
+// verificar também quando o campo for modificado, para que a mensagem suma quando as senhas forem iguais
+senhaC.addEventListener('input', validarSenha);
+</script>
