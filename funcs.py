@@ -32,10 +32,10 @@ def InsMySQL(TabelaBd,CampoBd,CampoFm):
     for values in CampoBd:
         if values == CampoBd[-1]:
             ValuesBD += f'{CampoBd[x]})'
-            ValuesFm += f'{CampoFm[x]})'
+            ValuesFm += f'"{CampoFm[x]}")'
         else:
             ValuesBD += f'{CampoBd[x]},'
-            ValuesFm += f'{CampoFm[x]},'  
+            ValuesFm += f'"{CampoFm[x]}",'  
         x+=1
     textoSQL += f' {ValuesBD} VALUES{ValuesFm}' 
     cursor.execute(textoSQL)
