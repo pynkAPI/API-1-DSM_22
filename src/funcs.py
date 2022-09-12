@@ -53,3 +53,20 @@ def upMySQL(TabelaBd,CampoBd,CampoFm,CampoWr):
     cursor.execute(textoSQL)
     mysql.connection.commit()
     cursor.close()
+
+def DelMySQL(TabelaBd,CampoBd,CampoFm):
+    x=0
+    cursor = mysql.connection.cursor()
+    textoSQL = f' DELETE {TabelaBd} WHERE '
+    for values in CampoBd:
+        if x==0:
+            textoSQL+= f'{CampoBd[x]} = {CampoFm[x]} '
+        else:
+            textoSQL+= f' and {CampoBd[x]} = {CampoFm[x]}'
+        x+=1
+    cursor.execute(textoSQL)
+    resultado = cursor.fetchone()
+    mysql.connection.commit()
+    cursor.close()
+    return resultado    
+
