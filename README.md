@@ -96,6 +96,7 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 
 5. Instalando dependências:
 
+- Navegue até a raiz do diretório e execute o comando:
 ```console
     pip install -r requirements.txt
 ``` 
@@ -103,21 +104,11 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 6. Executando a aplicação
 
 - Navegue até a pasta src dentro dessa pasta raíz através da linha de comando e execute o arquivo 'app.py'. 
-- Caso esteja usando Windows e esteja seguindo exatamente o que foi descrito no guia:
-
-```console
-    cd ..
-    cd ..
-    cd src
-    python app.py
-``` 
-
-- Caso esteja usando Unix e esteja seguindo exatamente o que foi descrito no guia:
 
 ```console
     cd src
     python app.py
-``` 
+```  
 
 7. Entrando na aplicação
 - Abra o navegador e digite a url que aparecerá no cmd após a execução do 'app.py'.
