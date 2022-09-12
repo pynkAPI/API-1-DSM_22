@@ -41,3 +41,15 @@ def InsMySQL(TabelaBd,CampoBd,CampoFm):
     cursor.execute(textoSQL)
     mysql.connection.commit()
     cursor.close()
+    
+def upMySQL(TabelaBd,CampoBd,CampoFm,CampoWr):
+    x=0
+    cursor = mysql.connection.cursor()
+    textoSQL = f' UPDATE {TabelaBd} SET '
+    for values in CampoBd:
+        textoSQL += f'{CampoBd[x]} = "{CampoFm[x]}", '
+        x+=1
+    textoSQL += f'WHERE {CampoWr}' 
+    cursor.execute(textoSQL)
+    mysql.connection.commit()
+    cursor.close()
