@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
     <title>Login|Py.nk</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> -->
+    <link rel="stylesheet" href="../static/style/style.css">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
@@ -19,14 +20,14 @@
                     <h2 class="title">FAÇA SEU LOGIN</h2>
                     <div class="input-field">
                         <i class='bx bxs-user'></i>
-                        <input type="text" placeholder="NOME" name="login">
+                        <input type="text" placeholder="LOGIN" name="login">
                     </div>
                     <div class="input-field">
                         <i class='bx bxs-lock'></i>
                         <input type="password" placeholder="SENHA" name="senha">
                     </div>
                     <input type="submit" value="ENTRAR" class="btn solid">
-                    <a href="cadastroold.html">Cadastrar</a>
+                    <a id="linkCad" href="cadastroold.html">NÃO TEM UM CONTA? CADASTRE-SE</a>                   
                 </form>
                 <div></div>
             </div>
