@@ -1,5 +1,6 @@
 #from crypt import methods
 from importlib.metadata import requires
+from types import CellType
 from flask import Flask, render_template,request, url_for, redirect, session
 from flask_mysqldb import MySQL
 import funcs
@@ -8,9 +9,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
+app.config['MYSQL_PASSWORD'] = 'mcs2809'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -38,20 +39,27 @@ def cadastro():
         nome            = request.form['name']
         cpf             = request.form['cpf']
         endereco        = request.form['endereco']
+        cep             = request.form['cep']
+        rua             = request.form['rua']
+        bairro          = request.form['bairro']
+        municipio       = request.form['municipio']
+        estado          = request.form['estado']
         datanascimento  = request.form['datanasc']
         genero          = request.form['genero']
         senha           = request.form['senha']
-        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],
-                       CampoFm=[cpf,nome,genero,endereco,senha,datanascimento])
+        login           = request.form['login']
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'cep', 'rua', 'bairro', 'municipio', 'estado', 'senha','login', 'datanascimento'],
+                       CampoFm=[cpf,nome,genero,endereco, cep, rua, bairro, municipio, estado,senha, login,datanascimento])
+        
     return render_template('cadastroold.html')
 #------------------------------
 
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     if request.method == "POST":
-        cpf         = request.form['cpf']
+        login         = request.form['login']
         senha       = request.form['senha']
-        resultado   = funcs.SlcMySQL('tb_usuario',CampoBd=['cpf','senha'],CampoFm=[cpf,senha])
+        resultado   = funcs.SlcMySQL('tb_usuario',CampoBd=['login','senha'],CampoFm=[login,senha])
     if resultado:
         session['login']    = True
         session['nome']     = resultado[1]
