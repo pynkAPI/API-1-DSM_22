@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    
+}
+body{
+    color: #B71258;
+    background: whitesmoke;
+}
+a{
+    text-decoration: none;
+}
+li{
+    list-style: none;
+}
+.container{
+    max-width: 95%;
+    margin: auto;
+    width: 100%;
+}
+header{
+    position: fixed;
+    width: 100%;
+    height: 85px;
+    background:linear-gradient( #CC5587, #B71258); 
+}
+.logo{
+    
+    margin-top: 9px;
+}
+.nav{
+    display: flex;
+    align-items: center ;
+    justify-content: space-between;
+    padding: 4.5px ;
+}
+.navbar{
+    display: flex;
+    align-items: center ;
+    column-gap: 3rem;   
+}
+.nav-link{
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 0.2rem;
+    color: whitesmoke;
+}
+.nav-link:hover{
+    color: whitesmoke;
+    background:#CC5587 ;
+    transition: 0.3s all linear;
+}
+.func{
+    margin-top: 1.5%;
+    margin-left: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.func .bx{
+    font-size: 3.5rem;
+    padding: 10px;
+    border-radius:0.5rem;
+    color: #B71258;
+    background: whitesmoke;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #CC5587;
+}
+.func .bx:hover{
+    color: whitesmoke;
+    background: linear-gradient( #CC5587, #B71258); 
+    transition: 0.3s all linear;
+}
+.funcao{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    padding:8%;
+}
+.h1{
+    font-size: 1.5rem;
+}
+.input-field{
+    max-width:380px;
+    width: 100%;
+    height: 50px;
+    margin: 10px 0;
+    display: grid;
+    padding: 0. 4rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #B71258;
+}
+
+.input-field input{
+    text-align: center;
+    background-color: none ;
+    outline: none ;
+    border: none ;
+    line-height: 1;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #444;
+} 
+.btnd{
+    background-color: #B71258;
+    border: none;
+    border-radius: 49px;
+    color: #ffffff;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .btnd:hover{
+background-color: #CC5587;
+  }
+

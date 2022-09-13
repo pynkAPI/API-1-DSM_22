@@ -5,31 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Py.nk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}">
+    
 </head>
 <body>
     <header>
         <div class="nav container">
-            <div class="img-navbar">
-                <a href="#" class="logo"><img src="src/img/pynkpng2.png" alt="logo"></a>  
+            <div class="logo">
+                <a href="#"><img src="img/pynkpng2.png" alt="logo"></a>  
             </div>
             <ul class="navbar">
-                <li><a href="#" class="nav-link">Página Inicial</a></li>
-                <li><a href="#" class="nav-link">A Py.nk</a></li>
-                <li><a href="#" class="nav-link">Sua conta</a></li>
+                <li><a href="#" class="nav-link">Menu</a></li>
+                <li><a href="#" class="nav-link">Conta</a></li>
+                <li><a href="#" class="nav-link">Py.nk</a></li>
                 <li><a href="#" class="nav-link">Contato</a></li>
             </ul>
         </div>
-    </header>
-        <section class="menu container">
-            <div class="funções">
-                <a href="#" title="SAQUE">SAQUE</a>
-                <a href="#" title="DEPOSITE">DEPOSITE</a>
-                <a href="#" title="SAQUE">TRANSFERÊNCIA</a>
-        </div>
-            <div class="status">
-                <h3>SEU SALDO</h3>
-                <input class="form-control" type="text" name="saldo">
+            <div class="func">
+                <a href="deposito.html"><i class='bx bx-money'></i></a>
+                <h5>DEPOSITO</h5>
+                <br>
+                <a href="Saque.html"><i class='bx bx-money-withdraw'></i></a>
+                <h5>SAQUE</h5>
             </div>
-        </section>
+    </header>  
 </body>
 </html>
