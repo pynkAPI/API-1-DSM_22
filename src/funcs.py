@@ -34,7 +34,7 @@ def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm, CampoEs):
         else:
             textoSQL += f', {CampoEs[y]}'
         y+=1 
-    textoSQL = f' FROM {TabelaBd} WHERE '
+    textoSQL += f' FROM {TabelaBd} WHERE '
     for values in CampoBd:
         if x==0:
             textoSQL+= f'{CampoBd[x]} = "{CampoFm[x]}" '

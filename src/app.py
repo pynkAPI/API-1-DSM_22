@@ -52,11 +52,12 @@ def cadastro():
         tipoconta       = request.form['tipoconta']
         funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'cep', 'rua', 'bairro', 'municipio', 'estado', 'senha','login', 'datanascimento'],
                        CampoFm=[cpf,nome,genero,endereco, cep, rua, bairro, municipio, estado,senha, login,datanascimento])
+        
         id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
-
+        
         funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'saldo'],
                         CampoFm=[id_usuario, 1, tipoconta, datetime.today(), 0])
-        
+
     return render_template('cadastroold.html')
 #------------------------------
 
