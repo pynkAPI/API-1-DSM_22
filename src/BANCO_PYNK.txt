@@ -11,7 +11,6 @@ cpf varchar(25) NOT NULL,
 genero varchar(25) NOT NULL,
 endereco varchar(50) NOT NULL,
 datanascimento date NOT NULL,
-estado varchar(100) NOT NULL,
 senha varchar(100) NOT NULL,
 login varchar(100) NOT NULL
 );
@@ -35,6 +34,7 @@ id_conta int AUTO_INCREMENT PRIMARY KEY,
 id_usuario int NOT NULL,
 id_agencia int NOT NULL,
 tipo varchar(255) NOT NULL,
+numeroconta varchar(50) NOT NULL,
 data_abertura date NOT NULL,
 saldo float NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario)
@@ -62,8 +62,8 @@ FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
 
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, cep, rua, bairro, municipio, datanascimento, estado, senha, login) 
-VALUES('GERENTE GERAL', '0',  'OUTROS', 'ENDERECO DOS BOBOS', '00000', 'RUA DOS BOBOS', 'BAIRRO DOS BOBOS', 'MUNICIPIO DOS BOBOS', curdate(), 'ESTADO DOS BOBOS', 'senha', 'GA1');
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, login) 
+VALUES('GERENTE GERAL', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', 'GA1');
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario) 
 VALUES('GERENTE DE AGÊNCIA', '0', 1);
 INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)

@@ -50,8 +50,8 @@ def cadastro():
         
         id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
         
-        funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'saldo'],
-                        CampoFm=[id_usuario[0], 1, tipoconta, datetime.today(), 0])
+        funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
+                        CampoFm=[id_usuario[0], 1, tipoconta, id_usuario[0], datetime.today(), 0])
 
     return render_template('cadastroold.html')
 #------------------------------
