@@ -51,6 +51,7 @@ def cadastro():
         funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'cep', 'rua', 'bairro', 'municipio', 'estado', 'senha','login', 'datanascimento'],
                        CampoFm=[cpf,nome,genero,endereco, cep, rua, bairro, municipio, estado,senha, login,datanascimento])
         
+        
     return render_template('cadastroold.html')
 #------------------------------
 
