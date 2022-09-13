@@ -12,7 +12,7 @@ app.secret_key = 'super secret key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'fatec'
+app.config['MYSQL_PASSWORD'] = 'mcs2809'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -40,23 +40,18 @@ def cadastro():
         nome            = request.form['name']
         cpf             = request.form['cpf']
         endereco        = request.form['endereco']
-        cep             = request.form['cep']
-        rua             = request.form['rua']
-        bairro          = request.form['bairro']
-        municipio       = request.form['municipio']
-        estado          = request.form['estado']
         datanascimento  = request.form['datanasc']
         genero          = request.form['genero']
         senha           = request.form['senha']
         login           = request.form['login']
         tipoconta       = request.form['tipoconta']
-        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'cep', 'rua', 'bairro', 'municipio', 'estado', 'senha','login', 'datanascimento'],
-                       CampoFm=[cpf,nome,genero,endereco, cep, rua, bairro, municipio, estado,senha, login,datanascimento])
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha','login', 'datanascimento'],
+                       CampoFm=[cpf,nome,genero,endereco, senha, login,datanascimento])
         
         id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
         
         funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'saldo'],
-                        CampoFm=[id_usuario, 1, tipoconta, datetime.today(), 0])
+                        CampoFm=[id_usuario[0], 1, tipoconta, datetime.today(), 0])
 
     return render_template('cadastroold.html')
 #------------------------------
