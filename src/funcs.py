@@ -13,9 +13,33 @@ def SlcMySQL(TabelaBd,CampoBd,CampoFm):
     textoSQL = f' SELECT * FROM {TabelaBd} WHERE '
     for values in CampoBd:
         if x==0:
-            textoSQL+= f'{CampoBd[x]} = {CampoFm[x]} '
+            textoSQL+= f'{CampoBd[x]} = "{CampoFm[x]}" '
         else:
-            textoSQL+= f' and {CampoBd[x]} = {CampoFm[x]}'
+            textoSQL+= f' and {CampoBd[x]} = "{CampoFm[x]}"'
+        x+=1
+    cursor.execute(textoSQL)
+    resultado = cursor.fetchone()
+    mysql.connection.commit()
+    cursor.close()
+    return resultado
+
+def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm,CampoEs):
+    x=0
+    y=0
+    cursor = mysql.connection.cursor()
+    textoSQL = ''
+    for values in CampoEs:
+        if y==0:
+            textoSQL += f'SELECT {CampoEs[y]}'
+        else:
+            textoSQL += f', {CampoEs[y]}'
+        y+=1 
+    textoSQL = f' FROM {TabelaBd} WHERE '
+    for values in CampoBd:
+        if x==0:
+            textoSQL+= f'{CampoBd[x]} = "{CampoFm[x]}" '
+        else:
+            textoSQL+= f' and {CampoBd[x]} = "{CampoFm[x]}"'
         x+=1
     cursor.execute(textoSQL)
     resultado = cursor.fetchone()
