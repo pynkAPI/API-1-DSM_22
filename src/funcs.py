@@ -23,7 +23,7 @@ def SlcMySQL(TabelaBd,CampoBd,CampoFm):
     cursor.close()
     return resultado
 
-def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm,CampoEs):
+def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm, CampoEs):
     x=0
     y=0
     cursor = mysql.connection.cursor()
