@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro|Py.nk</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> -->
+    <link rel="stylesheet" href="../static/style/style.css">
+
 </head>
 <body>
     <div class="container">
@@ -14,111 +16,44 @@
             <div class="cadastro-login">
                 <form action="login.html" method="POST" class="form-cadastro">
                     <h2 class="title">ABRA SUA CONTA</h2>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="text" placeholder="NOME COMPLETO" name="name">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+        
+                        <input  type="text" placeholder="NOME COMPLETO" name="name">
+
                         <input type="text" placeholder="ENDEREÇO" name="endereco">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
                         <input type="text" placeholder="CEP" name="cep">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
                         <input type="text" placeholder="RUA" name="rua">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
                         <input type="text" placeholder="BAIRRO" name="bairro">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
+
                         <input type="text" placeholder="MUNICIPIO" name="municipio">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
+
                         <input type="text" placeholder="ESTADO" name="estado">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
+
                         <input type="text" placeholder="CPF" name="cpf">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
+
                         <input type="date" placeholder="DATA DE NASCIMENTO" name="datanasc">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input list="genero" placeholder="GÊNERO" name="genero">
-                        <datalist id="genero">
-                            <option value="FEMININO"></option>
-                            <option value="MASCULINO"></option>
-                            <option value="OUTROS"></option>
-                        </datalist>
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
+                        <select id="genero">
+                            <option value="N">GÊNERO</option>
+                            <option value="F">Feminino</option>
+                            <option value="M">Masculino</option>
+                            <option value="O">Outros</option>
+                        </select>
+
                         <input type="text" placeholder="LOGIN" name="login">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
+
                         <input type="password" placeholder="SENHA" name="senha">
-                    </div>
-                    <div>
+ 
                         <input type="submit" value="CADASTRAR" class="btn solid">
-                    </div>
-                    <div>
                         <input type="submit" value="JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!" class="btnd solid">
-                    </div>
-                </form>
-                <form action="" class="form-login">
-                    <h2 class="title">FAÇA SEU LOGIN</h2>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="text" placeholder="CPF">
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="SENHA">
-                        </div>   
-                        <input type="submit" value="ENTRAR" class="btn solid">
-                        <a href="cadastro.html">Cadastrar</a>
                 </form>
             </div>
         </div>
-
-        <div class="panels-container">
-            <div class="panel left-panel">
-              <div class="content">
-                <h3>Já tem uma conta? ?</h3>
-                <p>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-                  ex ratione. Aliquid!
-                </p>
-                <button class="btn transparent" id="btn.login">
-                  FAÇA SEU LOGIN
-                </button>
-              </div>
-              <img src="src/img/clientepynk.svg" class="image" alt="" />
-            </div>
-            <div class="panel right-panel">
-              <div class="content">
-                <h3>ABRA SUA CONTA?</h3>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                  laboriosam ad deleniti.
-                </p>
-                <button class="btn transparent" id="btn.cadastro">
-                 CADASTRAR
-                </button>
-              </div>
-              <img src="src/img/loginpynk.svg" class="image" alt="" />
-            </div>
-          </div>
-        </div>
+    </div>
 </body>
-
 </html>
