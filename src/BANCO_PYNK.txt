@@ -62,6 +62,7 @@ FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
 
+
 INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, login) 
 VALUES('GERENTE GERAL', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', 'GA1');
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario) 

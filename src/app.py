@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'mcs2809'
+app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -28,12 +28,26 @@ def index():
     return render_template('login.html')
 #------------------------------
 
+#Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
     return render_template('home.html')
+#------------------------------
 
-#Pagina de login
-@app.route("/cadastroold.html", methods = ['POST', 'GET'])
+#Pagina Deposito
+@app.route("/deposito")
+def deposito():
+    return render_template('deposito.html')
+#------------------------------
+
+#Pagina Saque
+@app.route("/saque")
+def saque():
+    return render_template('saque.html')
+#------------------------------
+
+#Pagina de Cadastro
+@app.route("/cadastro.html", methods = ['POST', 'GET'])
 def cadastro():
     if request.method == "POST":
         #Variaveis vindas do FORM vindas do cadastro.html
@@ -53,9 +67,10 @@ def cadastro():
         funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
                         CampoFm=[id_usuario[0], 1, tipoconta, id_usuario[0], datetime.today(), 0])
 
-    return render_template('cadastroold.html')
+    return render_template('cadastro.html')
 #------------------------------
 
+#Pagina de Login
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     if request.method == "POST":
@@ -68,6 +83,7 @@ def login():
         return home()
     else:
         return index()
+#------------------------------
 
 #Bloco para subir o site.
 if __name__ == "__main__":

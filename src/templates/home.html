@@ -5,29 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Py.nk</title>
-    <link rel="stylesheet" href="css/stylehome.css">
+    <!-- <link rel="stylesheet" href="css/stylehome.css"> -->
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}">
 </head>
 <body>
     <header>
         <div class="nav container">
             <div class="logo">
-                <a href="#"><img src="img/pynkpng2.png" alt="logo"></a>  
+                <a href="#"><img src="../static/img/pynkpng2.png" alt="logo"></a>  
             </div>
             <ul class="navbar">
                 <li><a href="#" class="nav-link">Menu</a></li>
-                <!-- <li><a href="#" class="nav-link">Contato</a></li> -->
-                <!-- <li><a href="#" class="nav-link">Py.nk</a></li> -->
-                <li><a href="login.html" class="nav-link"><i class='bx bx-log-out'></i></a></li>
+                <li><a href="{{ url_for('index') }}" class="nav-link"><i class='bx bx-log-out'></i></a></li>
             </ul>
         </div>
             <div class="func">
-                <a href="deposito.html"><i class='bx bx-money'></i></a>
+                <a href="{{ url_for('deposito') }}"><i class='bx bx-money'></i></a>
                 <h5>DEPOSITO</h5><br>
-                <a href="Saque.html"><i class='bx bx-money-withdraw'></i></a>
+                <a href="{{ url_for('saque') }}"><i class='bx bx-money-withdraw'></i></a>
                 <h5>SAQUE</h5>
-                
             </div>
     </header>  
 </body>

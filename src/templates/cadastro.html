@@ -14,31 +14,28 @@
     <div class="container">
         <div class="forms-container">
             <div class="cadastro-login">
-                <form action="login.html" method="POST" class="form-cadastro">
+                <form action="/cadastro.html" method="POST" class="form-cadastro">
                     <h2 class="title">ABRA SUA CONTA</h2>
-        
-                        <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name">
-
-                        <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco">
-
-                        <input class="input-field-cad" type="text" placeholder="CPF" name="cpf">
-
-                        <label style="text-align: left;font-size: 10px">DATA NASCIMENTO</label>
-                        <input style="" class="input-field-cad" type="date" placeholder="DATA DE NASCIMENTO" name="datanasc">
-
-                        <select class="input-field-cad" id="genero">
-                            <option value="N">GÊNERO</option>
-                            <option value="F">Feminino</option>
-                            <option value="M">Masculino</option>
-                            <option value="O">Outros</option>
-                        </select>
-
-                        <input class="input-field-cad" type="text" placeholder="LOGIN" name="login">
-
-                        <input class="input-field-cad" type="password" placeholder="SENHA" name="senha">
- 
-                        <input  type="submit" value="CADASTRAR" class="btn solid">
-                        <input  type="submit" value="JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!" class="btnd solid">
+                    <input class="input-field-cad" type="text" placeholder="LOGIN" name="login">
+                    <input class="input-field-cad" type="password" placeholder="SENHA" name="senha">
+                    <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name">
+                    <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco">
+                    <input class="input-field-cad" type="text" placeholder="CPF" name="cpf">
+                    <label>DATA NASCIMENTO</label>
+                    <input class="input-field-cad" type="date" name="datanasc">
+                    <label>TIPO DE CONTA</label>
+                    <select id="input_tipoconta" class="input-field-cad" name="tipoconta">
+                        <option value="Conta Corrente">CONTA CORRENTE</option>
+                        <option value="Conta Poupança">CONTA POUPANÇA</option>
+                    </select>
+                    <label>GENÊRO</label>
+                    <select class="input-field-cad" id="genero" name="genero">
+                        <option value="F">FEMININO</option>
+                        <option value="M">MASCULINO</option>
+                        <option value="O">OUTROS</option>
+                    </select>
+                    <input  type="submit" value="CADASTRAR" class="btn solid"> 
+                    <a id="linkCad" href="{{ url_for('index') }}">JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!</a>   
                 </form>
             </div>
         </div>

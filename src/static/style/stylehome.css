@@ -58,7 +58,7 @@ header{
     margin-top: 1.5%;
     margin-left: 3%;
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: space-between;
     flex-direction: column;
 }
@@ -129,3 +129,15 @@ header{
 background-color: #CC5587;
   }
 
+  .bx-log-out{
+    font-size: 50px;
+  }
+
+  .func a{
+    width: 80px;
+  }
+
+  .func h5{
+    width: 80px;
+    text-align: center;
+  }
