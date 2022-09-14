@@ -8,7 +8,6 @@
     <title>Cadastro|Py.nk</title>
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> -->
     <link rel="stylesheet" href="../static/style/style.css">
-
 </head>
 <body>
     <div class="container">
@@ -16,20 +15,21 @@
             <div class="cadastro-login">
                 <form action="/cadastro.html" method="POST" class="form-cadastro">
                     <h2 class="title">ABRA SUA CONTA</h2>
-                    <input class="input-field-cad" type="text" placeholder="LOGIN" name="login">
-                    <input class="input-field-cad" type="password" placeholder="SENHA" name="senha">
-                    <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name">
-                    <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco">
-                    <input class="input-field-cad" type="text" placeholder="CPF" name="cpf">
+                    <input class="input-field-cad" type="text" placeholder="LOGIN" name="login" required>
+                    <input type="password" class="input-field-cad" placeholder="SENHA" id="SenhaId" name="senha" required>
+                    <input type="password" class="input-field-cad" placeholder="CONFIRMAR SENHA" id="RepetirsenhaId" name="Repetirsenha" required>
+                    <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name" required>
+                    <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco" required>
+                    <input class="input-field-cad" type="text" placeholder="CPF" name="cpf" required>
                     <label>DATA NASCIMENTO</label>
-                    <input class="input-field-cad" type="date" name="datanasc">
+                    <input class="input-field-cad" type="date" name="datanasc" required>
                     <label>TIPO DE CONTA</label>
-                    <select id="input_tipoconta" class="input-field-cad" name="tipoconta">
+                    <select id="input_tipoconta" class="input-field-cad" name="tipoconta" required>
                         <option value="Conta Corrente">CONTA CORRENTE</option>
                         <option value="Conta Poupança">CONTA POUPANÇA</option>
                     </select>
                     <label>GENÊRO</label>
-                    <select class="input-field-cad" id="genero" name="genero">
+                    <select class="input-field-cad" id="genero" name="genero" required>
                         <option value="F">FEMININO</option>
                         <option value="M">MASCULINO</option>
                         <option value="O">OUTROS</option>
@@ -40,5 +40,6 @@
             </div>
         </div>
     </div>
+    <script src="../static/scripts/confirmarsenha.js"></script>
 </body>
 </html>

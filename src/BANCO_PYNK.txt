@@ -7,12 +7,11 @@ USE pynk;
 CREATE TABLE tb_usuario (
 id_usuario int PRIMARY KEY auto_increment,
 nome varchar(255) NOT NULL,
-cpf varchar(25) NOT NULL,
+cpf varchar(25) NOT NULL UNIQUE,
 genero varchar(25) NOT NULL,
 endereco varchar(50) NOT NULL,
 datanascimento date NOT NULL,
-senha varchar(100) NOT NULL,
-login varchar(100) NOT NULL
+senha varchar(100) NOT NULL
 );
 
 CREATE TABLE tb_funcionario (
@@ -34,7 +33,7 @@ id_conta int AUTO_INCREMENT PRIMARY KEY,
 id_usuario int NOT NULL,
 id_agencia int NOT NULL,
 tipo varchar(255) NOT NULL,
-numeroconta varchar(50) NOT NULL,
+numeroconta varchar(50) NOT NULL UNIQUE,
 data_abertura date NOT NULL,
 saldo float NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario)

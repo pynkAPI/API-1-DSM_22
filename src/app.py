@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
+app.config['MYSQL_PASSWORD'] = 'fatec'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -65,7 +65,7 @@ def cadastro():
         id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
         
         funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
-                        CampoFm=[id_usuario[0], 1, tipoconta, id_usuario[0], datetime.today(), 0])
+                        CampoFm=[id_usuario[0], 1, tipoconta, datetime.today(), id_usuario[0], 0])
 
     return render_template('cadastro.html')
 #------------------------------
