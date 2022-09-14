@@ -38,6 +38,7 @@ body, input{
     height: 100%;
     top: 0;
     left: 0;
+    z-index: 3;
 }
 #cliente{
     margin-top: 5%;
@@ -47,11 +48,9 @@ body, input{
 #logo{
     width: 15%;
 }
- .img{
-     /* background-color: red; */
+.img{
     position: relative;
     z-index: 2;
-   
  }
 .cadastro-login{
     position:absolute;

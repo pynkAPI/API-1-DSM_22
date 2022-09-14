@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
     <title>Login|Py.nk</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> -->
-    <link rel="stylesheet" href="../static/style/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <!-- <link rel="stylesheet" href="../static/style/style.css"> -->
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
     <div class="container">
         <div class="img">
@@ -30,9 +31,15 @@
                         <input type="password" placeholder="SENHA" name="senha" required>
                     </div>
                     <input type="submit" value="ENTRAR" class="btn solid">
-                    <a id="linkCad" href="cadastro.html">NÃO TEM UM CONTA? CADASTRE-SE</a>                   
+                    <a id="linkCad" href="cadastro.html">NÃO TEM UM CONTA? CADASTRE-SE</a>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <label> seu código é {{ message }}</label>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                 </form>
-                <div></div>
             </div>
         </div>
     </div>

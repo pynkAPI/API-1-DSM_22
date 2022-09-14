@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,29 +10,32 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
     <header>
         <div class="nav container">
             <div class="logo">
-                <a href="{{ url_for('home') }}"><img src="../static/img/pynkpng2.png" alt="logo"></a>  
+                <a href="{{ url_for('home') }}"><img src="../static/img/pynkpng2.png" alt="logo"></a>
             </div>
-                <ul class="navbar">
-                    <li><a href="#" class="nav-link">Menu</a></li>
-                    <!-- <li><a href="#" class="nav-link">Contato</a></li>
+            <ul class="navbar">
+                <li><a href="#" class="nav-link">Menu</a></li>
+                <!-- <li><a href="#" class="nav-link">Contato</a></li>
                     <li><a href="#" class="nav-link">Py.nk</a></li> -->
-                    <li><a href="{{ url_for('index') }}" class="nav-link"><i class='bx bx-log-out'></i></a></li>
-                </ul>
-            </div>
+                <li><a href="{{ url_for('index') }}" class="nav-link"><i class='bx bx-log-out'></i></a></li>
+            </ul>
+        </div>
+    </header>
     <div class="funcao">
         <div class="h1">
             <h1>DEPOSITE SEU DINHEIRO</h1>
-        </div>        
+            <label>Saldo: R$ {{saldo}}</label>
+        </div>
         <div class="input-field">
             <input type="number" placeholder="00,00">
         </div>
         <input type="submit" value="DEPOSITAR" class="btnd solid"><br>
         <a href="{{ url_for('home') }}">Voltar ao Menu</a>
     </div>
-    
 </body>
+
 </html>

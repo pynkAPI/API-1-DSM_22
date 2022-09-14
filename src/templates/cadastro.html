@@ -18,16 +18,15 @@
         </div>
         <div class="forms-container">
             <div class="cadastro-login">
-                <form action="/cadastro.html" method="POST" class="form-cadastro">
+                <form action="{{ url_for('cadastro') }}" method="POST" class="form-cadastro">
                     <h2 class="title">ABRA SUA CONTA</h2>
-                    <input class="input-field-cad" type="text" placeholder="LOGIN" name="login" required>
+                    <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name" required>
+                    <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco" required>
+                    <input class="input-field-cad" type="text" placeholder="CPF" name="cpf" required>
                     <input type="password" class="input-field-cad" placeholder="SENHA" id="SenhaId" name="senha"
                         required>
                     <input type="password" class="input-field-cad" placeholder="CONFIRMAR SENHA" id="RepetirsenhaId"
                         name="Repetirsenha" required>
-                    <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name" required>
-                    <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco" required>
-                    <input class="input-field-cad" type="text" placeholder="CPF" name="cpf" required>
                     <label>DATA NASCIMENTO</label>
                     <input class="input-field-cad" type="date" name="datanasc" required>
                     <label>TIPO DE CONTA</label>
@@ -43,7 +42,6 @@
                     </select>
                     <input type="submit" value="CADASTRAR" class="btn solid">
                     <a id="linkCad" href="{{ url_for('index') }}">JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!</a>
-                    <label for="">NÚMERO DA CONTA</label>
                 </form>
             </div>
         </div>

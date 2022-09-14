@@ -1,6 +1,6 @@
 <div align="center">
 
-![readme_banner](src/templates/src/img/Banner.png)
+![readme_banner](src/static/img/Banner.png)
 </div>
 <br id="top">
 <p align="center" id="pseudo_nav">

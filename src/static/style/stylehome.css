@@ -29,7 +29,6 @@ header{
     background:linear-gradient( #CC5587, #B71258); 
 }
 .logo{
-    
     margin-top: 9px;
 }
 .nav{
@@ -140,4 +139,9 @@ background-color: #CC5587;
   .func h5{
     width: 80px;
     text-align: center;
+  }
+
+  .logo label{
+    color: white;
+    margin-left: 20px;
   }
