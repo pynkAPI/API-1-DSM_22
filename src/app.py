@@ -57,14 +57,14 @@ def cadastro():
         datanascimento  = request.form['datanasc']
         genero          = request.form['genero']
         senha           = request.form['senha']
-        login           = request.form['login']
         tipoconta       = request.form['tipoconta']
-        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha','login', 'datanascimento'],
-                       CampoFm=[cpf,nome,genero,endereco, senha, login,datanascimento])
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],
+                       CampoFm=[cpf,nome,genero,endereco, senha,datanascimento])
         
         id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
-        
-        funcs.InsMySQL('tb_contabancaria', CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
+
+        funcs.InsMySQL('tb_contabancaria', 
+                        CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
                         CampoFm=[id_usuario[0], 1, tipoconta, datetime.today(), id_usuario[0], 0])
 
     return render_template('cadastro.html')
@@ -74,15 +74,29 @@ def cadastro():
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     if request.method == "POST":
-        login         = request.form['login']
+        numeroconta = request.form['numeroconta']
         senha       = request.form['senha']
-        resultado   = funcs.SlcMySQL('tb_usuario',CampoBd=['login','senha'],CampoFm=[login,senha])
+        resultado   = funcs.SlcMySQL('''tb_usuario 
+                                        INNER JOIN tb_contabancaria 
+                                        ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
+                                    CampoBd=['numeroconta','senha'],
+                                    CampoFm=[numeroconta,senha])
     if resultado:
         session['login']    = True
         session['nome']     = resultado[1]
         return home()
     else:
-        return index()
+        resultado   = funcs.SlcMySQL('''tb_usuario 
+                                        INNER JOIN tb_funcionario 
+                                        ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
+                                    CampoBd=['login','senha'],
+                                    CampoFm=[numeroconta,senha])
+        if resultado:
+            session['login']    = True
+            session['nome']     = resultado[1]
+            return home()  
+        else:         
+            return index()
 #------------------------------
 
 #Bloco para subir o site.
