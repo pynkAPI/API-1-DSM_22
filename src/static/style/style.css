@@ -18,7 +18,7 @@ body, input{
     overflow:hidden
 }
 
-.container:before{
+.container::before{
     content: '';
     position: absolute;
     width: 200vh;
@@ -28,6 +28,7 @@ body, input{
     top: -10%;
     right: 48%;
     transform: translateY(-50%) ;
+    z-index: 1;
 }
 
 
@@ -38,7 +39,20 @@ body, input{
     top: 0;
     left: 0;
 }
- 
+#cliente{
+    margin-top: 5%;
+    width: 40%;
+    margin-left: 10%;
+} 
+#logo{
+    width: 15%;
+}
+ .img{
+     /* background-color: red; */
+    position: relative;
+    z-index: 2;
+   
+ }
 .cadastro-login{
     position:absolute;
     top:50%;
