@@ -16,6 +16,7 @@ body, input{
     min-height: 100vh;
     background-color: whitesmoke;
     overflow:hidden
+    
 }
 
 .container::before{
@@ -43,6 +44,7 @@ body, input{
 #cliente{
     margin-top: 5%;
     width: 40%;
+    height: 100%;
     margin-left: 10%;
 } 
 #logo{
@@ -193,6 +195,19 @@ body, input{
     margin: 10px 0;
     display: grid;
     grid-template-columns: 6.5% 85%;
+    padding: 0. 4rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #B71258;
+}
+
+.input-date{
+    text-align: center;
+    max-width:380px;
+    width: 100%;
+    height: 50px;
+    background-color: #F0E8EA ;
+    margin: 10px 0;
     padding: 0. 4rem;
     border-width: 1px;
     border-style: solid;

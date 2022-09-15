@@ -8,9 +8,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'mcs2809'
+app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
