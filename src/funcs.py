@@ -116,7 +116,9 @@ def geraId(nome, agencia, cpf):
     nome = nome.lower()
     arr_nome = nome.split(" ")
     letra_prim_nome = arr_nome[0][0:1]
-    letra_seg_nome = arr_nome[1][0:1]   
+    letra_seg_nome = ''
+    if len(arr_nome)<1:
+        letra_seg_nome = arr_nome[1][0:1]   
     format_agencia = ""
     arr_cpf = []
     cont_caractere = 0
@@ -130,7 +132,7 @@ def geraId(nome, agencia, cpf):
         format_agencia += agencia
         agencia = format_agencia
     
-    idUsuario = agencia
+    nummeroConta = agencia
 
     #gerando um array com os valores splitados
     for num in cpf:
@@ -140,14 +142,15 @@ def geraId(nome, agencia, cpf):
     while cont_caractere < 4:
         #gerar valor aleatorio 4 vezes dentro do limite do array (lenght)
         random_index = random.randint(0, len(arr_cpf)-1)
-        idUsuario += arr_cpf [random_index]
+        nummeroConta += arr_cpf [random_index]
         cont_caractere += 1
     
-    idUsuario += str(alfabetoCript.index(letra_prim_nome))
-    idUsuario += str(alfabetoCript.index(letra_seg_nome))
+    nummeroConta += str(alfabetoCript.index(letra_prim_nome))
+    if letra_seg_nome:
+        nummeroConta += str(alfabetoCript.index(letra_seg_nome))
 
     #caso não some 12 caracteres esse while concatena zeros ao final da string
-    while len(idUsuario)<12:
-        idUsuario += '0'
-
-    return idUsuario
+    while len(nummeroConta)<12:
+        nummeroConta += '0'
+    
+    return nummeroConta

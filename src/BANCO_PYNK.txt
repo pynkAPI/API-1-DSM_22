@@ -1,4 +1,4 @@
-DROP DATABASE pynk;
+
 
 CREATE DATABASE pynk;
 
@@ -62,7 +62,8 @@ FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
 
-
+INSERT INTO tb_capitaltotal 
+VALUES(1, 10000,0);
 INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha) 
 VALUES('GERENTE GERAL', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha');
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 

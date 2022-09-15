@@ -8,9 +8,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
+app.config['MYSQL_PASSWORD'] = 'fatec'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -23,6 +23,10 @@ mysql = MySQL(app)
 #Pagina inicial
 @app.route("/")
 def index():
+    session['login'] = False
+    session['nome']  = None 
+    session['conta'] = None
+    session['tipo']  = None
     return render_template('login.html')
 #------------------------------
 
@@ -38,8 +42,11 @@ def home():
 #Pagina Deposito
 @app.route("/deposito")
 def deposito():
-    saldo = f"{session['saldo']:.2f}".replace(".",",")
+    saldo = None
+    if session['saldo'] != None:
+        saldo = f"{session['saldo']:.2f}".replace(".",",")
     return render_template('deposito.html',saldo=saldo)
+    
 #------------------------------
 
 #Pagina Saque
@@ -60,7 +67,7 @@ def SaqueConta():
                    CampoBd=['saldo'], 
                    CampoFm=[valor],
                    CampoWr=['numeroconta'], 
-                   CampoPs=[session['conta']])
+                   CampoPs=[session['conta']])           
 
         saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
                                                 CampoBd=['numeroconta'],
@@ -69,7 +76,8 @@ def SaqueConta():
         session['saldo'] = saldoAtualizado[0]
         return saque()
 
-
+#------------------------------
+#Deposito de Conta
 @app.route("/depositoConta",  methods = ['POST', 'GET'])
 def depositoConta():
     if request.method == "POST":
@@ -87,6 +95,7 @@ def depositoConta():
                                                 CampoBd=['numeroconta'],
                                                 CampoFm=[session['conta']],
                                                 CampoEs=['saldo'])
+
         session['saldo'] = saldoAtualizado[0]
         return deposito()
 
@@ -147,8 +156,9 @@ def login():
         if resultado:
             session['login']    = True
             session['nome']     = resultado[1] 
-            session['conta'] = numeroconta
+            session['conta']    = numeroconta
             session['tipo']     = 2
+            session['saldo']    = None
             return home()
         else:     
             return index()  
