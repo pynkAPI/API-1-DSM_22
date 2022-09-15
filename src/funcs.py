@@ -67,14 +67,25 @@ def InsMySQL(TabelaBd,CampoBd,CampoFm):
     mysql.connection.commit()
     cursor.close()
     
-def upMySQL(TabelaBd,CampoBd,CampoFm,CampoWr):
+def upMySQL(TabelaBd,CampoBd,CampoFm,CampoWr,CampoPs):
     x=0
+    y=0
     cursor = mysql.connection.cursor()
     textoSQL = f' UPDATE {TabelaBd} SET '
     for values in CampoBd:
-        textoSQL += f'{CampoBd[x]} = "{CampoFm[x]}", '
+        if x == 0:
+            textoSQL += f'{CampoBd[x]} = "{CampoFm[x]}" '
+        else:
+            textoSQL += f', {CampoBd[x]} = "{CampoFm[x]}" '
         x+=1
-    textoSQL += f'WHERE {CampoWr}' 
+
+    for values in CampoWr:
+        if y == 0:
+            textoSQL += f'WHERE {CampoWr[y]} = "{CampoPs[y]}"'
+        else:
+            textoSQL += f'AND {CampoWr[y]} = "{CampoPs[y]}"'
+        y+=1
+
     cursor.execute(textoSQL)
     mysql.connection.commit()
     cursor.close()
