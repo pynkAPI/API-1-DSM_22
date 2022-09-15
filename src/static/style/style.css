@@ -212,4 +212,28 @@ body, input{
     border-width: 1px;
     border-style: solid;
     border-color: #B71258;
+    font-size: 15px;
+    color: gray;
+}
+
+.input-selects{
+    text-align: center;
+    max-width:380px;
+    width: 100%;
+    height: 50px;
+    background-color: #F0E8EA ;
+    margin: 10px 0;
+    padding: 0. 4rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #B71258;
+    font-size: 15px;
+    color: gray;
+}
+
+::-webkit-calendar-picker-indicator{
+    background-color: #B71258 ;
+    padding: 20px;
+    cursor: pointer;
+    border-radius: 3px;
 }
