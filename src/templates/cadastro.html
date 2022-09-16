@@ -37,7 +37,10 @@
                         <option value="O">OUTROS</option>
                     </select>
                     <input class="input-date" type="date" name="datanasc" required>
-                    <input type="submit" value="CADASTRAR" class="btn solid">
+                    <div>
+                        <input type="checkbox" id="chkconCordoCadstro" name="concordoCadstro" required > <label for="concordoCadstro">Concordo que meus dados sejam cadastrados</label>
+                    </div> 
+                    <input type="submit" value="CADASTRAR" class="btn solid"> 
                     <a id="linkCad" href="{{ url_for('index') }}">JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!</a>
                 </form>
             </div>

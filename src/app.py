@@ -10,7 +10,7 @@ app.secret_key = 'super secret key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'fatec'
+app.config['MYSQL_PASSWORD'] = 'mcs2809'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
