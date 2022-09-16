@@ -1,6 +1,6 @@
 <div align="center">
 
-![readme_banner](src/static/img/Banner.png)
+![readme_banner](doc/img/bannerPynk.png)
 </div>
 <br id="top">
 <p align="center" id="pseudo_nav">
@@ -45,7 +45,7 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 ## •Instalação e utilização da aplicação
 •Instalação
 1. Baixe o Python
-    
+
     No site oficial do Python na aba de downloads procure pelo seu sistema operacional e siga os passos de instalação.
     https://www.python.org/downloads/
 
@@ -57,14 +57,14 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 1. Crie um diretório
 - Crie um diretório e navegue até ele atraves da linha de comando.
 
-```console 
+```console
     mkdir <nome do diretório>
     cd <nome do diretório>
 ```
 
 2. Clone o repositório
 
-```console 
+```console
     git clone https://github.com/pynkAPI/API-1-DSM_22.git .
 ```
 - Repare que no final tem um ponto, ele é colocado propositalmente para que não seja criado mais um diretório dentro desse recém criado por você.
@@ -78,7 +78,7 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 ```console
     python3 -m venv <nome do ambiente>
 ```
-- Caso mesmo assim o diretório com o nome do ambiente não seja criado assegure-se que o **python está configurado em suas variáveis de ambiente** e tente novamente o processo. 
+- Caso mesmo assim o diretório com o nome do ambiente não seja criado assegure-se que o **python está configurado em suas variáveis de ambiente** e tente novamente o processo.
 
 4. Executar o ambiente virtual
 
@@ -99,11 +99,11 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 - Navegue até a raiz do diretório e execute o comando:
 ```console
     pip install -r requirements.txt
-``` 
+```
 
 6. Executando a aplicação
 
-- Navegue até a pasta src dentro dessa pasta raíz através da linha de comando e execute o arquivo 'app.py'. 
+- Navegue até a pasta src dentro dessa pasta raíz através da linha de comando e execute o arquivo 'app.py'.
 
 ```console
     cd src
@@ -112,6 +112,6 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 
 7. Entrando na aplicação
 - Abra o navegador e digite a url que aparecerá no cmd após a execução do 'app.py'.
-- **IMPORTANTE:** Não feche a janela do cmd enquanto estiver utilizando a aplicação. 
+- **IMPORTANTE:** Não feche a janela do cmd enquanto estiver utilizando a aplicação.
 
 • [To the top ↑](#top)
