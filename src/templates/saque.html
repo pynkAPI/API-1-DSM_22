@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saque Pynk</title>
-    <!-- <link rel="stylesheet" href="css/stylehome.css"> -->
+    <link rel="stylesheet" href="../static/style/stylehome.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
 
@@ -25,11 +25,14 @@
                 <li><a href="{{ url_for('index') }}" class="nav-link"><i class='bx bx-log-out'></i></a></li>
             </ul>
         </div>
+        <div class="saldo">
+            <label>Saldo: R$ {{saldo}}</label>
+            </div>
     </header>
     <div class="funcao">
+       
         <div class="h1">
             <h1>SAQUE SEU DINHEIRO</h1>
-            <label>Saldo: R$ {{saldo}}</label>
         </div>
         <form action="{{ url_for('SaqueConta') }}" method="POST">
             <div class="input-field">
@@ -40,5 +43,4 @@
         <a href="{{ url_for('home') }}">Voltar ao Menu</a>
     </div>
 </body>
-
 </html>
