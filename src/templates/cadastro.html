@@ -27,19 +27,16 @@
                         required>
                     <input type="password" class="input-field-cad" placeholder="CONFIRMAR SENHA" id="RepetirsenhaId"
                         name="Repetirsenha" required>
-                    <label>DATA NASCIMENTO</label>
-                    <input class="input-date" type="date" name="datanasc" required>
-                    <label>TIPO DE CONTA</label>
                     <select id="input_tipoconta" class="input-selects" name="tipoconta" required>
                         <option value="Conta Corrente">CONTA CORRENTE</option>
                         <option value="Conta Poupança">CONTA POUPANÇA</option>
                     </select>
-                    <label>GENÊRO</label>
                     <select class="input-selects" id="genero" name="genero" required>
                         <option value="F">FEMININO</option>
                         <option value="M">MASCULINO</option>
                         <option value="O">OUTROS</option>
                     </select>
+                    <input class="input-date" type="date" name="datanasc" required>
                     <input type="submit" value="CADASTRAR" class="btn solid">
                     <a id="linkCad" href="{{ url_for('index') }}">JÁ POSSUI UMA CONTA? FAÇA SEU LOGIN!</a>
                 </form>
