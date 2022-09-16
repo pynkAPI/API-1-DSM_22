@@ -39,16 +39,17 @@ body, input{
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 3;
 }
 #cliente{
-    margin-top: 5%;
-    width: 40%;
+    margin-top: 4%;
+    width: 35%;
     height: 100%;
     margin-left: 10%;
 } 
 #logo{
-    width: 15%;
+    margin-top: 3%;
+    margin-left: 2%;
+    width: 18%;
 }
 .img{
     position: relative;
