@@ -26,11 +26,14 @@
         </div>
         <div class="saldo">
             <label>Saldo: R$ {{saldo}}</label>
-            </div>
+        </div>
     </header>
     <div class="funcao"><br>
         <div class="h1">
             <h1>DEPOSITE SEU DINHEIRO</h1>
+        </div>
+        <div>
+            <h3>É APENAS ACEITO VALORES A CIMA DE 0</h3>
         </div>
         <form action="{{ url_for('depositoConta') }}" method="POST">
             <div class="input-field">

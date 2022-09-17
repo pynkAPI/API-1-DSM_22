@@ -60,20 +60,21 @@ def saque():
 def SaqueConta():
     if request.method == "POST":
         valor = float(request.form['valor'])
+        if valor >= 0:
+            valor = float(session['saldo']) - valor
 
-        valor = float(session['saldo']) - valor
+            funcs.upMySQL('tb_contabancaria', 
+                           CampoBd=['saldo'], 
+                           CampoFm=[valor],
+                           CampoWr=['numeroconta'], 
+                           CampoPs=[session['conta']])           
 
-        funcs.upMySQL('tb_contabancaria', 
-                   CampoBd=['saldo'], 
-                   CampoFm=[valor],
-                   CampoWr=['numeroconta'], 
-                   CampoPs=[session['conta']])           
-
-        saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
-                                                CampoBd=['numeroconta'],
-                                                CampoFm=[session['conta']],
-                                                CampoEs=['saldo'])
-        session['saldo'] = saldoAtualizado[0]
+            saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
+                                                        CampoBd=['numeroconta'],
+                                                        CampoFm=[session['conta']],
+                                                        CampoEs=['saldo'])
+            session['saldo'] = saldoAtualizado[0]
+            return saque()
         return saque()
 
 #------------------------------
@@ -81,24 +82,26 @@ def SaqueConta():
 @app.route("/depositoConta",  methods = ['POST', 'GET'])
 def depositoConta():
     if request.method == "POST":
+    
         valor = float(request.form['valor'])
+        if valor >= 0:
+            valor = valor + float(session['saldo'])
 
-        valor = valor + float(session['saldo'])
+            funcs.upMySQL('tb_contabancaria', 
+                          CampoBd=['saldo'], 
+                          CampoFm=[valor],
+                          CampoWr=['numeroconta'], 
+                          CampoPs=[session['conta']])
 
-        funcs.upMySQL('tb_contabancaria', 
-                   CampoBd=['saldo'], 
-                   CampoFm=[valor],
-                   CampoWr=['numeroconta'], 
-                   CampoPs=[session['conta']])
+            saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
+                                                        CampoBd=['numeroconta'],
+                                                        CampoFm=[session['conta']],
+                                                        CampoEs=['saldo'])
 
-        saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
-                                                CampoBd=['numeroconta'],
-                                                CampoFm=[session['conta']],
-                                                CampoEs=['saldo'])
-
-        session['saldo'] = saldoAtualizado[0]
+            session['saldo'] = saldoAtualizado[0]
+            return deposito()
         return deposito()
-
+        
 #Pagina de Cadastro
 @app.route("/cadastro.html", methods = ['POST', 'GET'])
 def cadastro():
