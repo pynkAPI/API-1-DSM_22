@@ -64,6 +64,7 @@ def SaqueConta():
             valor = float(session['saldo']) - valor
 
             funcs.upMySQL('tb_contabancaria', 
+            
                            CampoBd=['saldo'], 
                            CampoFm=[valor],
                            CampoWr=['numeroconta'], 
