@@ -25,8 +25,8 @@ FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario)
 
 CREATE TABLE tb_capitaltotal (
 id_capitaltotal int AUTO_INCREMENT PRIMARY KEY,
-capitalinicial float NOT NULL,
-capitalexterno float NOT NULL
+capitalinicial double NOT NULL,
+capitalexterno double NOT NULL
 );
 
 CREATE TABLE tb_contabancaria (
@@ -36,7 +36,7 @@ id_agencia int NOT NULL,
 tipo varchar(255) NOT NULL,
 numeroconta varchar(50) NOT NULL UNIQUE,
 data_abertura date NOT NULL,
-saldo float NOT NULL,
+saldo double NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario)
 );
 
@@ -47,7 +47,7 @@ id_conta_origem int NOT NULL,
 id_conta_destino int NOT NULL,
 Datatime datetime NOT NULL,
 tipo varchar(50) NOT NULL,
-valor float NOT NULL
+valor double NOT NULL
 );
 
 CREATE TABLE tb_agencia (
