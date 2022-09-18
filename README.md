@@ -114,4 +114,12 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 - Abra o navegador e digite a url que aparecerá no cmd após a execução do 'app.py'.
 - **IMPORTANTE:** Não feche a janela do cmd enquanto estiver utilizando a aplicação.
 
+•Banco de dados
+1. Abra o seu SGBD e importe o Script SQL
+- Dentro do seu sistema de gerenciamento de banco de dados procure pela opção de importar Script SQL.
+- Após importado execute todas as linhas.
+
+2. Credenciais do Banco
+- Dentro do arquivo app.py logo no começo existe uma sessão comentada como "Conexão ao banco de dados", dentro dela, na linha 13 (app.config['MYSQL_PASSWORD'] = '<sua-senha-vai-aqui>') adicione a senha configurada no seu sistema como padrão do usuário root.
+
 • [To the top ↑](#top)
