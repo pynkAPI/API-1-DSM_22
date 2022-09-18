@@ -42,7 +42,6 @@ def home():
 #Pagina Deposito
 @app.route("/deposito")
 def deposito():
-    saldo = None
     if session['saldo'] != None:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
     return render_template('deposito.html',saldo=saldo)
@@ -64,7 +63,6 @@ def SaqueConta():
             valor = float(session['saldo']) - valor
 
             funcs.upMySQL('tb_contabancaria', 
-            
                            CampoBd=['saldo'], 
                            CampoFm=[valor],
                            CampoWr=['numeroconta'], 
