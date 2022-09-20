@@ -154,3 +154,8 @@ def geraId(nome, agencia, cpf):
         nummeroConta += '0'
     
     return nummeroConta
+
+def TirarPontoeTraco(CPF):
+    CPF = CPF.replace(".","")
+    CPF = CPF.replace("-","")
+    return CPF

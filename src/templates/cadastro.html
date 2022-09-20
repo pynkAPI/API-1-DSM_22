@@ -22,7 +22,7 @@
                     <h2 class="title">ABRA SUA CONTA</h2>
                     <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name" required>
                     <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco" required>
-                    <input class="input-field-cad" type="text" placeholder="CPF" name="cpf" id="CPFId" required>
+                    <input oninput="mascara(this)" onblur="ValidarCPF(this)" class="input-field-cad" type="text" placeholder="CPF" name="cpf" id="CPFId" required>
                     <input type="password" class="input-field-cad" placeholder="SENHA" id="SenhaId" name="senha"
                         required>
                     <input type="password" class="input-field-cad" placeholder="CONFIRMAR SENHA" id="RepetirsenhaId"

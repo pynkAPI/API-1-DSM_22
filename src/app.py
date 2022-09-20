@@ -107,7 +107,7 @@ def cadastro():
     if request.method == "POST":
         #Variaveis vindas do FORM vindas do cadastro.html
         nome            = request.form['name']
-        cpf             = request.form['cpf']
+        cpf             = funcs.TirarPontoeTraco(request.form['cpf'])
         endereco        = request.form['endereco']
         dataNascimento  = request.form['datanasc']
         genero          = request.form['genero']
