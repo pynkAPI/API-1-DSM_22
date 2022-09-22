@@ -8,15 +8,15 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
+app.config['MYSQL_PASSWORD'] = 'fatec'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
 # Bloco de Paginas.
 
-# Resumo dos comandos 
+# Resumo dos comandos
     #Route  -> Caminho das paginas.
     #Def    -> Função de exibição da pagina.
 
@@ -24,7 +24,7 @@ mysql = MySQL(app)
 @app.route("/")
 def index():
     session['login'] = False
-    session['nome']  = None 
+    session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
     return render_template('login.html')
@@ -45,7 +45,7 @@ def deposito():
     if session['saldo'] != None:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
     return render_template('deposito.html',saldo=saldo)
-    
+
 #------------------------------
 
 #Pagina Saque
@@ -62,11 +62,11 @@ def SaqueConta():
         if valor >= 0:
             valor = float(session['saldo']) - valor
 
-            funcs.upMySQL('tb_contabancaria', 
-                           CampoBd=['saldo'], 
+            funcs.upMySQL('tb_contabancaria',
+                           CampoBd=['saldo'],
                            CampoFm=[valor],
-                           CampoWr=['numeroconta'], 
-                           CampoPs=[session['conta']])           
+                           CampoWr=['numeroconta'],
+                           CampoPs=[session['conta']])
 
             saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
                                                         CampoBd=['numeroconta'],
@@ -81,15 +81,15 @@ def SaqueConta():
 @app.route("/depositoConta",  methods = ['POST', 'GET'])
 def depositoConta():
     if request.method == "POST":
-    
+
         valor = float(request.form['valor'])
         if valor >= 0:
             valor = valor + float(session['saldo'])
 
-            funcs.upMySQL('tb_contabancaria', 
-                          CampoBd=['saldo'], 
+            funcs.upMySQL('tb_contabancaria',
+                          CampoBd=['saldo'],
                           CampoFm=[valor],
-                          CampoWr=['numeroconta'], 
+                          CampoWr=['numeroconta'],
                           CampoPs=[session['conta']])
 
             saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
@@ -100,7 +100,7 @@ def depositoConta():
             session['saldo'] = saldoAtualizado[0]
             return deposito()
         return deposito()
-        
+
 #Pagina de Cadastro
 @app.route("/cadastro.html", methods = ['POST', 'GET'])
 def cadastro():
@@ -115,17 +115,17 @@ def cadastro():
         tipoConta       = request.form['tipoconta']
         funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],
                        CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento])
-        
+
         id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
         #Gera o numero da conta, usando o nome do usuário, id da agência e o cpf do usuário
         numeroCampo = funcs.geraId(str(nome),str(1),str(cpf))
-        funcs.InsMySQL('tb_contabancaria', 
+        funcs.InsMySQL('tb_contabancaria',
                         CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
                         CampoFm=[id_usuario[0], 1, tipoConta, datetime.today(), numeroCampo, 0])
         flash(numeroCampo)
         return render_template('login.html')
-        
-    return render_template('cadastro.html') 
+
+    return render_template('cadastro.html')
 #------------------------------
 
 #Pagina de Login
@@ -135,12 +135,12 @@ def login():
         #login do usuário comum
         numeroconta = request.form['numeroconta']
         senha       = request.form['senha']
-        resultado   = funcs.SlcMySQL('''tb_usuario 
-                                        INNER JOIN tb_contabancaria 
+        resultado   = funcs.SlcMySQL('''tb_usuario
+                                        INNER JOIN tb_contabancaria
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
                                     CampoBd=['numeroconta','senha'],
                                     CampoFm=[numeroconta,senha])
-                    
+
     if resultado:
         session['login'] = True
         session['nome']  = resultado[1]
@@ -150,24 +150,23 @@ def login():
         return home()
     else:
         #Login de gerente geral e gerente de agência
-        resultado   = funcs.SlcMySQL('''tb_usuario 
-                                        INNER JOIN tb_funcionario 
+        resultado   = funcs.SlcMySQL('''tb_usuario
+                                        INNER JOIN tb_funcionario
                                         ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
                                     CampoBd=['login','senha'],
                                     CampoFm=[numeroconta,senha])
         if resultado:
             session['login']    = True
-            session['nome']     = resultado[1] 
+            session['nome']     = resultado[1]
             session['conta']    = numeroconta
             session['tipo']     = 2
             session['saldo']    = None
             return home()
-        else:     
-            return index()  
-  
+        else:
+            return index()
+
 #------------------------------
 
 #Bloco para subir o site.
 if __name__ == "__main__":
     app.run(debug=True)
-   

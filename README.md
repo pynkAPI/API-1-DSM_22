@@ -5,7 +5,7 @@
 <br id="top">
 <p align="center" id="pseudo_nav">
     <a href="#sobre">Sobre</a> •
-    <a href="#backlog">Backlog</a> •
+    <a href="#backlogEus">Backlog e US</a> •
     <a href="#doc">Documentação</a> •
     <a href="#metodologia">Metodologia</a> •
     <a href="#contato">Contatos</a> •
@@ -22,7 +22,67 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 
 <span id="backlog">
 
-## •Backlog
+## •Backlog e US
+
+- Nota: A coluna ID Requisição do Backlog está associada a um arquivo de circulação interna acordado com o cliente. Este não está contemplado por motivos de privacidade do mesmo, entretanto, a coluna foi mantida para fins avaliativos.
+
+<div align="center" class="stories">
+
+#### User Stories
+
+|  ID  |                                                                                                 US                                                                                                | Sprint |
+|:----:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------:|
+| US01 | Eu, enquanto usuário comum, desejo realizar depósitos em espécie, para conseguir realizar operações com meu dinheiro dentro do banco.                                                             |    1   |
+| US02 | Eu, enquanto usuário comum, desejo realizar saques em caixa, para retirar o dinheiro guardado no banco.                                                                                           |    1   |
+| US03 | Eu, enquanto usuário comum, desejo realizar requisição de abertura de conta, para abrir uma conta dentro do banco.                                                                                |    1   |
+| US04 | Eu, enquanto usuário comum, desejo realizar a requisição de alteração de dados, para atualizar meus dados cadastrais.                                                                             |    2   |
+| US05 | Eu, enquanto usuário comum, desejo realizar a requisição de cancelamento de conta, para cancelar uma conta dentro do banco.                                                                       |    2   |
+| US06 | Eu, enquanto usuário comum, desejo realizar movimentações de dinheiro da minha conta para outra conta do mesmo banco utilizando uma "chave", para realizar transferências de dinheiro.            |    2   |
+| US07 | Eu, enquanto usuário comum, desejo que seja realziado emissão de comprovantes imediatamente após qualquer operação, para conseguir comprovar minhas movimentações feitas em minha conta bancária  |    2   |
+| US08 | Eu, enquanto Gerente de Agência, desejo ter todas as funcionalidades de um usuário comum, para poder ter um conta dentro do banco como um cliente.                                                |    2   |
+| US09 | Eu, enquanto Gerente de Agência, desejo ver todas operações de depósito em caixa de minha agência, para após a conferência "física" aceitar ou recusar a operação.                                |    2   |
+| US10 | Eu, enquanto Gerente de Agência, desejo ver todas as requisições de abertura de conta de minha agência, para poder recusar ou aceitar a abertura de conta.                                        |    2   |
+| US11 | Eu, enquanto Gerente de Agência, desejo ver as requisições de alteração de dados cadastrais de usuários de minha agência, para aceitar ou recusar a operação.                                     |    2   |
+| US12 | Eu, enquanto Gerente de Agência, desejo ver todas as requisições de cancelamento de conta bancárias, para poder cancelar uma conta que não esteja devendo ou tenha nenhum dinheiro guardado.      |    2   |
+| US13 | Eu, enquanto Gerente Geral, desejo ter todas as funcionalidades de um usuário comum e um Gerente de Agência, para que não haja restrições internas de sistema.                                    |    3   |
+| US14 | Eu enquanto gerente Geral, desejo gerenciar usuário do tipo gerente de agência, para poder alterar, criar, deletar, ver todos os Gerentes de Agências e ver atrelar um gerente a uma Agência.     |    3   |
+| US15 | Eu, enquanto Gerente Geral, desejo gerenciar Agências, para poder alterar, criar, deletar e ver todas as Agências.                                                                                |    3   |
+| US16 | Eu, enquanto Gerente Geral, desejo alterar o capital total do banco, para atualizar o capital do banco e corrigir inconsistências.                                                                |    3   |
+| US17 | Eu, enquanto usuário comum (cliente), desejo ter uma interface acessível e intuitiva, para ter uma boa experiência durante a utilização do sistema.                                               |    3   |
+| US18 | Eu, enquanto Gerente Geral, desejo que toda movimentação de dinheiro altera o valor total de acordo com o tipo de transação, para que o capital total do banco tenha consistência com a realidade |    4   |
+| US19 | Eu, enquanto Usuário comum, desejo que quando meu saldo fique negativo minha conta em status de cheque especial, para que eu posso realizar empréstimos do banco                                  |    4   |
+
+#### Product Backlog
+| **Sprint** | **ID US** | **ID Função** | **ID Requisição** | **Funções**                                                                               | **Prioridade** | **Status**   |
+|------------|-----------|---------------|-------------------|-------------------------------------------------------------------------------------------|----------------|--------------|
+|      1     |    US01   |      F.1      |        RF.3       | Depósito em espécie                                                                       |      ALTA      |     Feito    |
+|      1     |    US02   |      F.2      |        RF.3       | Saque em espécie                                                                          |      ALTA      |     Feito    |
+|      1     |    US10   |      F.3      |        RF.3       | Criação de conta de usuário comum                                                         |      ALTA      |     Feito    |
+|      2     |    US07   |      F.4      |        RF.3       | Emissão de extratos                                                                       |      MÉDIA     | Em andamento |
+|      2     |    US09   |      F.5      |        RF.2       | Conferência de depósito                                                                   |      MÉDIA     | Em andamento |
+|      2     |    US04   |      F.6      |        RF.3       | Requisição de alteração de dados                                                          |      MÉDIA     | Em andamento |
+|      2     |    US05   |      F.7      |        RF.3       | Requisição de cancelamento de conta                                                       |      MÉDIA     | Em andamento |
+|      2     |    US03   |      F.8      |        RF.3       | Requisição de criação de conta                                                            |      MÉDIA     | Em andamento |
+|      2     |    US06   |      F.9      |        RF.3       | Transferência em contas do mesmo banco*                                                   |      MÉDIA     | Em andamento |
+|      2     |    US18   |      F.10     |        RF.6       | Não aceitar qualquer saque que extrapole o valor total do banco.                          |      MÉDIA     | Em andamento |
+|      2     |    US10   |      F.11     |        RF.2       | Aceite ou recusa de requisição de abertura de conta                                       |      MÉDIA     | Em andamento |
+|      2     |    US11   |      F.12     |        RF.2       | Aceite ou recusa de requisição alteração de dados de usuário                              |      MÉDIA     | Em andamento |
+|      3     |    US12   |      F.13     |        RF.2       | Aceite ou recusa de requisição de fechamento de conta de usuário                          |      MÉDIA     | Em andamento |
+|      3     |    US15   |      F.14     |        RF.1       | Criar Agência                                                                             |      MÉDIA     | Em andamento |
+|      3     |    US14   |      F.15     |        RF.1       | Criar Gerente de Agência                                                                  |      MÉDIA     | Em andamento |
+|      3     |    US14   |      F.16     |        RF.1       | Alterar dados de Gerente de Agência                                                       |      BAIXA     |  Em aguardo  |
+|      3     |    US14   |      F.17     |        RF.1       | Deletar Gerente de Agência                                                                |      BAIXA     |  Em aguardo  |
+|      3     |    US14   |      F.18     |        RF.1       | Atrelar Gerente de Agência a uma Agência                                                  |      BAIXA     |  Em aguardo  |
+|      4     |    US16   |      F.19     |        RF.1       | Gerenciar o capital total do banco                                                        |      BAIXA     |  Em aguardo  |
+|      4     |    US15   |      F.20     |        RF.1       | Fechamento de agência                                                                     |      BAIXA     |  Em aguardo  |
+|      4     |    US15   |      F.21     |        RF.1       | Alterar dados de Agência                                                                  |      BAIXA     |  Em aguardo  |
+|      4     |    US18   |      F.22     |     RF.4, RF.5    | Alteração do capital total do banco de acordo com os saques e Depósitos                   |      BAIXA     |  Em aguardo  |
+|      4     |    US19   |      F.23     |    RF.12, RF.13   | Função de cheque especial                                                                 |      BAIXA     |  Em aguardo  |
+|      4     |    US20   |      F.24     |        RF.7       | Truncamento dos valores com as correções apropriadas para evitar inconsistência de dados. |      BAIXA     |  Em aguardo  |
+
+
+</div>
+
 • [To the top ↑](#top)
 
 <span id="doc">
