@@ -1,0 +1,47 @@
+{% from 'requisicaoBs.html' import tabelaChk %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requisição Exemplos</title>
+</head>
+<body>
+    
+        <div>
+            <table>
+                <tr class="cabecalho">
+                    {% for header in cabecalhoTabela %}
+                    {% if header == 'id' %}
+                         <th class="celula" style="visibility: collapse">{{ header }}</th>
+                    {% else %}
+                        <th class="celula">{{ header }}</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% for row in pesquisaSQLTabela %}
+                <form action="{{ url_for('deletarConta') }}" method="POST">
+                <tr class="linhaGrid">
+                    {% for cell in row %}
+                        {% if row|length == 0 %}
+                        <td class="celula"   name='id_conta' value={{ cell }}></td>
+                        {% else %}
+                        <td class="celula">{{ cell }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td class=""> 
+                        <input type="submit" value="DELETAR" name="delete" class="btnd solid">
+                    </td>
+                </tr>
+                </form>
+            {% endfor %}
+            </table>
+        </div>
+       
+    </form>
+    
+    
+</body>
+</html>

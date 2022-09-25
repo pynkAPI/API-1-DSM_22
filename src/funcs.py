@@ -11,7 +11,7 @@ mysql = MySQL(app)
 def SlcMySQL(TabelaBd,CampoBd,CampoFm):
     x=0
     cursor = mysql.connection.cursor()
-    textoSQL = f' SELECT * FROM {TabelaBd} WHERE '
+    textoSQL = f' SELECT * FROM {TabelaBd}'
     for values in CampoBd:
         if x==0:
             textoSQL+= f'{CampoBd[x]} = "{CampoFm[x]}" '
@@ -19,7 +19,7 @@ def SlcMySQL(TabelaBd,CampoBd,CampoFm):
             textoSQL+= f' and {CampoBd[x]} = "{CampoFm[x]}"'
         x+=1
     cursor.execute(textoSQL)
-    resultado = cursor.fetchone()
+    resultado = cursor.fetchall()
     mysql.connection.commit()
     cursor.close()
     return resultado
@@ -35,15 +35,15 @@ def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm, CampoEs):
         else:
             textoSQL += f', {CampoEs[y]}'
         y+=1 
-    textoSQL += f' FROM {TabelaBd} WHERE '
+    textoSQL += f' FROM {TabelaBd}'
     for values in CampoBd:
         if x==0:
-            textoSQL+= f'{CampoBd[x]} = "{CampoFm[x]}" '
+            textoSQL+= f'WHERE {CampoBd[x]} = "{CampoFm[x]}" '
         else:
             textoSQL+= f' and {CampoBd[x]} = "{CampoFm[x]}"'
         x+=1
     cursor.execute(textoSQL)
-    resultado = cursor.fetchone()
+    resultado = cursor.fetchall()
     mysql.connection.commit()
     cursor.close()
     return resultado

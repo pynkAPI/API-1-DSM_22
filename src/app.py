@@ -1,4 +1,6 @@
 from datetime import datetime
+from tabnanny import check
+from turtle import pd
 from flask import Flask, render_template,request, url_for, redirect, session,flash
 from flask_mysqldb import MySQL
 import funcs
@@ -10,7 +12,7 @@ app.secret_key = 'super secret key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'fatec'
+app.config['MYSQL_PASSWORD'] = 'mcs2809'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -21,7 +23,7 @@ mysql = MySQL(app)
     #Def    -> Função de exibição da pagina.
 
 #Pagina inicial
-@app.route("/")
+@app.route("/a")
 def index():
     session['login'] = False
     session['nome']  = None
@@ -164,6 +166,36 @@ def login():
             return home()
         else:
             return index()
+
+
+#------------------------------
+
+#Bloco de requisição padrão
+
+@app.route("/deletarConta",  methods = ['POST', 'GET'])
+def deletarConta():
+
+    if request.method =='POST':
+        if request.form.get('delete') == 'DELETAR':
+            nome =  request.form.get('id')
+            return()
+
+
+#------------------------------
+
+#Bloco de requisição padrão
+
+@app.route("/") 
+def RequisicaoPadrao():    
+    cabecalho = ('','Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
+
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario', 
+                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
+                                           CampoBd=[],
+                                           CampoFm=[])  
+
+    return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+
 
 #------------------------------
 
