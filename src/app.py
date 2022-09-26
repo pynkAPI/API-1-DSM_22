@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'mcs2809'
+app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -23,7 +23,7 @@ mysql = MySQL(app)
     #Def    -> Função de exibição da pagina.
 
 #Pagina inicial
-@app.route("/a")
+@app.route("/")
 def index():
     session['login'] = False
     session['nome']  = None
@@ -142,7 +142,7 @@ def login():
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
                                     CampoBd=['numeroconta','senha'],
                                     CampoFm=[numeroconta,senha])
-
+        
     if resultado:
         session['login'] = True
         session['nome']  = resultado[1]
@@ -166,8 +166,6 @@ def login():
             return home()
         else:
             return index()
-
-
 #------------------------------
 
 #Bloco de requisição padrão
@@ -185,7 +183,7 @@ def deletarConta():
 
 #Bloco de requisição padrão
 
-@app.route("/") 
+@app.route("/a") 
 def RequisicaoPadrao():    
     cabecalho = ('','Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
 
