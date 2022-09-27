@@ -32,18 +32,6 @@ def index():
     return render_template('login.html')
 #------------------------------
 
-#Bloco de requisição padrão
-
-@app.route("/ReqAbertura", methods = ['POST', 'GET']) 
-def ReqAbertura(): 
-    if request.method == "POST":
-        ativo = request.form['verificacao']
-        idUsu    = request.form['IdUsu']   
-        funcs.upMySQL('tb_usuario',CampoBd=['ativo'],CampoFm=[ativo],
-                                    CampoWr=['id_usuario'],CampoPs=[idUsu])
-    return home()
-#------------------------------
-
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
@@ -58,7 +46,8 @@ def home():
                                                         CampoFm=['0'],CampoEs=['nome','id_usuario'])
         for row in resultado:
             itens.append(row)
-                
+        
+        saldo = f"{session['saldo']:.2f}".replace(".",",")
         return render_template('homeG.html',saldo=saldo,itens=itens)    
 #------------------------------
 
@@ -182,13 +171,15 @@ def login():
                                         ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
                                     CampoBd=['login','senha'],
                                     CampoFm=[numeroconta,senha])
+        resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
         if resultado:
             for row in resultado:
-                session['nome']     = row[1]
+                session['nome'] = row[1]
             session['login']    = True
             session['conta']    = numeroconta
             session['tipo']     = 2
-            session['saldo']    = None
+            for row2 in resultadocap:
+                session['saldo']  = row2[1]
             return home()
         else:
             return index()
@@ -225,7 +216,17 @@ def RequisicaoPadrao():
 
 #------------------------------
 
+#Bloco de requisição padrão
 
+@app.route("/ReqAbertura", methods = ['POST', 'GET']) 
+def ReqAbertura(): 
+    if request.method == "POST":
+        ativo = request.form['verificacao']
+        idUsu    = request.form['IdUsu']   
+        funcs.upMySQL('tb_usuario',CampoBd=['ativo'],CampoFm=[ativo],
+                                    CampoWr=['id_usuario'],CampoPs=[idUsu])
+    return home()
+#------------------------------
 
 #Bloco para subir o site.
 if __name__ == "__main__":
