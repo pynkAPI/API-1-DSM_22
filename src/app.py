@@ -32,19 +32,32 @@ def index():
     return render_template('login.html')
 #------------------------------
 
+#Bloco de requisição padrão
+
+@app.route("/ReqAbertura", methods = ['POST', 'GET']) 
+def ReqAbertura(): 
+    if request.method == "POST":
+        ativo = request.form['verificacao']
+        idUsu    = request.form['IdUsu']   
+        funcs.upMySQL('tb_usuario',CampoBd=['ativo'],CampoFm=[ativo],
+                                    CampoWr=['id_usuario'],CampoPs=[idUsu])
+    return home()
+#------------------------------
+
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
     saldo = None
     itens = []
+    idusu = []
     if session['tipo'] == 1:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
         return render_template('home.html',saldo=saldo)
     else:
-        teste = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
-                                                        CampoFm=['0'],CampoEs=['nome'])
-        if teste:
-            itens = 'teste'
+        resultado = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
+                                                        CampoFm=['0'],CampoEs=['nome','id_usuario'])
+        for row in resultado:
+            itens.append(row)
                 
         return render_template('homeG.html',saldo=saldo,itens=itens)    
 #------------------------------
@@ -124,8 +137,8 @@ def cadastro():
         genero          = request.form['genero']
         senha           = request.form['senha']
         tipoConta       = request.form['tipoconta']
-        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],
-                       CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento])
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento','ativo'],
+                       CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento,'0'])
 
         resultado = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
         for row in resultado:
@@ -212,14 +225,7 @@ def RequisicaoPadrao():
 
 #------------------------------
 
-#Bloco de requisição padrão
 
-@app.route("/ReqAbertura") 
-def ReqAbertura():    
-    resultado   = funcs.upMySQL('tb_usuario',CampoBd=['ativo','senha'],CampoFm=[numeroconta,senha])
-
-    return render_template("homeG.html")
-#------------------------------
 
 #Bloco para subir o site.
 if __name__ == "__main__":

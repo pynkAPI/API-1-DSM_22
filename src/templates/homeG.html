@@ -5,13 +5,14 @@
 {% block func %}
 <div class="func">
     {% for teste in itens %}
-    <form action="{{ url_for('depositoConta') }}" method="POST">
-        <label>{{teste}}</label><br>
+    <form action="ReqAbertura" method="POST">
+        <label>Abertura {{teste[0]}}</label><br>
         <input type="radio" name="verificacao" value="1">
         <label for="css">Sim</label>
-        <input type="radio" name="verificacao" value="0">
+        <input type="radio" name="verificacao" value="2">
         <label for="html">Não</label>
         <input type="submit" class="btnd solid">
+        <input type="hidden" value="{{teste[1]}}" name="IdUsu">
     </form><br>
     {% endfor %}
 </div>
