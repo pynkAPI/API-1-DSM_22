@@ -11,7 +11,8 @@ cpf varchar(25) NOT NULL UNIQUE,
 genero varchar(25) NOT NULL,
 endereco varchar(50) NOT NULL,
 datanascimento date NOT NULL,
-senha varchar(100) NOT NULL
+senha varchar(100) NOT NULL,
+ativo varchar(1) NOT NULL
 );
 
 CREATE TABLE tb_funcionario (

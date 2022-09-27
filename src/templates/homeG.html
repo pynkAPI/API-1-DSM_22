@@ -1,0 +1,18 @@
+{% extends "home.html" %}
+{% block saldo %}
+<label>Saldo banco: R$ {{saldo}}</label>
+{% endblock %}
+{% block func %}
+<div class="func">
+    {% for teste in itens %}
+    <form action="{{ url_for('depositoConta') }}" method="POST">
+        <label>{{teste}}</label><br>
+        <input type="radio" name="verificacao" value="1">
+        <label for="css">Sim</label>
+        <input type="radio" name="verificacao" value="0">
+        <label for="html">Não</label>
+        <input type="submit" class="btnd solid">
+    </form><br>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -21,7 +21,7 @@ def SlcMySQL(TabelaBd,CampoBd,CampoFm):
         x+=1
 
     cursor.execute(textoSQL)
-    resultado = cursor.fetchone()
+    resultado = cursor.fetchall()
     mysql.connection.commit()
     cursor.close()
     return resultado
@@ -45,7 +45,7 @@ def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm, CampoEs):
             textoSQL+= f' and {CampoBd[x]} = "{CampoFm[x]}"'
         x+=1
     cursor.execute(textoSQL)
-    resultado = cursor.fetchone()
+    resultado = cursor.fetchall()
     mysql.connection.commit()
     cursor.close()
     return resultado

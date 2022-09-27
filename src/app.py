@@ -36,9 +36,17 @@ def index():
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
     saldo = None
+    itens = []
     if session['tipo'] == 1:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
-    return render_template('home.html',saldo=saldo)
+        return render_template('home.html',saldo=saldo)
+    else:
+        teste = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
+                                                        CampoFm=['0'],CampoEs=['nome'])
+        if teste:
+            itens = 'teste'
+                
+        return render_template('homeG.html',saldo=saldo,itens=itens)    
 #------------------------------
 
 #Pagina Deposito
@@ -74,7 +82,8 @@ def SaqueConta():
                                                         CampoBd=['numeroconta'],
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['saldo'])
-            session['saldo'] = saldoAtualizado[0]
+            for row in saldoAtualizado:
+                session['saldo'] = row[0]
             return saque()
         return saque()
 
@@ -98,8 +107,8 @@ def depositoConta():
                                                         CampoBd=['numeroconta'],
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['saldo'])
-
-            session['saldo'] = saldoAtualizado[0]
+            for row in saldoAtualizado:
+                session['saldo'] = row[0]
             return deposito()
         return deposito()
 
@@ -118,12 +127,14 @@ def cadastro():
         funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento'],
                        CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento])
 
-        id_usuario = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
+        resultado = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
+        for row in resultado:
+            id_usuario = row[0]
         #Gera o numero da conta, usando o nome do usuário, id da agência e o cpf do usuário
         numeroCampo = funcs.geraId(str(nome),str(1),str(cpf))
         funcs.InsMySQL('tb_contabancaria',
                         CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
-                        CampoFm=[id_usuario[0], 1, tipoConta, datetime.today(), numeroCampo, 0])
+                        CampoFm=[id_usuario, 1, tipoConta, datetime.today(), numeroCampo, 0])
         flash(numeroCampo)
         return render_template('login.html')
 
@@ -140,13 +151,14 @@ def login():
         resultado   = funcs.SlcMySQL('''tb_usuario
                                         INNER JOIN tb_contabancaria
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
-                                    CampoBd=['numeroconta','senha'],
-                                    CampoFm=[numeroconta,senha])
+                                    CampoBd=['tb_contabancaria.numeroconta','tb_usuario.senha','tb_usuario.ativo'],
+                                    CampoFm=[numeroconta,senha,'1'])
         
     if resultado:
+        for row in resultado:
+            session['nome']     = row[1]
+            session['saldo']    = row[14]
         session['login'] = True
-        session['nome']  = resultado[1]
-        session['saldo'] = resultado[13]
         session['conta'] = numeroconta
         session['tipo']  = 1
         return home()
@@ -158,8 +170,9 @@ def login():
                                     CampoBd=['login','senha'],
                                     CampoFm=[numeroconta,senha])
         if resultado:
+            for row in resultado:
+                session['nome']     = row[1]
             session['login']    = True
-            session['nome']     = resultado[1]
             session['conta']    = numeroconta
             session['tipo']     = 2
             session['saldo']    = None
@@ -187,14 +200,25 @@ def deletarConta():
 def RequisicaoPadrao():    
     cabecalho = ('','Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario', 
+    resultado = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario', 
                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
                                            CampoBd=[],
-                                           CampoFm=[])  
+                                           CampoFm=[]) 
+    for row in resultado:
+        pesquisaSQL = row[0]
 
     return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
 
+#------------------------------
+
+#Bloco de requisição padrão
+
+@app.route("/ReqAbertura") 
+def ReqAbertura():    
+    resultado   = funcs.upMySQL('tb_usuario',CampoBd=['ativo','senha'],CampoFm=[numeroconta,senha])
+
+    return render_template("homeG.html")
 #------------------------------
 
 #Bloco para subir o site.

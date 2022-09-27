@@ -27,16 +27,18 @@
             {% endblock %}
         </div>
         <div class="saldo">
+            {% block saldo %}
             <label>Saldo: R$ {{saldo}}</label>
+            {% endblock %}
         </div>
+        {% block func %}
         <div class="func">
-            {% block func %}
             <a href="{{ url_for('deposito') }}"><i class='bx bx-money'></i></a>
             <h5>DEPOSITO</h5><br>
             <a href="{{ url_for('saque') }}"><i class='bx bx-money-withdraw'></i></a>
-            <h5>SAQUE</h5>
-            {% endblock %}
+            <h5>SAQUE</h5>    
         </div>
+        {% endblock %}
     </header>
 </body>
 
