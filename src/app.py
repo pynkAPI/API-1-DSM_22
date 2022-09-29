@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'fatec'
+app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -23,7 +23,7 @@ mysql = MySQL(app)
     #Def    -> Função de exibição da pagina.
 
 #Pagina inicial
-@app.route("/a")
+@app.route("/")
 def index():
     session['login'] = False
     session['nome']  = None
@@ -42,13 +42,19 @@ def home():
         saldo = f"{session['saldo']:.2f}".replace(".",",")
         return render_template('home.html',saldo=saldo)
     else:
-        resultado = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
+        cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
+        itens = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
                                                         CampoFm=['0'],CampoEs=['nome','id_usuario'])
-        for row in resultado:
-            itens.append(row)
+
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario', 
+                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
+                                           CampoBd=[],
+                                           CampoFm=[]) 
+
+        # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
         
         saldo = f"{session['saldo']:.2f}".replace(".",",")
-        return render_template('homeG.html',saldo=saldo,itens=itens)    
+        return render_template('homeG.html',saldo=saldo,itens=itens,cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)    
 #------------------------------
 
 #Pagina Deposito
@@ -203,7 +209,7 @@ def deletarConta():
 
 #Bloco de requisição padrão
 
-@app.route("/") 
+@app.route("/a") 
 def RequisicaoPadrao():    
     cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
 
