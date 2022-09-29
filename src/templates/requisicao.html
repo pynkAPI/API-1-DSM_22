@@ -1,29 +1,23 @@
-{% from 'requisicaoBs.html' import tabelaChk %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Requisição Exemplos</title>
-</head>
-<body>
-    
+{% extends "home.html" %}
+{% block saldo %}
+{% endblock %}
+{% block func %}
+
         <div>
-            <table>
-                <tr class="cabecalho">
+            <table class="tabelaRequisicao">
+                <tr class="linhaTabela">
                     {% for header in cabecalhoTabela %}
                     {% if header == 'id' %}
-                         <th class="celula" style="visibility: collapse">{{ header }}</th>
+                         <th style="visibility: collapse">{{ header }}</th>
                     {% else %}
-                        <th class="celula">{{ header }}</th>
+                        <th >{{ header }}</th>
                     {% endif %}
                     {% endfor %}
                 </tr>
                 {% for row in pesquisaSQLTabela %}
                 <form action="{{ url_for('deletarConta') }}" method="POST">
-                <tr class="linhaGrid">
+                <tr class="linhaTabela">
                     {% for cell in row %}
                         {% if row[0] == cell %}
                         <input type="hidden" value="{{ cell }}" name="IdUsuario">
@@ -32,7 +26,7 @@
                         {% endif %}
                     {% endfor %}
                     <td> 
-                        <input type="submit" name="delete" class="btnd solid">
+                        <input type="submit" name="delete" value="Deletar" class="btnd solid">
                     </td>
                 </tr>
                 </form>
@@ -41,7 +35,4 @@
         </div>
        
     </form>
-    
-    
-</body>
-</html>
+{% endblock %}
