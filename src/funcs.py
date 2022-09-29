@@ -95,7 +95,7 @@ def upMySQL(TabelaBd,CampoBd,CampoFm,CampoWr,CampoPs):
 def DelMySQL(TabelaBd,CampoBd,CampoFm):
     x=0
     cursor = mysql.connection.cursor()
-    textoSQL = f' DELETE {TabelaBd} WHERE '
+    textoSQL = f' DELETE FROM {TabelaBd} WHERE '
     for values in CampoBd:
         if x==0:
             textoSQL+= f'{CampoBd[x]} = {CampoFm[x]} '
