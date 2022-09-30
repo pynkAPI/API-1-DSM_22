@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3307 #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'yyyetygvg1'
+app.config['MYSQL_PASSWORD'] = 'fatec'
 app.config['MYSQL_DB'] = 'pynk'
 
 mysql = MySQL(app)
@@ -46,15 +46,15 @@ def home():
         itens = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
                                                         CampoFm=['0'],CampoEs=['nome','id_usuario'])
 
-        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario', 
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
                                            CampoBd=[],
-                                           CampoFm=[]) 
+                                           CampoFm=[])
 
         # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
-        
+
         saldo = f"{session['saldo']:.2f}".replace(".",",")
-        return render_template('homeG.html',saldo=saldo,itens=itens,cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)    
+        return render_template('homeG.html',saldo=saldo,itens=itens,cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 #------------------------------
 
 #Pagina Deposito
@@ -103,6 +103,7 @@ def depositoConta():
 
         valor = float(request.form['valor'])
         if valor >= 0:
+
             valor = valor + float(session['saldo'])
 
             funcs.upMySQL('tb_contabancaria',
@@ -115,6 +116,14 @@ def depositoConta():
                                                         CampoBd=['numeroconta'],
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['saldo'])
+
+            idConta = funcs.SlcEspecificoMySQL('tb_contabancaria',
+                                                        CampoBd=['numeroconta'],
+                                                        CampoFm=[session['conta']],
+                                                        CampoEs=['id_conta'])
+
+            funcs.Transacao(idConta[0][0], idConta[0][0], 'Depósito', valor)
+
             for row in saldoAtualizado:
                 session['saldo'] = row[0]
             return deposito()
@@ -161,7 +170,7 @@ def login():
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
                                     CampoBd=['tb_contabancaria.numeroconta','tb_usuario.senha','tb_usuario.ativo'],
                                     CampoFm=[numeroconta,senha,'1'])
-        
+
     if resultado:
         for row in resultado:
             session['nome']     = row[1]
@@ -201,7 +210,7 @@ def deletarConta():
     funcs.DelMySQL(TabelaBd='tb_usuario',
                    CampoBd=['id_usuario'],
                    CampoFm=[id_usuario])
-    
+
     return RequisicaoPadrao()
 
 
@@ -209,14 +218,14 @@ def deletarConta():
 
 #Bloco de requisição padrão
 
-@app.route("/a") 
-def RequisicaoPadrao():    
+@app.route("/a")
+def RequisicaoPadrao():
     cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario', 
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
                                            CampoBd=[],
-                                           CampoFm=[]) 
+                                           CampoFm=[])
 
 
     return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
@@ -226,11 +235,11 @@ def RequisicaoPadrao():
 
 #Bloco de requisição padrão
 
-@app.route("/ReqAbertura", methods = ['POST', 'GET']) 
-def ReqAbertura(): 
+@app.route("/ReqAbertura", methods = ['POST', 'GET'])
+def ReqAbertura():
     if request.method == "POST":
         ativo = request.form['verificacao']
-        idUsu = request.form['IdUsu']   
+        idUsu = request.form['IdUsu']
         funcs.upMySQL('tb_usuario',CampoBd=['ativo'],CampoFm=[ativo],
                                     CampoWr=['id_usuario'],CampoPs=[idUsu])
     return home()

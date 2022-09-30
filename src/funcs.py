@@ -162,20 +162,9 @@ def TirarPontoeTraco(CPF):
     CPF = CPF.replace("-","")
     return CPF
 
-def InsTransacao(conta_origem, conta_destino, tipo, valor):
+# TabelaBd,CampoBd,CampoFm, CampoEs
+def Transacao(conta_origem, conta_destino, tipo, valor):
     data = datetime.datetime.now()
-    cursor = mysql.connection.cursor()
-    textoSQL = ' INSERT INTO tb_transacao (id_conta_origem, id_conta_destino, Datatime, tipo, valor)'
-    textoSQL += f"VALUES ('{conta_origem}', '{conta_destino}', '{data}', '{tipo}', '{valor}');"
-    for values in CampoBd:
-        if values == CampoBd[-1]:
-            ValuesBD += f'{CampoBd[x]})'
-            ValuesFm += f'"{CampoFm[x]}")'
-        else:
-            ValuesBD += f'{CampoBd[x]},'
-            ValuesFm += f'"{CampoFm[x]}",'
-        x+=1
-    textoSQL += f' {ValuesBD} VALUES{ValuesFm}'
-    cursor.execute(textoSQL)
-    mysql.connection.commit()
-    cursor.close()
+    InsMySQL('tb_transacao',
+            CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor'],
+            CampoFm = [conta_origem, conta_destino, data, tipo, valor])
