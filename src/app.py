@@ -1,19 +1,19 @@
 from datetime import datetime
-from tabnanny import check
-from turtle import pd
 from flask import Flask, render_template,request, url_for, redirect, session,flash
 from flask_mysqldb import MySQL
 import funcs
 import random
 
+config = funcs.LoadConfig()
+
 app = Flask(__name__)
 app.secret_key = 'super secret key'
 # Conexão ao banco de dados
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306 #Caso a porta seja a padrão, comentar linha.
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'fatec'
-app.config['MYSQL_DB'] = 'pynk'
+app.config['MYSQL_HOST'] = config['host']
+app.config['MYSQL_PORT'] = config['port'] #Caso a porta seja a padrão, comentar linha.
+app.config['MYSQL_USER'] = config['user']
+app.config['MYSQL_PASSWORD'] = config['password']
+app.config['MYSQL_DB'] = config['db']
 
 mysql = MySQL(app)
 # Bloco de Paginas.

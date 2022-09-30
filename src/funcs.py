@@ -162,9 +162,26 @@ def TirarPontoeTraco(CPF):
     CPF = CPF.replace("-","")
     return CPF
 
-# TabelaBd,CampoBd,CampoFm, CampoEs
 def Transacao(conta_origem, conta_destino, tipo, valor):
     data = datetime.datetime.now()
     InsMySQL('tb_transacao',
             CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor'],
             CampoFm = [conta_origem, conta_destino, data, tipo, valor])
+
+def LoadConfig():
+    config = {}
+    conf = open("config.conf", "r")
+    for line in conf:
+        line = line.strip()
+        if line[:4] == 'host':
+            config['host'] = line[7:]
+        elif line[:4] == 'port':
+            config['port'] = int(line[6:])
+        elif line[:4] == 'user':
+            config['user'] = line[7:]
+        elif line[:8] == 'password':
+            config['password'] = line[11:]
+        elif line[:2] == 'db':
+            config['db'] = line[5:]
+    conf.close()
+    return config
