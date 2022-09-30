@@ -90,6 +90,14 @@ def SaqueConta():
                                                         CampoBd=['numeroconta'],
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['saldo'])
+
+            idConta = funcs.SlcEspecificoMySQL('tb_contabancaria',
+                                                        CampoBd=['numeroconta'],
+                                                        CampoFm=[session['conta']],
+                                                        CampoEs=['id_conta'])
+
+            funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']))
+
             for row in saldoAtualizado:
                 session['saldo'] = row[0]
             return saque()
