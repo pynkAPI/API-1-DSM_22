@@ -28,6 +28,11 @@ A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como com
 
 - Nota: Como podemos observar no Burndown, nós erramos no planejamento e estouramos as horas que estavam planejadas. Isso se deve a falta de familiaridade com o próprio tempo de desenvolvimento e pela falta de um método lógico para estimativa de tempo durante a sprint planning.
 
+**GIF do Produto entregue na Sprint 1**:
+
+<img src="/doc/img/Gif Programa Sprint 1.gif">
+
+
 • [To the top ↑](#top)
 
 <span id="metodologia">
