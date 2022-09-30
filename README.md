@@ -6,7 +6,6 @@
 <p align="center" id="pseudo_nav">
     <a href="#sobre">Sobre</a> •
     <a href="#backlogEus">Backlog e US</a> •
-    <a href="#doc">Documentação</a> •
     <a href="#metodologia">Metodologia</a> •
     <a href="#contato">Contatos</a> •
     <a href="#instalacao">Instalação</a>
@@ -15,9 +14,20 @@
 <span id="sobre">
 
 ## •Sobre o Projeto
-Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um sistema que fomentado sobre metodologias ágeis entrega um internet banking com funções básicas de funcionamento e uma interface de administração para gerenciamento da aplicação. Para a realização deste, três principais atores foram levantados: o **cliente** que pode ser chamado também de usuário comum, deve poder realizar a requisição de cadastro, login, emissão de extrato bancário, movimentações em conta (depósito em caixa, saque e transferência) que geram no momento de execução um comprovante, requisição de atualização de dados e requisição de fechamento de conta; o **gerente de agência** é a entidade que gerencia uma unidade do banco (agência), deve poder realizar qualquer operação que um usuário comum realiza e além disso deve conseguir aceitar ou recusar requisições de abertura de conta de usuário, aceitar ou recusar requisições de alteração de dados de clientes, realizar a conferência de depósito em caixa.
+Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um sistema que fomentado sobre metodologias ágeis entrega um internet banking com funções básicas de funcionamento e uma interface de administração para gerenciamento da aplicação. Para a realização deste, três principais atores foram levantados: o **cliente** que pode ser chamado também de usuário comum, deve poder realizar a requisição de cadastro, login, emissão de extrato bancário, movimentações em conta (depósito em caixa, saque e transferência) que geram no momento de execução um comprovante, requisição de atualização de dados e requisição de fechamento de conta; o **gerente de agência** é a entidade que gerencia uma unidade do banco (agência), deve poder realizar qualquer operação que um usuário comum realiza e além disso deve conseguir aceitar ou recusar requisições de abertura de conta de usuário, aceitar ou recusar requisições de alteração de dados de clientes, realizar a conferência de depósito em caixa e requerir alteração de seus próprios dados ao gerente geral; o **gerente geral** (além de todas as outras funcionalidades citadas das outras entidades) deve ter acesso ao gerenciamento das agências, dos gerentes de agência e do montante total do banco. Além das funcionalidades dos usuário o banco também deve conter tratativas para problemas como o arredondamento de casas decimais, rendimento de poupança e etc.
 
 ## •Sobre a API
+#### •Sprint 1
+A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como comentários pouco descritivos no Git e apresentação. Porém, foi muito importante no sentido de entendermos o passo do time, reconhecermos fragilidades e barreiras pessoais. Os **acertos** percebidos pelo time foram a **cooperação**, **empenho**, **entrega** e **organização**. Enquanto que os **erros** foram mal organização da **sprint planning**, **tempo de estudo irreal** e **ausência** de alguns integrantes do grupo. É bom ressaltar que muitos desses erros foram causados por falta de conhecimento ou pouca experiência do grupo e que esses pontos foram levantados em conjunto com todos os integrantes.
+
+**Destaque da Sprint 1**: Felipe Augusto Graciano
+
+**Burndown Chart da Sprint 1**:
+
+<img src="/doc/img/Burndown Sprint 1.png">
+
+- Nota: Como podemos observar no Burndown, nós erramos no planejamento e estouramos as horas que estavam planejadas. Isso se deve a falta de familiaridade com o próprio tempo de desenvolvimento e pela falta de um método lógico para estimativa de tempo durante a sprint planning.
+
 • [To the top ↑](#top)
 
 <span id="backlog">
@@ -85,19 +95,33 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 
 • [To the top ↑](#top)
 
-<span id="doc">
-
-## •Documentação
-• [To the top ↑](#top)
-
 <span id="metodologia">
 
 ## •Metodologia
+
+O projeto está sendo desenvolvido de utilizando **metodologias ágeis** de gerenciamento, no nosso caso o **SCRUM**.
+Também achamos pertinente adotar um método de **estimativa de tempo de desenvolvimento** chamado **Estimativa PERT (Program Evaluation and Review Technique)** que consiste em uma fórmula que pondera matemáticamente um espectro de estimativas que possui três possiveis elementos de tempo: **otimista**, **mais provavel** e **pessimista**. O que a fórmula faz é reajustar a amostra para algo que apesar de considerar extremos, avalia eles como avaria dando um peso maior pro tempo que comumente vai acontecer mais (mais provável). A fórmula foi implementada na Sprint 2 e tem se mostrado muito assertiva.
+
 • [To the top ↑](#top)
 
 <span id="contato">
 
 ## •Contatos
+<div align="center" class="contatos">
+
+|               Nome              |      Cargo     |                GitHub               |                            LinkedIn                            |
+|:-------------------------------:|:--------------:|:-----------------------------------:|:--------------------------------------------------------------:|
+|      Miguel Carvalho Soares     |      P.O.      |     https://github.com/Miguel-C1    |  https://www.linkedin.com/in/miguel-carvalho-soares-722b161a3/ |
+|  Otávio Abreu dos Santos Silva  |     Master     |   https://github.com/otavioabreu27  |              https://www.linkedin.com/in/o-abreu/              |
+|    Yasmin Helena Souza Mosena   | Desenvolvedora |      https://github.com/ymosena     |    https://www.linkedin.com/in/yasmin-m%C3%B3sena-11b256249/   |
+|     Matheus Guermandi Costa     |  Desenvolvedor |  https://github.com/mguermandi1204  | https://www.linkedin.com/in/matheus-guermandi-costa-07a029244/ |
+| Pedro Henrique Silva De Almeida |  Desenvolvedor | https://github.com/PedroHSdeAlmeida |          https://www.linkedin.com/in/pedrohsalmeidaa/          |
+|        Felipe Silva Alves       |  Desenvolvedor |     https://github.com/fealvesfe    |    https://www.linkedin.com/in/felipe-silva-alves-b43651200/   |
+|      Augusto Henrique Buin      |  Desenvolvedor |    https://github.com/AugustoBuin   |  https://www.linkedin.com/in/augusto-henrique-buin-a58bb0208/  |
+|     Felipe Augusto Graciano     |  Desenvolvedor |      https://github.com/Yetgvg      |                                -                               |
+
+</div>
+
 • [To the top ↑](#top)
 
 <span id="instalacao">
@@ -180,6 +204,6 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 - Após importado execute todas as linhas.
 
 2. Credenciais do Banco
-- Dentro do arquivo app.py logo no começo existe uma sessão comentada como "Conexão ao banco de dados", dentro dela, na linha 13 (app.config['MYSQL_PASSWORD'] = '<sua-senha-vai-aqui>') adicione a senha configurada no seu sistema como padrão do usuário root.
+- Dentro da pasta src existe um arquivo chamado "config.conf", altere as credenciais do banco respeitando os espaçamentos de acordo com o seu ambiente, para isso utilize o editor de texto de sua preferência.
 
 • [To the top ↑](#top)
