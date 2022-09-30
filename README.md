@@ -5,8 +5,8 @@
 <br id="top">
 <p align="center" id="pseudo_nav">
     <a href="#sobre">Sobre</a> •
-    <a href="#backlogEus">Backlog e US</a> •
     <a href="#metodologia">Metodologia</a> •
+    <a href="#backlogEus">Backlog e US</a> •
     <a href="#contato">Contatos</a> •
     <a href="#instalacao">Instalação</a>
 </p>
@@ -27,6 +27,15 @@ A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como com
 <img src="/doc/img/Burndown Sprint 1.png">
 
 - Nota: Como podemos observar no Burndown, nós erramos no planejamento e estouramos as horas que estavam planejadas. Isso se deve a falta de familiaridade com o próprio tempo de desenvolvimento e pela falta de um método lógico para estimativa de tempo durante a sprint planning.
+
+• [To the top ↑](#top)
+
+<span id="metodologia">
+
+## •Metodologia
+
+O projeto está sendo desenvolvido utilizando **metodologias ágeis** de gerenciamento, no nosso caso o **SCRUM**.
+Também achamos pertinente adotar um método de **estimativa de tempo de desenvolvimento** chamado **Estimativa PERT (Program Evaluation and Review Technique)** que consiste em uma fórmula que pondera matematicamente um espectro de estimativas que possui três possiveis elementos de tempo: **otimista**, **mais provavel** e **pessimista**. O que a fórmula faz é reajustar a amostra para algo que apesar de considerar extremos, avalia eles como avaria dando um peso maior pro tempo que comumente vai acontecer mais (mais provável). A fórmula foi implementada na Sprint 2 e tem se mostrado muito assertiva. Outro ponto interessante para ser abordado é que apesar de o nome ser **API** o programa não é uma **Application Programming Interface**, isso pois o nome se dá a metodologia de aprendizado implantada na **Fatec SJC** que inclusive atingiu **reconhecimento internacional** pelo **MIT (Massachusetts Institute of Technology)** com um selo chamado **CDIO (Conceive Design Implement Operate)**. **Aprendizagem por Projetos Integrados** é o nome da metodologia de ensino que por padrão esta contemplada no nome do projeto.
 
 • [To the top ↑](#top)
 
@@ -92,15 +101,6 @@ A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como com
 
 
 </div>
-
-• [To the top ↑](#top)
-
-<span id="metodologia">
-
-## •Metodologia
-
-O projeto está sendo desenvolvido de utilizando **metodologias ágeis** de gerenciamento, no nosso caso o **SCRUM**.
-Também achamos pertinente adotar um método de **estimativa de tempo de desenvolvimento** chamado **Estimativa PERT (Program Evaluation and Review Technique)** que consiste em uma fórmula que pondera matemáticamente um espectro de estimativas que possui três possiveis elementos de tempo: **otimista**, **mais provavel** e **pessimista**. O que a fórmula faz é reajustar a amostra para algo que apesar de considerar extremos, avalia eles como avaria dando um peso maior pro tempo que comumente vai acontecer mais (mais provável). A fórmula foi implementada na Sprint 2 e tem se mostrado muito assertiva.
 
 • [To the top ↑](#top)
 
