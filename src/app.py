@@ -43,8 +43,8 @@ def home():
         return render_template('home.html',saldo=saldo)
     else:
         cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
-        itens = funcs.SlcEspecificoMySQL('tb_usuario ',CampoBd=['ativo'],
-                                                        CampoFm=['0'],CampoEs=['nome','id_usuario'])
+        itens = funcs.SlcEspecificoMySQL('tb_contabancaria ',CampoBd=['status_contabancaria'],
+                                                        CampoFm=['0'],CampoEs=['id_usuario','id_conta'])
 
         pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
@@ -96,7 +96,7 @@ def SaqueConta():
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['id_conta'])
 
-            funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']))
+            funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
 
             for row in saldoAtualizado:
                 session['saldo'] = row[0]
@@ -130,7 +130,7 @@ def depositoConta():
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['id_conta'])
 
-            funcs.Transacao(idConta[0][0], idConta[0][0], 'Depósito', valor)
+            funcs.Transacao(idConta[0][0], idConta[0][0], 'Depósito', valor, '0')
 
             for row in saldoAtualizado:
                 session['saldo'] = row[0]
@@ -158,8 +158,8 @@ def cadastro():
         #Gera o numero da conta, usando o nome do usuário, id da agência e o cpf do usuário
         numeroCampo = funcs.geraId(str(nome),str(1),str(cpf))
         funcs.InsMySQL('tb_contabancaria',
-                        CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo'],
-                        CampoFm=[id_usuario, 1, tipoConta, datetime.today(), numeroCampo, 0])
+                        CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo', 'status_contabancaria'],
+                        CampoFm=[id_usuario, 1, tipoConta, datetime.today(), numeroCampo, 0, '0'])
         flash(numeroCampo)
         return render_template('login.html')
 
@@ -247,9 +247,9 @@ def RequisicaoPadrao():
 def ReqAbertura():
     if request.method == "POST":
         ativo = request.form['verificacao']
-        idUsu = request.form['IdUsu']
-        funcs.upMySQL('tb_usuario',CampoBd=['ativo'],CampoFm=[ativo],
-                                    CampoWr=['id_usuario'],CampoPs=[idUsu])
+        IdConta = request.form['IdConta']
+        funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[ativo],
+                                        CampoWr=['id_conta'],CampoPs=[IdConta])
     return home()
 #------------------------------
 

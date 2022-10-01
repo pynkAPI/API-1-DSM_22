@@ -162,11 +162,11 @@ def TirarPontoeTraco(CPF):
     CPF = CPF.replace("-","")
     return CPF
 
-def Transacao(conta_origem, conta_destino, tipo, valor):
+def Transacao(conta_origem, conta_destino, tipo, valor, status):
     data = datetime.datetime.now()
     InsMySQL('tb_transacao',
-            CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor'],
-            CampoFm = [conta_origem, conta_destino, data, tipo, valor])
+            CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor', 'status_transacao'],
+            CampoFm = [conta_origem, conta_destino, data, tipo, valor, status])
 
 def LoadConfig():
     config = {}

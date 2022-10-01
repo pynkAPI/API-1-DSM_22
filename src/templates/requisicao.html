@@ -6,19 +6,20 @@
 
         <div>
             <table class="tabelaRequisicao">
+                <!-- Inicio da Tabela -->
                 <tr class="linhaTabela">
+                    <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->
                     {% for header in cabecalhoTabela %}
-                    {% if header == 'id' %}
-                         <th style="visibility: collapse">{{ header }}</th>
-                    {% else %}
                         <th >{{ header }}</th>
-                    {% endif %}
                     {% endfor %}
                 </tr>
                 {% for row in pesquisaSQLTabela %}
                 <form action="{{ url_for('deletarConta') }}" method="POST">
                 <tr class="linhaTabela">
+                    <!-- Forma as linhas da tabela -->
                     {% for cell in row %}
+                        <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                        <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
                         {% if row[0] == cell %}
                         <input type="hidden" value="{{ cell }}" name="IdUsuario">
                         {% else %}
