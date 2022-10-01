@@ -1,4 +1,4 @@
-
+DROP DATABASE IF EXISTS pynk;
 
 CREATE DATABASE pynk;
 
@@ -38,6 +38,7 @@ tipo varchar(255) NOT NULL,
 numeroconta varchar(50) NOT NULL UNIQUE,
 data_abertura date NOT NULL,
 saldo double NOT NULL,
+status_contabancaria varchar(1) NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario)
 );
 
@@ -48,7 +49,8 @@ id_conta_origem int NOT NULL,
 id_conta_destino int NOT NULL,
 Datatime datetime NOT NULL,
 tipo varchar(50) NOT NULL,
-valor double NOT NULL
+valor double NOT NULL,
+status_transacao varchar(1) NOT NULL
 );
 
 CREATE TABLE tb_agencia (
@@ -65,9 +67,19 @@ ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contaba
 
 INSERT INTO tb_capitaltotal 
 VALUES(1, 10000,0);
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha) 
-VALUES('GERENTE GERAL', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha');
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo) 
+VALUES('GERENTE AGÊNCIA', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1');
+
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo) 
+VALUES('Miguel Carvalho', '123',  'OUTROS', 'TESTE', curdate(), 'teste', '1');
+
+INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
+VALUES(2, 1, 'CONTA CORRENTE', 1234, curdate(), 0, '1');
+
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
 VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1');
+
 INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)
 VALUES('SP', 1, '0001');
+
+
