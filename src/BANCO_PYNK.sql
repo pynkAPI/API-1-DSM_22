@@ -61,12 +61,20 @@ numero_agencia VARCHAR(25) NOT NULL,
 FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 );
 
+CREATE TABLE tb_requisicoes(
+id_requisicao int AUTO_INCREMENT PRIMARY KEY,
+status_alteracao varchar(1) NOT NULL,
+id_usuario INT NOT NULL,
+FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario),
+descricao VARCHAR(255)
+);
 
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
 
 INSERT INTO tb_capitaltotal 
 VALUES(1, 10000,0);
+
 INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo) 
 VALUES('GERENTE AGÊNCIA', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1');
 
@@ -81,5 +89,9 @@ VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1');
 
 INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)
 VALUES('SP', 1, '0001');
+
+INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
+VALUES ('0',1,'desejo alterar meu cpf para ...');
+
 
 
