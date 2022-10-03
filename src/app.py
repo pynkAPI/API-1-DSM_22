@@ -176,7 +176,7 @@ def login():
         resultado   = funcs.SlcMySQL('''tb_usuario
                                         INNER JOIN tb_contabancaria
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
-                                    CampoBd=['tb_contabancaria.numeroconta','tb_usuario.senha','tb_usuario.ativo'],
+                                    CampoBd=['tb_contabancaria.numeroconta','tb_usuario.senha','tb_contabancaria.status_contabancaria'],
                                     CampoFm=[numeroconta,senha,'1'])
 
     if resultado:
