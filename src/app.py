@@ -78,6 +78,19 @@ def SaqueConta():
     if request.method == "POST":
         valor = float(request.form['valor'])
         if valor >= 0:
+            capital_total = float(funcs.SlcEspecificoMySQL('tb_capitaltotal',
+                                                    CampoBd=['id_capitaltotal'],
+                                                    CampoFm=['1'], 
+                                                    CampoEs=['capitalinicial']))
+
+            capital_total += float(funcs.SlcEspecificoMySQL('tb_capitaltotal',
+                                                    CampoBd=['id_capitaltotal'],
+                                                    CampoFm=['1'],
+                                                    CampoEs=['capitalexterno']))
+
+            if valor > capital_total:
+            ## PAREI AQUI: MATHEUS GUERMANDI
+
             valor = float(session['saldo']) - valor
 
             funcs.upMySQL('tb_contabancaria',
