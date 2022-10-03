@@ -1,0 +1,38 @@
+{% extends "home.html" %}
+{% block saldo %}
+{% endblock %}
+{% block func %}
+
+<div>
+    <table class="tabelaRequisicao">
+        <!-- Inicio da Tabela -->
+        <tr class="linhaTabela">
+            <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->    
+            {% for header in cabecalhoTabela %}
+                <th >{{ header }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in pesquisaSQLTabela %}
+        <form action="{{ url_for('conferenciaDeposito') }}" method="POST">
+        <tr class="linhaTabela">
+            <!-- Forma as linhas da tabela -->
+            {% for cell in row %}
+                <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                {% if row[0] == cell %}
+                <input type="hidden" value="{{ cell }}" name="IdTransacao">
+                {% else %}
+                <td class="celula">{{ cell }}</td>
+                {% endif %}
+            {% endfor %}
+            <td> 
+                <input type="submit" name="confirmar" value="Confirmar" class="btnd solid">
+                <input type="submit" name="recusar" value="Recusar" class="btnd solid">
+            </td>
+        </tr>
+        </form>
+    {% endfor %}
+    </table>
+</div>    
+
+{% endblock %}
