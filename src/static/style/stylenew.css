@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora&display=swap');
+
+*{
+    font-family: 'Sora', sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+body{
+    color: #D3E1F5;
+    background:#050624;
+}
+img{
+    width: 100%;
+}
+a{
+    text-decoration: none;
+}
+li{
+    list-style: none;
+}
+.container{  
+    width: 100%;
+    max-width: 2000px;
+    display: grid;
+}
+.panels{
+   display: flex;
+}
+/* .conta{
+    width: 100%;
+    background-color: #647bff;
+} */
+/* .logo{
+   width: 1.9%;
+   height: 1%;
+}
+.bx{
+    font-size: 2.3rem;
+    padding: 10px;
+    border-radius:0.5rem;
+    color: #B71258;
+    background: whitesmoke;
+}
+.bx:hover{
+    color: #B71258;
+    background:#EBEBEB; 
+    transition: 0.3s all linear;
+} */
+.menu-content{
+    /* height: 100%;
+    max-height: 600px; */
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+    /* margin-top: 5%; */
+}
+.mensagem{
+    display: flex;
+}
+.m-text{
+    width: 400px;
+}
+.m-img{
+    width: 52px;
+    height: 57px;
+    left: 207px;
+    top: 99px;
+    margin-right: 20px;
+}
+.saldo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 40px 16px 16px;
+    gap: 8px;
+    width: 400px;
+    height: 98px;
+    background: #1F203B;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color:  red;
+}
+.saldo h3{
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #D3E1F5;
+}
+.saldo label{
+    font-family: 'Manrope';
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 44px;
+    color: #D3E1F5;
+}
+.extrato{
+    align-items: center;
+    background: #050624;
+    width: 700px;
+    padding:30px;
+    border-radius: 20px;
+}
+
+.func{
+    color: #D3E1F5;
+}
+.func:hover{
+     color: #647bff;
+    background:#171b3c ;
+    transition: 0.3s all linear;
+}
+.scroll-div{
+    width: 650px;
+    background: #050624;
+    height: 700px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+.scroll-object{
+    color: #D3E1F5;
+    font-size: 19px;
+    padding: 20px;
+}
+.scroll-div::-webkit-scrollbar{
+    width: 1em;
+   
+}
+.scroll-div::-webkit-scrollbar-track{
+    background-color:#050624;
+}
+.scroll-div::-webkit-scrollbar-thumb{
+    background-color:#050624;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even){background-color: #DDA0DD}
+
+tr:hover{background-color:#1F203B}
+
+th {
+    background-color: #CC5587;
+    color: white;
+}
