@@ -186,5 +186,19 @@ def LoadConfig():
     conf.close()
     return config
 
-
+def cancelMySQL(id_usuario):
+    cursor = mysql.connection.cursor()
+    SlcEspecificoMySQL('tb_contabancaria','id_usuario',id_usuario, saldo)
+    if saldo > 0:
+        return "Saque seu dinheiro antes de cancelar sua conta!"
+    elif saldo < 0: 
+        return "Corrija sua situação bancária antes de cancelar sua conta!"
+    else: 
+        textoSQL = f'UPDATE tb_usuario set ativo = "0" where id_usuario = {id_usuario}'
+   
+    cursor.execute(textoSQL)
+    resultado = cursor.fetchall()
+    mysql.connection.commit()
+    cursor.close()
+    return "Cancelamento efetuado com sucesso"
     
