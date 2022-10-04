@@ -1,3 +1,4 @@
+
 from datetime import datetime
 from flask import Flask, render_template,request, url_for, redirect, session,flash
 from flask_mysqldb import MySQL
@@ -140,7 +141,7 @@ def depositoConta():
                                                         CampoFm=[session['conta']],
                                                         CampoEs=['id_conta'])
 
-            funcs.Transacao(idConta[0][0], idConta[0][0], 'Depósito', valor, '0')
+            funcs.Transacao(idConta[0][0], idConta[0][0], 'Depósito', float(request.form['valor']), '0')
 
             for row in saldoAtualizado:
                 session['saldo'] = row[0]
@@ -258,12 +259,7 @@ def RequisicaoPadrao():
 def ConferenciaDepositoTabela():
     cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao
-                                                       INNER JOIN tb_contabancaria
-                                                       ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem
-                                                       AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino
-                                                       INNER JOIN tb_usuario
-                                                       ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                            CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
                                            CampoBd=['status_transacao'],
                                            CampoFm=[0])
@@ -272,41 +268,50 @@ def ConferenciaDepositoTabela():
 
 #Bloco de conferência de depósito pendentes
 
-@app.route("/ConferenciaDeposito")
+@app.route("/ConferenciaDeposito", methods = ['POST', 'GET'])
 def ConferenciaDeposito():
     if request.method == "POST":
-        IdTransacao =   request.form['IdTransacao']
 
-        pesquisaSQLTransacao =  funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
+        botao = request.form.to_dict()
+
+        IdTransacao =   request.form['IdTransacao']
+        if botao['botao'] == 'Confirmar':
+
+            pesquisaSQLTransacao =  funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
                                                         CampoEs=['valor', 'id_conta_origem'],
                                                         CampoBd=['id_transacao'],
                                                         CampoFm=[IdTransacao])
 
-        pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao
-                                                       INNER JOIN tb_contabancaria
-                                                       ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem
-                                                       AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino
-                                                       INNER JOIN tb_usuario
-                                                       ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
-                                                    CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
-                                                    CampoBd=['id_transacao', 'tb_contabancaria.id_conta_origem'],
-                                                    CampoFm=[IdTransacao, pesquisaSQLTransacao[1]])
+            IdContaOrigem = pesquisaSQLTransacao[0][1]
+            valorTransacao = pesquisaSQLTransacao[0][0]
 
-        valor = pesquisaSQLTransacao[5] + pesquisaSQLConta[1]
+            pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
+                                                        CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
+                                                        CampoFm=[IdTransacao, IdContaOrigem])
+            saldoConta = pesquisaSQLConta[0][1]
+            valor = valorTransacao + saldoConta
 
-        funcs.upMySQL(TabelaBd='tb_transacao',
+            funcs.upMySQL(TabelaBd='tb_transacao',
                       CampoBd=['status_transacao'],
                       CampoFm=[1],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
 
-        funcs.upMySQL('tb_contabancaria',
+            funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
                           CampoFm=[valor],
-                          CampoWr=['numeroconta'],
-                          CampoPs=[session['conta']])
+                          CampoWr=['id_conta'],
+                          CampoPs=[IdContaOrigem])
+            return ConferenciaDepositoTabela()
+        else:
+            funcs.upMySQL(TabelaBd='tb_transacao',
+                      CampoBd=['status_transacao'],
+                      CampoFm=[2],
+                      CampoPs=[IdTransacao],
+                      CampoWr=['id_transacao'])
+            return ConferenciaDepositoTabela()
 
-        return ConferenciaDepositoTabela()
     return ConferenciaDepositoTabela()
 
 
