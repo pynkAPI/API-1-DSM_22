@@ -314,9 +314,6 @@ def ConferenciaDeposito():
 
     return ConferenciaDepositoTabela()
 
-
-
-
 #------------------------------
 
 #Bloco de requisição padrão
@@ -329,6 +326,23 @@ def ReqAbertura():
         funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[ativo],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
     return home()
+
+#------------------------------
+
+#Bloco de requisição de Abertura de Conta
+
+@app.route("/AceiteContaTabela")
+def AceiteContaTabela():
+    
+    cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta')
+
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb',
+                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
+                                           CampoBd=[],
+                                           CampoFm=[])
+
+    return render_template("conferencia.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+
 #------------------------------
 
 #Tratamento de Erros
