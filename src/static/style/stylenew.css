@@ -7,8 +7,8 @@
     box-sizing: border-box;
 }
 body{
-    color: #D3E1F5;
-    background:#050624;
+    color: black;
+    background:#e7e7e7;
 }
 img{
     width: 100%;
@@ -76,28 +76,26 @@ li{
     gap: 8px;
     width: 400px;
     height: 98px;
-    background: #1F203B;
+    background: whitesmoke;
     border-radius: 10px;
     border-style: solid;
     border-width: 1px;
-    border-color:  red;
+    border-color:  #CC5587;
 }
 .saldo h3{
     font-weight: 400;
     font-size: 12px;
     line-height: 15px;
-    color: #D3E1F5;
 }
 .saldo label{
     font-family: 'Manrope';
     font-weight: 800;
     font-size: 32px;
     line-height: 44px;
-    color: #D3E1F5;
 }
 .extrato{
     align-items: center;
-    background: #050624;
+    background: whitesmoke#;
     width: 700px;
     padding:30px;
     border-radius: 20px;
@@ -113,13 +111,13 @@ li{
 }
 .scroll-div{
     width: 650px;
-    background: #050624;
+    background:whitesmoke;
     height: 700px;
     overflow: hidden;
     overflow-y: scroll;
 }
 .scroll-object{
-    color: #D3E1F5;
+    
     font-size: 19px;
     padding: 20px;
 }
