@@ -336,10 +336,10 @@ def AceiteContaTabela():
     
     cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb',
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
-                                           CampoBd=[],
-                                           CampoFm=[])
+                                           CampoBd=['tb_contabancaria.status_contabancaria'],
+                                           CampoFm=[0])
 
     return render_template("conferencia.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
