@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Py.nk</title>
+    <link rel="stylesheet" href="../static/style/stylehome.css">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    {% endblock %}
+</head>
+<body>
+    <div class="menu-content">
+        <div class="panels">
+            <div class="left-panels">
+                    {% block cabecalho %}
+                    <div class="mensagem">
+                        <img src="../static/img/assistente.svg" class="m-img">
+                        <div class="m-text">
+                            <h2>Olá, Yasmin</h2>
+                            <h3>Acompanhe o status da sua conta:</h3>
+                        </div>
+                    </div> 
+                    {% endblock %}
+
+                        {% block saldo %}
+                        <div class="saldo">
+                            <h3>Seu Saldo</h3>
+                            <label>R$ {{saldo}}</label>
+                        </div>  
+                        {% endblock %}
+
+                            {% block func %}
+                            <div class="func">
+                                <a href="#">SAQUE</a>
+                                <a href="#">DEPOSITE</a>
+                                <a href="#">TRANSFIRA</a>
+                            </div>    
+                            {% endblock %} 
+                {% block extrato %}        
+                <div class="right-panels">
+                    <div class="extrato">
+                        <h2>Extrato</h2>
+                        <div class="scroll-div">
+                            <div class="scroll-object">
+                                <table class="tabelaRequisicao">
+                                    <!-- Inicio da Tabela -->
+                                    <tr class="linhaTabela">
+                                        <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->    
+                                        {% for header in cabecalhoTabela %}
+                                            <th >{{ header }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                    {% for row in pesquisaSQLTabela %}
+                                    <form action="{{ url_for('deletarConta') }}" method="POST">
+                                    <tr class="linhaTabela">
+                                        <!-- Forma as linhas da tabela -->
+                                        {% for cell in row %}
+                                            <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                                            <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                                            {% if row[0] == cell %}
+                                            <input type="hidden" value="{{ cell }}" name="IdUsuario">
+                                            {% else %}
+                                            <td class="celula">{{ cell }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <td> 
+                                            <input type="submit" name="delete" value="Deletar" class="btnd solid">
+                                        </td>
+                                    </tr>
+                                    </form>
+                                {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+                {% endblock %} 
+            </div>  
+        </div>
+    </div>    
+</body>
+</html>
