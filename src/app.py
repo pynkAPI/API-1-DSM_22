@@ -88,7 +88,7 @@ def SaqueConta():
                                                     CampoFm=['1'],
                                                     CampoEs=['capitalexterno']))
 
-            if valor > capital_total:
+            ##if valor > capital_total:
             ## PAREI AQUI: MATHEUS GUERMANDI
 
             valor = float(session['saldo']) - valor
@@ -251,9 +251,9 @@ def RequisicaoPadrao():
 
 #Bloco de conferência de depósito pendentes
 
-@app.route("/conferenciaDepositoTabela")
+@app.route("/ConferenciaDepositoTabela")
 def ConferenciaDepositoTabela():
-    cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data')
+    cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
                                                        INNER JOIN tb_contabancaria
@@ -269,11 +269,9 @@ def ConferenciaDepositoTabela():
 
 #Bloco de conferência de depósito pendentes
 
-@app.route("/conferenciaDepositoTabela")
-def ConferenciaDeposito():
-    
+@app.route("/ConferenciaDeposito")
+def ConferenciaDeposito(): 
     if request.method == "POST":
-
         IdTransacao =   request.form['IdTransacao']
 
         pesquisaSQLTransacao =  funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
@@ -304,16 +302,9 @@ def ConferenciaDeposito():
                           CampoFm=[valor],
                           CampoWr=['numeroconta'],
                           CampoPs=[session['conta']])
-
-        saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
-                                                        CampoBd=['numeroconta'],
-                                                        CampoFm=[session['conta']],
-                                                        CampoEs=['saldo'])
         
-
-        
-        return render_template("conferencia.html")
-    return render_template("conferencia.html")
+        return ConferenciaDepositoTabela()
+    return ConferenciaDepositoTabela()
     
    
 
@@ -334,4 +325,4 @@ def ReqAbertura():
 
 #Bloco para subir o site.
 if __name__ == "__main__":
-    app.run(debug=True)
+     app.run(debug=True)

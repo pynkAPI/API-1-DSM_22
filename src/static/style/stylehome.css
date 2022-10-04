@@ -154,3 +154,23 @@ header{
     width: 80px;
     text-align: center;
   }
+
+table {
+    border-collapse: collapse;
+    width: 75%;
+}
+
+th, td {
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even){background-color: #DDA0DD}
+
+tr:hover{background-color:#ddd}
+
+th {
+    background-color: #CC5587;
+    color: white;
+}

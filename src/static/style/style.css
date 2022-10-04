@@ -240,16 +240,6 @@ body, input{
     border-radius: 3px;
 }
 
-.tabelaRequisicao {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.linhaTabela {
-    text-align: left;
-    padding: 8px;
-}
 
 
-.linhaTabela:nth-child(even){background-color: #DDA0DD}
 

@@ -13,7 +13,7 @@
             {% endfor %}
         </tr>
         {% for row in pesquisaSQLTabela %}
-        <form action="{{ url_for('conferenciaDeposito') }}" method="POST">
+        <form action="{{ url_for('ConferenciaDeposito') }}" method="POST">
         <tr class="linhaTabela">
             <!-- Forma as linhas da tabela -->
             {% for cell in row %}
@@ -25,13 +25,13 @@
                 <td class="celula">{{ cell }}</td>
                 {% endif %}
             {% endfor %}
-            <td> 
-                <input type="submit" name="confirmar" value="Confirmar" class="btnd solid">
-                <input type="submit" name="recusar" value="Recusar" class="btnd solid">
-            </td>
-        </tr>
+                <td> 
+                <input type="submit" name="confirmar" value="Confirmar" class="btnd solid" id="btnConfirmar">
+                <input type="submit" name="recusar" value="Recusar" class="btnd solid" id="btnRecusar">
+                </td>
+            </tr>
         </form>
-    {% endfor %}
+         {% endfor %}
     </table>
 </div>    
 
