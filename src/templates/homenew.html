@@ -36,7 +36,8 @@
                                 <a href="#">SAQUE</a>
                                 <a href="#">DEPOSITE</a>
                                 <a href="#">TRANSFIRA</a>
-                            </div>    
+                            </div> 
+            </div> 
                             {% endblock %} 
                 {% block extrato %}        
                 <div class="right-panels">
@@ -62,12 +63,12 @@
                                             {% if row[0] == cell %}
                                             <input type="hidden" value="{{ cell }}" name="IdUsuario">
                                             {% else %}
-                                            <td class="celula">{{ cell }}</td>
+                                             <a href="#"><td class="celula">{{ cell }}</td></a>
                                             {% endif %}
                                         {% endfor %}
-                                        <td> 
+                                        <!-- <td> 
                                             <input type="submit" name="delete" value="Deletar" class="btnd solid">
-                                        </td>
+                                        </td> -->
                                     </tr>
                                     </form>
                                 {% endfor %}

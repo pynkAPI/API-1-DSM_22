@@ -8,7 +8,7 @@
 }
 body{
     color: #D3E1F5;
-    background: red;
+    background:#050624;
 }
 img{
     width: 100%;
@@ -25,7 +25,7 @@ li{
     display: grid;
 }
 .panels{
-    display: flex;
+   display: flex;
 }
 .left-panels{
     margin-right: 10%;
@@ -138,7 +138,7 @@ li{
 
 table {
     border-collapse: collapse;
-    width: 75%;
+    width: 100%;
 }
 
 th, td {
@@ -149,7 +149,7 @@ th, td {
 
 tr:nth-child(even){background-color: #DDA0DD}
 
-tr:hover{background-color:#ddd}
+tr:hover{background-color:#1F203B}
 
 th {
     background-color: #CC5587;
