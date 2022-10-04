@@ -1,7 +1,6 @@
 from datetime import datetime
 from flask import Flask, render_template,request, url_for, redirect, session,flash
-from 
- import MySQL
+from flask_mysqldb import MySQL
 import funcs
 import random
 
