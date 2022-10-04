@@ -6,6 +6,11 @@
     box-sizing: border-box;
 }
 
+body, html{
+  height: 100%;
+  width: 100%;
+}
+
 body, input{
     font-family: 'Oxygen', sans-serif;
 }
@@ -238,4 +243,58 @@ body, input{
     padding: 20px;
     cursor: pointer;
     border-radius: 3px;
+}
+
+.containerErro {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 3%;
+  gap: 3%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #B71258;
+}
+
+.frameErro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 20px;
+
+  width: auto;
+  height: auto;
+}
+
+.frameErro #txtFrameErro {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 63px;
+  color: #FFFFFF;
+
+}
+
+.descErro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 40px;
+  gap: 10px;
+  max-width: 100%;
+  height: 100%;
+  background: #F0E8EA;
+  border-radius: 25px;
+}
+
+.txtDescErro {
+  font-style: normal;
+  font-weight: 200;
+  font-size: 20px;
+  line-height: 48px;
+  color: #000000;
 }
