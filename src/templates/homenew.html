@@ -46,12 +46,12 @@
                             <div class="scroll-object">
                                 <table class="tabelaRequisicao">
                                     <!-- Inicio da Tabela -->
-                                    <tr class="linhaTabela">
-                                        <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->    
+                                    <!-- <tr class="linhaTabela">
+                                        Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)    
                                         {% for header in cabecalhoTabela %}
                                             <th >{{ header }}</th>
                                         {% endfor %}
-                                    </tr>
+                                    </tr> -->
                                     {% for row in pesquisaSQLTabela %}
                                     <form action="{{ url_for('deletarConta') }}" method="POST">
                                     <tr class="linhaTabela">
