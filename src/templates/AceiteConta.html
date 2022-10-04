@@ -1,8 +1,8 @@
 {% extends "home.html" %}
 {% block saldo %}
+<label>Saldo do banco: R$ {{saldo}}</label>
 {% endblock %}
 {% block func %}
-
 <div>
     <table class="tabelaRequisicao">
         <!-- Inicio da Tabela -->
@@ -13,14 +13,14 @@
             {% endfor %}
         </tr>
         {% for row in pesquisaSQLTabela %}
-        <form action="{{ url_for('ConferenciaDeposito') }}" method="POST" name="ConferenciaDeposito">
+        <form action="{{ url_for('ReqAbertura') }}" method="POST">
         <tr class="linhaTabela">
             <!-- Forma as linhas da tabela -->
             {% for cell in row %}
                 <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
                 <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
                 {% if row[0] == cell %}
-                <input type="hidden" value="{{ cell }}" name="IdTransacao">
+                <input type="hidden" value="{{ cell }}" name="IdConta">
                 {% else %}
                 <td class="celula">{{ cell }}</td>
                 {% endif %}

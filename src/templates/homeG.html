@@ -17,35 +17,6 @@
     </form><br>
     {% endfor %}
         <h1>Contas</h1>
-        <div>
-            <table class="tabelaRequisicao">
-                <tr class="linhaTabela">
-                    {% for header in cabecalhoTabela %}
-                    {% if header == 'id' %}
-                         <th style="visibility: collapse">{{ header }}</th>
-                    {% else %}
-                        <th >{{ header }}</th>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
-                {% for row in pesquisaSQLTabela %}
-                <form action="{{ url_for('deletarConta') }}" method="POST">
-                <tr class="linhaTabela">
-                    {% for cell in row %}
-                        {% if row[0] == cell %}
-                        <input type="hidden" value="{{ cell }}" name="IdUsuario">
-                        {% else %}
-                        <td class="celula">{{ cell }}</td>
-                        {% endif %}
-                    {% endfor %}
-                    <td> 
-                        <input type="submit" name="delete" value="Deletar" class="btnd solid">
-                    </td>
-                </tr>
-                </form>
-            {% endfor %}
-            </table>
-
             <a href="{{ url_for('ConferenciaDepositoTabela') }}"><i class='bx bx-money'></i></a>
             <h5>CONFERENCIA DEPOSITO</h5><br>
         </div>
