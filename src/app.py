@@ -78,43 +78,46 @@ def SaqueConta():
     if request.method == "POST":
         valor = float(request.form['valor'])
         if valor >= 0:
-            capital_total = float(funcs.SlcEspecificoMySQL('tb_capitaltotal',
-                                                    CampoBd=['id_capitaltotal'],
-                                                    CampoFm=['1'], 
-                                                    CampoEs=['capitalinicial']))
-
-            capital_total += float(funcs.SlcEspecificoMySQL('tb_capitaltotal',
+            capital_total = funcs.SlcEspecificoMySQL('tb_capitaltotal',
                                                     CampoBd=['id_capitaltotal'],
                                                     CampoFm=['1'],
-                                                    CampoEs=['capitalexterno']))
+                                                    CampoEs=['capitalinicial'])
 
-            ##if valor > capital_total:
-            ## PAREI AQUI: MATHEUS GUERMANDI
+            capital_externo = funcs.SlcEspecificoMySQL('tb_capitaltotal',
+                                                    CampoBd=['id_capitaltotal'],
+                                                    CampoFm=['1'],
+                                                    CampoEs=['capitalexterno'])
 
-            valor = float(session['saldo']) - valor
+            capital_total[0][0] += capital_externo[0][0]
 
-            funcs.upMySQL('tb_contabancaria',
-                           CampoBd=['saldo'],
-                           CampoFm=[valor],
-                           CampoWr=['numeroconta'],
-                           CampoPs=[session['conta']])
+            if valor <= capital_total[0][0]:
+                valor = float(session['saldo']) - valor
 
-            saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
-                                                        CampoBd=['numeroconta'],
-                                                        CampoFm=[session['conta']],
-                                                        CampoEs=['saldo'])
+                funcs.upMySQL('tb_contabancaria',
+                               CampoBd=['saldo'],
+                               CampoFm=[valor],
+                               CampoWr=['numeroconta'],
+                               CampoPs=[session['conta']])
 
-            idConta = funcs.SlcEspecificoMySQL('tb_contabancaria',
-                                                        CampoBd=['numeroconta'],
-                                                        CampoFm=[session['conta']],
-                                                        CampoEs=['id_conta'])
+                saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
+                                                            CampoBd=['numeroconta'],
+                                                            CampoFm=[session['conta']],
+                                                            CampoEs=['saldo'])
 
-            funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
+                idConta = funcs.SlcEspecificoMySQL('tb_contabancaria',
+                                                            CampoBd=['numeroconta'],
+                                                            CampoFm=[session['conta']],
+                                                            CampoEs=['id_conta'])
 
-            for row in saldoAtualizado:
-                session['saldo'] = row[0]
+                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
+
+                for row in saldoAtualizado:
+                    session['saldo'] = row[0]
+                return saque()
+            else:
+                flash ("Não é possivel realizar o saque!")
+        else:
             return saque()
-        return saque()
 
 #------------------------------
 #Deposito de Conta
@@ -255,7 +258,7 @@ def RequisicaoPadrao():
 def ConferenciaDepositoTabela():
     cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao
                                                        INNER JOIN tb_contabancaria
                                                        ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem
                                                        AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino
@@ -264,22 +267,22 @@ def ConferenciaDepositoTabela():
                                            CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
                                            CampoBd=['status_transacao'],
                                            CampoFm=[0])
-    
+
     return render_template("conferencia.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
 #Bloco de conferência de depósito pendentes
 
 @app.route("/ConferenciaDeposito")
-def ConferenciaDeposito(): 
+def ConferenciaDeposito():
     if request.method == "POST":
         IdTransacao =   request.form['IdTransacao']
 
         pesquisaSQLTransacao =  funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
-                                                        CampoEs=['valor', 'id_conta_origem'], 
-                                                        CampoBd=['id_transacao'], 
+                                                        CampoEs=['valor', 'id_conta_origem'],
+                                                        CampoBd=['id_transacao'],
                                                         CampoFm=[IdTransacao])
-        
-        pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+
+        pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao
                                                        INNER JOIN tb_contabancaria
                                                        ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem
                                                        AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino
@@ -302,11 +305,11 @@ def ConferenciaDeposito():
                           CampoFm=[valor],
                           CampoWr=['numeroconta'],
                           CampoPs=[session['conta']])
-        
+
         return ConferenciaDepositoTabela()
     return ConferenciaDepositoTabela()
-    
-   
+
+
 
 
 #------------------------------
