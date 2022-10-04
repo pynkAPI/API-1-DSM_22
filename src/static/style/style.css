@@ -16,7 +16,7 @@ body, input{
     min-height: 100vh;
     background-color: whitesmoke;
     overflow:hidden
-    
+
 }
 
 .container::before{
@@ -45,7 +45,7 @@ body, input{
     width: 35%;
     height: 100%;
     margin-left: 10%;
-} 
+}
 #logo{
     margin-top: 2%;
     margin-left: 2%;
@@ -118,7 +118,7 @@ body, input{
     font-weight: 600;
     font-size: 1.1rem;
     color: #444;
-} 
+}
  .input-field i{
     text-align: center;
     line-height: 55px;
@@ -239,7 +239,3 @@ body, input{
     cursor: pointer;
     border-radius: 3px;
 }
-
-
-
-

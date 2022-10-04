@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template,request, url_for, redirect, session,flash
+from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
 from flask_mysqldb import MySQL
 import funcs
 import random
@@ -325,6 +325,14 @@ def ReqAbertura():
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
     return home()
 #------------------------------
+
+#Tratamento de Erros
+@app.errorhandler(Exception)
+def excecao(e):
+    cod_excecao = str(e)
+    cod_excecao = cod_excecao[:3]
+    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+    return render_template(f'{cod_excecao}.html')
 
 #Bloco para subir o site.
 if __name__ == "__main__":

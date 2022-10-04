@@ -191,14 +191,19 @@ def cancelMySQL(id_usuario):
     SlcEspecificoMySQL('tb_contabancaria','id_usuario',id_usuario, saldo)
     if saldo > 0:
         return "Saque seu dinheiro antes de cancelar sua conta!"
-    elif saldo < 0: 
+    elif saldo < 0:
         return "Corrija sua situação bancária antes de cancelar sua conta!"
-    else: 
+    else:
         textoSQL = f'UPDATE tb_usuario set ativo = "0" where id_usuario = {id_usuario}'
-   
+
     cursor.execute(textoSQL)
     resultado = cursor.fetchall()
     mysql.connection.commit()
     cursor.close()
     return "Cancelamento efetuado com sucesso"
-    
+
+erro = {'404': 'Página não encontrada.',
+'403': 'Acesso restrito.',
+'500': 'Erro interno do servidor.',
+'503': 'Serviço indisponível.',
+'504': 'Gateway timeout'}
