@@ -7,6 +7,7 @@ USE pynk;
 CREATE TABLE tb_usuario (
 id_usuario int PRIMARY KEY auto_increment,
 nome varchar(255) NOT NULL,
+email varcchar(255) NOT NULL,
 cpf varchar(25) NOT NULL UNIQUE,
 genero varchar(25) NOT NULL,
 endereco varchar(50) NOT NULL,

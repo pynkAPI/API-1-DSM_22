@@ -1,3 +1,4 @@
+import email
 from email.message import EmailMessage
 from datetime import datetime
 from tokenize import Double
@@ -153,8 +154,10 @@ def cadastro():
         genero          = request.form['genero']
         senha           = request.form['senha']
         tipoConta       = request.form['tipoconta']
-        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento','ativo'],
-                       CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento,'0'])
+        email           = request.form['email']
+
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento','ativo', 'email'],
+                       CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento,'0', email])
 
         resultado = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
         for row in resultado:
