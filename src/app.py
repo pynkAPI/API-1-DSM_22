@@ -323,25 +323,31 @@ def AceiteConta():
 
         botao = request.form.to_dict()
         IdConta = request.form['IdConta']
+        
+        email = ''
+        email = funcs.SlcEspecificoMySQL('tb_usuario',
+                                     CampoBd=['id_usuario'],
+                                     CampoFm=[IdConta],
+                                     CampoEs=['email'])
+
+        print(email[0][0])
+        print(IdConta)
 
         if botao['botao'] == 'Confirmar':
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.mandaEmail(IdConta, 'pohotig744@botsoko.com', True) 
+            funcs.mandaEmail(IdConta, email, True)  
             return AceiteContaTabela()
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.mandaEmail(IdConta, 'pohotig744@botsoko.com', False) 
+            funcs.mandaEmail(IdConta, email, False)  
             return AceiteContaTabela()
 
-        # email = funcs.SlcEspecificoMySQL('tb_usuario',
-        #                                 CampoBd=['id_usuario'],
-        #                                 CampoFm=[IdConta],
-        #                                 CampoEs=['email'])
 
-        funcs.mandaEmail(IdConta, 'otavio.abreu96@gmail.com', True)                                    
-    
+
+                                           
+
 #------------------------------
 
 #Bloco de requisição de Abertura de Conta
