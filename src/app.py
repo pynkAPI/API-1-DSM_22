@@ -189,7 +189,7 @@ def login():
         if resultado:
             for row in resultado:
                 session['nome']     = row[1]
-                session['saldo']    = row[14]
+                session['saldo']    = row[15]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1
@@ -311,7 +311,7 @@ def ConferenciaDeposito():
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
             return ConferenciaDepositoTabela()
-        return ConferenciaDepositoTabela()
+ 
 
 #------------------------------
 
@@ -325,13 +325,10 @@ def AceiteConta():
         IdConta = request.form['IdConta']
         
         email = ''
-        email = funcs.SlcEspecificoMySQL('tb_usuario',
-                                     CampoBd=['id_usuario'],
+        email = funcs.SlcEspecificoMySQL('tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                     CampoBd=['tb_contabancaria.id_conta'],
                                      CampoFm=[IdConta],
-                                     CampoEs=['email'])
-
-        print(email[0][0])
-        print(IdConta)
+                                     CampoEs=['tb_usuario.email'])
 
         if botao['botao'] == 'Confirmar':
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
@@ -343,10 +340,7 @@ def AceiteConta():
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
             funcs.mandaEmail(IdConta, email, False)  
             return AceiteContaTabela()
-
-
-
-                                           
+       
 
 #------------------------------
 

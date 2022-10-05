@@ -210,7 +210,7 @@ def mandaEmail(id, destinatario, aceite):
     senha = "hjdixtkskjwtvxqr"
     if aceite == True:
         numeroconta = SlcEspecificoMySQL('tb_contabancaria',
-                                         CampoBd=['id_usuario'],
+                                         CampoBd=['id_conta'],
                                          CampoFm=[id],
                                          CampoEs=['numeroconta'])
         
