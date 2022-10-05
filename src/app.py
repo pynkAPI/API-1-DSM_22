@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from tokenize import Double
 from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
 from flask_mysqldb import MySQL
 import funcs
@@ -70,7 +71,7 @@ def saque():
 @app.route("/SaqueConta",  methods = ['POST', 'GET'])
 def SaqueConta():
     if request.method == "POST":
-        valor = float(request.form['valor'])
+        valor = Double(request.form['valor'])
         if valor >= 0:
             capital_total = funcs.SlcEspecificoMySQL('tb_capitaltotal',
                                                     CampoBd=['id_capitaltotal'],
@@ -82,10 +83,8 @@ def SaqueConta():
                                                     CampoFm=['1'],
                                                     CampoEs=['capitalexterno'])
 
-            capital_total[0][0] += capital_externo[0][0]
-
             if valor <= capital_total[0][0]:
-                valor = float(session['saldo']) - valor
+                valor = Double(session['saldo']) - valor
 
                 funcs.upMySQL('tb_contabancaria',
                                CampoBd=['saldo'],
@@ -103,13 +102,14 @@ def SaqueConta():
                                                             CampoFm=[session['conta']],
                                                             CampoEs=['id_conta'])
 
-                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
+                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', Double(request.form['valor']), '1')
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
                 return saque()
             else:
                 flash ("Não é possivel realizar o saque!")
+                return redirect(url_for('saque'))
         else:
             return saque()
 
