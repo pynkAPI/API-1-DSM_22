@@ -1,4 +1,4 @@
-
+from email.message import EmailMessage
 from datetime import datetime
 from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
 from flask_mysqldb import MySQL
@@ -324,13 +324,20 @@ def AceiteConta():
         if botao['botao'] == 'Confirmar':
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
+            funcs.mandaEmail(IdConta, 'pohotig744@botsoko.com', True) 
             return AceiteContaTabela()
-
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
+            funcs.mandaEmail(IdConta, 'pohotig744@botsoko.com', False) 
             return AceiteContaTabela()
-                                    
+
+        # email = funcs.SlcEspecificoMySQL('tb_usuario',
+        #                                 CampoBd=['id_usuario'],
+        #                                 CampoFm=[IdConta],
+        #                                 CampoEs=['email'])
+
+        funcs.mandaEmail(IdConta, 'otavio.abreu96@gmail.com', True)                                    
     
 #------------------------------
 

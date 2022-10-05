@@ -1,3 +1,6 @@
+from email.message import EmailMessage
+import ssl
+import smtplib
 from importlib.metadata import requires
 from flask import Flask, render_template,request, url_for, redirect, session
 from flask_mysqldb import MySQL
@@ -202,6 +205,34 @@ def cancelMySQL(id_usuario):
     cursor.close()
     return "Cancelamento efetuado com sucesso"
 
+def mandaEmail(id, destinatario, aceite):
+    remetente = "py.nk.fatec@gmail.com"
+    senha = "hjdixtkskjwtvxqr"
+    if aceite == True:
+        # numeroconta = SlcEspecificoMySQL('tb_contabancaria',
+        #                                 CampoBd=['id_usuario'],
+        #                                 CampoFm=[id],
+        #                                 CampoEs=['numeroconta'])
+        assunto = 'Bem vindo ao Py.NK!'
+        corpo = 'Isso é um teste!'
+        # corpo = f'''Seja bem vindo(a)! 
+        # Nós do PyNK agradecemos a preferência, utilize o código {numeroconta[0][0]} para acessar sua conta.'''
+    elif aceite == False:
+        assunto = 'Irregularidade no cadastro Py.NK.'
+        corpo = 'Isso é um teste de falso!'
+
+    em = EmailMessage()
+    em['From'] = remetente
+    em['To'] = destinatario
+    em['subject'] = assunto
+    em.set_content(corpo)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(remetente, senha)
+        smtp.sendmail(remetente, destinatario, em.as_string())
+     
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
 '401': 'Antes de fazer essa requisição se autentifique.',
 '404': 'Página não encontrada.',
