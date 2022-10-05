@@ -314,15 +314,24 @@ def ConferenciaDeposito():
 
 #Bloco de requisição padrão
 
-@app.route("/ReqAbertura", methods = ['POST', 'GET'])
-def ReqAbertura():
+@app.route("/AceiteConta", methods = ['POST', 'GET'])
+def AceiteConta():
     if request.method == "POST":
-        ativo = request.form['verificacao']
-        IdConta = request.form['IdConta']
-        funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[ativo],
-                                        CampoWr=['id_conta'],CampoPs=[IdConta])
-    return home()
 
+        botao = request.form.to_dict()
+        IdConta = request.form['IdConta']
+
+        if botao['botao'] == 'Confirmar':
+            funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
+                                        CampoWr=['id_conta'],CampoPs=[IdConta])
+            return AceiteContaTabela()
+
+        else:    
+            funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
+                                        CampoWr=['id_conta'],CampoPs=[IdConta])
+            return AceiteContaTabela()
+                                    
+    
 #------------------------------
 
 #Bloco de requisição de Abertura de Conta
@@ -330,14 +339,14 @@ def ReqAbertura():
 @app.route("/AceiteContaTabela")
 def AceiteContaTabela():
 
-    cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta')
+    cabecalho = ('Nome', 'CPF', 'Número Conta', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta', '', '')
 
     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
-                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
+                                           CampoEs=['tb_contabancaria.id_conta','tb_usuario.nome', 'tb_usuario.cpf', 'tb_contabancaria.numeroconta','tb_usuario.datanascimento','tb_usuario.endereco','tb_usuario.genero', 'tb_contabancaria.tipo'],
                                            CampoBd=['tb_contabancaria.status_contabancaria'],
                                            CampoFm=[0])
 
-    return render_template("conferencia.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+    return render_template("AceiteConta.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
 #------------------------------
 
