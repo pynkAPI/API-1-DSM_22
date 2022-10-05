@@ -36,26 +36,19 @@ def index():
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
-    saldo = None
-    itens = []
-    idusu = []
-    if session['tipo'] == 1:
-        saldo = f"{session['saldo']:.2f}".replace(".",",")
-        return render_template('home.html',saldo=saldo)
+    if session['login'] == False:
+        abort(401)
     else:
-        cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
-        itens = funcs.SlcEspecificoMySQL('tb_contabancaria ',CampoBd=['status_contabancaria'],
-                                                        CampoFm=['0'],CampoEs=['id_usuario','id_conta'])
-
-        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
-                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
-                                           CampoBd=[],
-                                           CampoFm=[])
-
-        # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
-
-        saldo = f"{session['saldo']:.2f}".replace(".",",")
-        return render_template('homeG.html',saldo=saldo,itens=itens,cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+        saldo = None
+        itens = []
+        idusu = []
+        if session['tipo'] == 1:
+            saldo = f"{session['saldo']:.2f}".replace(".",",")
+            return render_template('home.html',saldo=saldo)
+        else:
+            # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+            saldo = f"{session['saldo']:.2f}".replace(".",",")
+            return render_template('homeG.html',saldo=saldo,itens=itens)
 #------------------------------
 
 #Pagina Deposito
@@ -187,37 +180,38 @@ def login():
         resultado   = funcs.SlcMySQL('''tb_usuario
                                         INNER JOIN tb_contabancaria
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
-
                                     CampoBd=['tb_contabancaria.numeroconta','tb_usuario.senha','tb_contabancaria.status_contabancaria'],
                                     CampoFm=[numeroconta,senha,'1'])
 
-    if resultado:
-        for row in resultado:
-            session['nome']     = row[1]
-            session['saldo']    = row[14]
-        session['login'] = True
-        session['conta'] = numeroconta
-        session['tipo']  = 1
-        return home()
-    else:
-        #Login de gerente geral e gerente de agência
-        resultado   = funcs.SlcMySQL('''tb_usuario
-                                        INNER JOIN tb_funcionario
-                                        ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
-                                    CampoBd=['login','senha'],
-                                    CampoFm=[numeroconta,senha])
-        resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
         if resultado:
             for row in resultado:
-                session['nome'] = row[1]
-            session['login']    = True
-            session['conta']    = numeroconta
-            session['tipo']     = 2
-            for row2 in resultadocap:
-                session['saldo']  = row2[1]
+                session['nome']     = row[1]
+                session['saldo']    = row[14]
+            session['login'] = True
+            session['conta'] = numeroconta
+            session['tipo']  = 1
             return home()
         else:
-            return index()
+            #Login de gerente geral e gerente de agência
+            resultado   = funcs.SlcMySQL('''tb_usuario
+                                            INNER JOIN tb_funcionario
+                                            ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
+                                        CampoBd=['login','senha'],
+                                        CampoFm=[numeroconta,senha])
+            resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
+            if resultado:
+                for row in resultado:
+                    session['nome'] = row[1]
+                session['login']    = True
+                session['conta']    = numeroconta
+                session['tipo']     = 2
+                for row2 in resultadocap:
+                    session['saldo']  = row2[1]
+                return home()
+            else:
+                return index()
+    else:
+        abort(401)
 #------------------------------
 
 #Bloco de requisição padrão
@@ -257,14 +251,17 @@ def RequisicaoPadrao():
 
 @app.route("/ConferenciaDepositoTabela")
 def ConferenciaDepositoTabela():
-    cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
+    if session['login'] == True:
+        cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
-                                           CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
-                                           CampoBd=['status_transacao'],
-                                           CampoFm=[0])
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                            CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
+                                            CampoBd=['status_transacao'],
+                                            CampoFm=[0])
 
-    return render_template("conferencia.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+        return render_template("conferencia.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+    else:
+        abort(401)
 
 #Bloco de conferência de depósito pendentes
 
@@ -311,8 +308,7 @@ def ConferenciaDeposito():
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
             return ConferenciaDepositoTabela()
-
-    return ConferenciaDepositoTabela()
+        return ConferenciaDepositoTabela()
 
 #------------------------------
 
@@ -333,7 +329,7 @@ def ReqAbertura():
 
 @app.route("/AceiteContaTabela")
 def AceiteContaTabela():
-    
+
     cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta')
 
     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',

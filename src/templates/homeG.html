@@ -5,7 +5,7 @@
 {% block func %}
 <div class="func">
     <h1>Contas esperando abertura</h1>
-    {% for teste in itens %}
+    <!--{% for teste in itens %}
     <form action="ReqAbertura" method="POST">
         <label>Abertura {{teste[0]}}</label><br>
         <input type="radio" name="verificacao" value="1">
@@ -15,7 +15,7 @@
         <input type="submit" class="btnd solid">
         <input type="hidden" value="{{teste[1]}}" name="IdConta">
     </form><br>
-    {% endfor %}
+    {% endfor %} -->
         <h1>Contas</h1>
             <a href="{{ url_for('ConferenciaDepositoTabela') }}"><i class='bx bx-money'></i></a>
             <h5>CONFERENCIA DEPOSITO</h5><br>
