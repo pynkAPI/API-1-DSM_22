@@ -174,3 +174,44 @@ th {
     background-color: #CC5587;
     color: white;
 }
+
+.divConteudo{
+    display: inline-block;
+    width: 30%;
+    height: 500px;
+}
+
+.extrato{
+    background-color: red;
+}
+
+/* Pagina Home Extrato */
+
+#DivLinks{
+    position:relative;
+    border-width:2px;
+    width:30%;
+    height: 100vmax;
+    float: left;
+    text-align: center;
+}
+#DivLinks .bx{
+    font-size: 3.5rem;
+    padding: 10px;
+    border-radius:0.5rem;
+    color: #B71258;
+    background: whitesmoke;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #CC5587;
+}
+#DivLinks .bx:hover{
+    color: whitesmoke;
+    background: linear-gradient( #CC5587, #B71258); 
+    transition: 0.3s all linear;
+}
+
+#tbExtrato{
+    width: 70%;
+    border-collapse: collapse;
+}

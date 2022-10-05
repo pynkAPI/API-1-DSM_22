@@ -44,8 +44,9 @@ def home():
         itens = []
         idusu = []
         if session['tipo'] == 1:
+            cabecalho = ('Tipo', 'Valor', 'De:', 'Para:')
             saldo = f"{session['saldo']:.2f}".replace(".",",")
-            return render_template('home.html',saldo=saldo)
+            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho)
         else:
             # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
             saldo = f"{session['saldo']:.2f}".replace(".",",")

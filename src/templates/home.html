@@ -32,11 +32,24 @@
             {% endblock %}
         </div>
         {% block func %}
-        <div class="func">
-            <a href="{{ url_for('deposito') }}"><i class='bx bx-money'></i></a>
-            <h5>DEPOSITO</h5><br>
-            <a href="{{ url_for('saque') }}"><i class='bx bx-money-withdraw'></i></a>
-            <h5>SAQUE</h5>    
+        <div class="group">
+            <div id="DivLinks">
+                <a href="{{ url_for('deposito') }}"><i class='bx bx-money'></i></a>
+                <h5>DEPOSITO</h5><br>
+                <a href="{{ url_for('saque') }}"><i class='bx bx-money-withdraw'></i></a>
+                <h5>SAQUE</h5>
+            </div>
+            <div id="DivExtrato">
+                <table id="tbExtrato">
+                    <thead>
+                        <tr>
+                            {% for header in cabecalhoTabela %}
+                                <th>{{header}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
         {% endblock %}
     </header>
