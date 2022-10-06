@@ -209,17 +209,20 @@ def mandaEmail(id, destinatario, aceite):
     remetente = "py.nk.fatec@gmail.com"
     senha = "hjdixtkskjwtvxqr"
     if aceite == True:
-        # numeroconta = SlcEspecificoMySQL('tb_contabancaria',
-        #                                 CampoBd=['id_usuario'],
-        #                                 CampoFm=[id],
-        #                                 CampoEs=['numeroconta'])
+        numeroconta = SlcEspecificoMySQL('tb_contabancaria',
+                                         CampoBd=['id_conta'],
+                                         CampoFm=[id],
+                                         CampoEs=['numeroconta'])
+        
+        
         assunto = 'Bem vindo ao Py.NK!'
-        corpo = 'Isso é um teste!'
-        # corpo = f'''Seja bem vindo(a)! 
-        # Nós do PyNK agradecemos a preferência, utilize o código {numeroconta[0][0]} para acessar sua conta.'''
+        corpo = f'''Seja bem vindo(a)! 
+        Nós do PyNK agradecemos a preferência, utilize o código {str(numeroconta)[3:-5]} para acessar sua conta.'''
+
     elif aceite == False:
         assunto = 'Irregularidade no cadastro Py.NK.'
-        corpo = 'Isso é um teste de falso!'
+        corpo = f'''Olá, algo de errado aconteceu.
+        Durante a triagem do seu cadastro o Py.NK encontrou algumas divergências, sua conta não foi criada.'''
 
     em = EmailMessage()
     em['From'] = remetente
