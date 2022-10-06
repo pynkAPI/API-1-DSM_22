@@ -83,7 +83,7 @@ def SaqueConta():
                                                     CampoEs=['capitalexterno'])
 
             if valor <= capital_total[0][0]:
-                valor = Double(session['saldo']) - valor
+                valor = float(session['saldo']) - valor
 
                 funcs.upMySQL('tb_contabancaria',
                                CampoBd=['saldo'],
@@ -187,7 +187,7 @@ def login():
         if resultado:
             for row in resultado:
                 session['nome']     = row[1]
-                session['saldo']    = row[14]
+                session['saldo']    = row[15]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1
@@ -210,7 +210,7 @@ def login():
                     session['saldo']  = row2[1]
                 return home()
             else:
-                return index()
+                abort(401)
     else:
         abort(401)
 #------------------------------
@@ -439,12 +439,12 @@ def AceiteAlteracaoTabela():
 #------------------------------
 
 #Tratamento de Erros
-# @app.errorhandler(Exception)
-# def excecao(e):
-#     cod_excecao = str(e)
-#     cod_excecao = cod_excecao[:3]
-#     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-#     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
+@app.errorhandler(Exception)
+def excecao(e):
+    cod_excecao = str(e)
+    cod_excecao = cod_excecao[:3]
+    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 
     #Bloco para subir o site.
 if __name__ == "__main__":

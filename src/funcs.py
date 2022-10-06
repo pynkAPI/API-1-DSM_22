@@ -237,7 +237,7 @@ def mandaEmail(id, destinatario, aceite):
         smtp.sendmail(remetente, destinatario, em.as_string())
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
-'401': 'Antes de fazer essa requisição se autentifique.',
+'401': 'Antes de fazer essa requisição se autentifique. Credenciais inválidas.',
 '404': 'Página não encontrada.',
 '403': 'Acesso restrito.',
 '500': 'Erro interno do servidor.',
