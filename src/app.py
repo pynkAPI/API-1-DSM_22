@@ -42,16 +42,13 @@ def home():
         abort(401)
     else:
         saldo = None
-        itens = []
-        idusu = []
         if session['tipo'] == 1:
             cabecalho = ('Tipo', 'Valor', 'De:', 'Para:')
             saldo = f"{session['saldo']:.2f}".replace(".",",")
             return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho)
         else:
-            # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
             saldo = f"{session['saldo']:.2f}".replace(".",",")
-            return render_template('homeG.html',saldo=saldo,itens=itens)
+            return render_template('homeG.html',saldo=saldo)
 #------------------------------
 
 #Pagina Deposito
@@ -73,7 +70,7 @@ def saque():
 @app.route("/SaqueConta",  methods = ['POST', 'GET'])
 def SaqueConta():
     if request.method == "POST":
-        valor = Double(request.form['valor'])
+        valor = float(request.form['valor'])
         if valor >= 0:
             capital_total = funcs.SlcEspecificoMySQL('tb_capitaltotal',
                                                     CampoBd=['id_capitaltotal'],
@@ -104,7 +101,7 @@ def SaqueConta():
                                                             CampoFm=[session['conta']],
                                                             CampoEs=['id_conta'])
 
-                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', Double(request.form['valor']), '1')
+                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
@@ -190,7 +187,7 @@ def login():
         if resultado:
             for row in resultado:
                 session['nome']     = row[1]
-                session['saldo']    = row[15]
+                session['saldo']    = row[14]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1
@@ -220,33 +217,33 @@ def login():
 
 #Bloco de requisição padrão
 
-@app.route("/deletarConta",  methods = ['POST', 'GET'])
-def deletarConta():
+# @app.route("/deletarConta",  methods = ['POST', 'GET'])
+# def deletarConta():
 
-    id_usuario = request.form['IdUsuario']
+#     id_usuario = request.form['IdUsuario']
 
-    funcs.DelMySQL(TabelaBd='tb_usuario',
-                   CampoBd=['id_usuario'],
-                   CampoFm=[id_usuario])
+#     funcs.DelMySQL(TabelaBd='tb_usuario',
+#                    CampoBd=['id_usuario'],
+#                    CampoFm=[id_usuario])
 
-    return RequisicaoPadrao()
+#     return RequisicaoPadrao()
 
 
 #------------------------------
 
 #Bloco de requisição padrão
 
-@app.route("/a")
-def RequisicaoPadrao():
-    cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
+# @app.route("/a")
+# def RequisicaoPadrao():
+#     cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
 
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
-                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
-                                           CampoBd=[],
-                                           CampoFm=[])
+#     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
+#                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
+#                                            CampoBd=[],
+#                                            CampoFm=[])
 
 
-    return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+#     return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
 
 #------------------------------
@@ -284,14 +281,23 @@ def ConferenciaDeposito():
                                                         CampoFm=[IdTransacao])
 
             IdContaOrigem = pesquisaSQLTransacao[0][1]
-            valorTransacao = pesquisaSQLTransacao[0][0]
+            valorTransacao = float(pesquisaSQLTransacao[0][0])
 
             pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
                                                         CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
                                                         CampoFm=[IdTransacao, IdContaOrigem])
-            saldoConta = pesquisaSQLConta[0][1]
+            
+            pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                        CampoEs=['capitalinicial'],
+                                                        CampoBd=['id_capitaltotal'],
+                                                        CampoFm=[1])
+                                            
+            valorTotalBanco = float(pesquisaTotalBanco[0][0])
+            saldoConta = float(pesquisaSQLConta[0][1])
             valor = valorTransacao + saldoConta
+
+            valorTotalBanco = valor + valorTotalBanco
 
             funcs.upMySQL(TabelaBd='tb_transacao',
                       CampoBd=['status_transacao'],
@@ -304,6 +310,14 @@ def ConferenciaDeposito():
                           CampoFm=[valor],
                           CampoWr=['id_conta'],
                           CampoPs=[IdContaOrigem])
+
+            funcs.upMySQL(TabelaBd='tb_capitaltotal',
+                          CampoBd=['capitalinicial'],
+                          CampoFm=[valorTotalBanco],
+                          CampoWr=['id_capitaltotal'],
+                          CampoPs=[1])
+            session['saldo'] = valorTotalBanco
+            
             return ConferenciaDepositoTabela()
         else:
             funcs.upMySQL(TabelaBd='tb_transacao',
@@ -342,7 +356,65 @@ def AceiteConta():
             funcs.mandaEmail(IdConta, email, False)  
             return AceiteContaTabela()
        
+#------------------------------
 
+#Bloco de renderização da tela de Transação
+
+@app.route("/Transacao")
+def Transacao():
+    if session['saldo'] != None:
+        saldo = f"{session['saldo']:.2f}".replace(".",",")
+    return render_template('transacao.html',saldo=saldo)
+
+#------------------------------
+
+#Bloco de transação entre contas
+
+@app.route("/TransacaoConta",  methods = ['POST', 'GET'])
+def TransacaoConta():
+    if request.method == 'POST':
+        numeroConta = request.form['numeroConta']
+        valor = float(request.form['valor'])
+
+        pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                                  CampoBd=['numeroconta'],
+                                                  CampoFm=[numeroConta],
+                                                  CampoEs=['id_conta', 'saldo'])
+
+        pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                                  CampoBd=['numeroconta'],
+                                                  CampoFm=[session['conta']],
+                                                  CampoEs=['id_conta', 'saldo'])
+        IdContaDestino = pesquisaContaDestino[0][0]
+        IdContaOrigem = pesquisaContaOrigem[0][0]
+
+        valorContaDestino = pesquisaContaDestino[0][1]
+        valorContaOrigem = pesquisaContaOrigem[0][1]
+
+        valorContaDestino = valorContaDestino + valor
+        valorContaOrigem = valorContaOrigem - valor
+
+        if IdContaDestino == IdContaOrigem:
+            return render_template('transacao.html')
+
+        funcs.upMySQL(TabelaBd='tb_contabancaria',
+                      CampoBd=['saldo'],
+                      CampoFm=[valorContaOrigem],
+                      CampoPs=[IdContaOrigem],
+                      CampoWr=['id_conta'])
+
+        funcs.upMySQL(TabelaBd='tb_contabancaria',
+                      CampoBd=['saldo'],
+                      CampoFm=[valorContaDestino],
+                      CampoPs=[IdContaDestino],
+                      CampoWr=['id_conta'])
+
+        session['saldo'] = valorContaOrigem
+
+        funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
+
+        return Transacao()
+        
 #------------------------------
 
 #Bloco de requisição de Abertura de Conta
@@ -369,6 +441,6 @@ def excecao(e):
     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 
-#Bloco para subir o site.
+    #Bloco para subir o site.
 if __name__ == "__main__":
      app.run(debug=True)
