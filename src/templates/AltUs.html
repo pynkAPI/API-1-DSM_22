@@ -1,0 +1,26 @@
+{% extends "home.html" %}
+{% block alt %}
+<div class="input-field">
+    <h2>Solicitar alterção de seus dados</h2>
+    <div class="inputs">
+        <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="Nome" required>
+        <input class="input-field-cad" type="text" placeholder="CPF" name="CPF" required>
+        <input class="input-field-cad" type="text" placeholder="E-MAIL" name="email" required>
+        <input class="input-field-cad" type="text" placeholder="ENDERECO" name="endereco" required>
+
+        <input class="input-field-cad" type="text" placeholder="DATA DE NASCIMENTO" name="Data Nasc" required>
+        <input class="input-field-cad" type="text" placeholder="NÚMERO CONTA" name="'Número Conta" required>
+        <select id="input_tipoconta" class="input-selects" name="tipoconta" required>
+                        <option value="Conta Corrente">CONTA CORRENTE</option>
+                        <option value="Conta Poupança">CONTA POUPANÇA</option>
+        </select>
+        <select class="input-selects" id="genero" name="genero" required>
+            <option value="F">FEMININO</option>
+            <option value="M">MASCULINO</option>
+            <option value="O">OUTROS</option>
+        </select>
+        <textarea cols="50" rows="5" placeholder="DESCRICAO"></textarea><br><br>
+        <input type="submit" value="SOLICITAR" class="btn solid"> 
+    </div>
+</div>
+{% endblock %}

@@ -431,10 +431,21 @@ def AceiteContaTabela():
 
     return render_template("AceiteConta.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
-@app.route("/AceiteAlteracaoTabela")
+@app.route("/AceiteAlteracaoTabela")    
 def AceiteAlteracaoTabela():
-    return
 
+    cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Número Conta', 'Tipo Conta', 'Descrição')
+
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_requisicoes ON tb_usuario.id_usuario = tb_requisicoes.id_usuario',
+                                           CampoEs=['tb_contabancaria.id_conta', 'tb_usario.id_usuario','tb_usuario.nome', 'tb_usuario.cpf', 'tb_contabancaria.numeroconta','tb_usuario.datanascimento', 'tb_contabancaria.tipo' , 'tb_requisicoes'],
+                                           CampoBd=['status_alteracao'],
+                                           CampoFm=[0])
+
+    return render_template("ReqAlt.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+
+@app.route("/ReqAlt")
+def ReqAlt():
+    return render_template('ReqAlt.html')
 
 #------------------------------
 

@@ -22,13 +22,13 @@
             {% endfor %}
         </tr>
         {% for row in pesquisaSQLTabela %}
-        <form action="{{ url_for('AceiteConta') }}" method="POST" name="AceiteAlteraçãoTabela">
+        <form action="{{ url_for('AlteracaoConta) }}" method="POST" name="AceiteAlteracaoTabela">
         <tr class="linhaTabela">
             <!-- Forma as linhas da tabela -->
             {% for cell in row %}
                 <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
                 <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                {% if row[0] == cell %}
+                {% if row[0] == cell or row[1] == cell %}
                 <input type="hidden" value="{{ cell }}" name="IdConta">
                 {% else %}
                 <td class="celula">{{ cell }}</td>
