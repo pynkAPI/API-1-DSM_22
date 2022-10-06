@@ -11,7 +11,47 @@
     {% endblock %}
 </head>
 <body>
-    <div class="menu-content">
+    <div class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <!-- <img src="pynklogo.png"> -->
+            </div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="#">
+                    <i class='bx bx-user'></i>
+                    <span class="links_name">Sua Conta</span>
+                </a>
+            </li>
+            <!-- <li>
+                <a href="#" class="req_btn">
+                    <i class='bx bx-list-check'></i>
+                    <span class="links_name">Requisições</span>
+                </a>
+                    <ul>
+                        <li>
+                            <a href="#">
+                                <i class='bx bxs-user-detail'></i>
+                                <span class="links_name">Alteração de Dados</span>
+                            </a>
+                        </li>
+                    </ul>
+            </li> -->
+        </ul>
+        <div class="profile_content">
+            <div class="profile">
+                <div class="profile-details">
+                    <!-- <img src="user.svg" alt="img"> -->
+                    <div class="name_job">
+                    </div>
+                </div>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </div>
+        </div>
+    </div>
+    <div class="home_content">
         <div class="panels">
             <div class="left-panels">
                     {% block cabecalho %}
@@ -33,9 +73,18 @@
 
                             {% block func %}
                             <div class="func">
-                                <a href="#">SAQUE</a>
-                                <a href="#">DEPOSITE</a>
-                                <a href="#">TRANSFIRA</a>
+                                <a href="#">
+                                    <i class='bx bx-user'></i>
+                                    <span class="links_name">Depósite</span>
+                                </a>
+                                <a href="#">
+                                    <i class='bx bx-user'></i>
+                                    <span class="links_name">Saque</span>
+                                </a>
+                                <a href="#">
+                                    <i class='bx bx-user'></i>
+                                    <span class="links_name">Transfira</span>
+                                </a>
                             </div> 
             </div> 
                             {% endblock %} 
@@ -63,7 +112,7 @@
                                             {% if row[0] == cell %}
                                             <input type="hidden" value="{{ cell }}" name="IdUsuario">
                                             {% else %}
-                                             <a href="#"><td class="celula">{{ cell }}</td></a>
+                                            <a href="#"><td class="celula">{{ cell }}</td></a>
                                             {% endif %}
                                         {% endfor %}
                                         <!-- <td> 
@@ -81,5 +130,21 @@
             </div>  
         </div>
     </div>    
+    </div>
+    <script>
+        let btn = document.querySelector("#btn");
+        let sidebar = document.querySelector(".sidebar");
+        btn.onclick = function() {
+            sidebar.classList.toggle("active")
+        }
+        sidebar.onclick = function() {
+            sidebar.classList.toggle("active")
+        }
+        $('.req_btn').click(function(){
+            $('.sidebar ul .req_show').toggleClass("show");
+        });
+    </script>
+
+            
 </body>
 </html>

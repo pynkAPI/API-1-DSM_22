@@ -1,4 +1,4 @@
-{% extends "home.html" %}
+{% extends "homenew.html" %}
 {% block saldo %}
 <label>Saldo do banco: R$ {{saldo}}</label>
 {% endblock %}
@@ -21,8 +21,6 @@
     <h5>CONFERENCIA DEPOSITO</h5><br>
     <a href="{{ url_for('AceiteContaTabela') }}"><i class='bx bx-money'></i></a>
     <h5>REQUISIÇÕES DE ABERTURA DE CONTAS</h5><br>
-    <a href="{{ url_for('AceiteAlteraçaoTabela') }}"><i class='bx bx-money'></i></a>
-    <h5>REQUISIÇÕES DE ALTERAÇÃO DE DADOS</h5><br>
 </div>
 </div>
 {% endblock %}
