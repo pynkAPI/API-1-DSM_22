@@ -359,15 +359,20 @@ def AceiteContaTabela():
 
     return render_template("AceiteConta.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
+@app.route("/AceiteAlteracaoTabela")
+def AceiteAlteracaoTabela():
+    return
+
+
 #------------------------------
 
 #Tratamento de Erros
-@app.errorhandler(Exception)
-def excecao(e):
-    cod_excecao = str(e)
-    cod_excecao = cod_excecao[:3]
-    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
+# @app.errorhandler(Exception)
+# def excecao(e):
+#     cod_excecao = str(e)
+#     cod_excecao = cod_excecao[:3]
+#     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+#     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 
 #Bloco para subir o site.
 if __name__ == "__main__":
