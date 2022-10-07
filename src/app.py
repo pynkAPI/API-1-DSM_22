@@ -1,5 +1,10 @@
+import os
 import email
 from email.message import EmailMessage
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from datetime import datetime
 from tokenize import Double
 from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
@@ -385,12 +390,12 @@ def AceiteConta():
         if botao['botao'] == 'Confirmar':
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.mandaEmail(IdConta, email, True)  
+            funcs.emailCadastro(IdConta, email, True)  
             return AceiteContaTabela()
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.mandaEmail(IdConta, email, False)  
+            funcs.emailCadastro(IdConta, email, False)  
             return AceiteContaTabela()
        
 #------------------------------

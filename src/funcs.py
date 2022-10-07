@@ -1,4 +1,9 @@
+import os
 from email.message import EmailMessage
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import ssl
 import smtplib
 from importlib.metadata import requires
@@ -237,6 +242,10 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
                                             CampoFm=[dados_transacao[0][2]],
                                             CampoEs=['numeroconta'])
 
+    email = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                            CampoBd=['id_conta'],
+                                            CampoFm=[dados_transacao[0][1]],
+                                            CampoEs=['tb_usuario.email'])
     movimentacao = {
         'conta_origem' : numero_conta_origem[0][0],
         'nome_origem' : nome_origem[0][0],
@@ -249,11 +258,18 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
         'valor' : valor
     }
 
-    criaComprovante(movimentacao, numero_conta_origem[0][0])
+    nome_comp = criaComprovante(movimentacao, numero_conta_origem[0][0])
+
+    emailComprovante(nome_comp, email[0][0])
+
+    os.remove(nome_comp)
+
+    
 
     
 def criaComprovante (dicionario, numero_conta):
-    c = canvas.Canvas(f"comp{dicionario['id']}{numero_conta}.pdf")
+    nome_comp = f"{dicionario['id']}{numero_conta}.pdf"
+    c = canvas.Canvas(nome_comp)
     c.setFont("Helvetica", 12)
     if dicionario ['tipo'] == 'Depósito':
         c.drawString(80,750,"Comprovante de Depósito")
@@ -289,8 +305,8 @@ def criaComprovante (dicionario, numero_conta):
             c.drawString(80,590,f"Numero de conta: {dicionario['conta_origem']}")
             c.drawString(80,560,f"ID da Transação: {dicionario['id']}")
     c.showPage()
-    return c.save()
-    
+    c.save()
+    return nome_comp 
 
 def LoadConfig():
     config = {}
@@ -327,7 +343,7 @@ def cancelMySQL(id_usuario):
                 CampoPs=[id_usuario])
         return "Cancelamento efetuado com sucesso"
 
-def mandaEmail(id, destinatario, aceite):
+def emailCadastro(id, destinatario, aceite):
     remetente = "py.nk.fatec@gmail.com"
     senha = "hjdixtkskjwtvxqr"
     if aceite == True:
@@ -335,7 +351,6 @@ def mandaEmail(id, destinatario, aceite):
                                          CampoBd=['id_conta'],
                                          CampoFm=[id],
                                          CampoEs=['numeroconta'])
-        
         
         assunto = 'Bem vindo ao Py.NK!'
         corpo = f'''Seja bem vindo(a)! 
@@ -357,6 +372,40 @@ def mandaEmail(id, destinatario, aceite):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
         smtp.login(remetente, senha)
         smtp.sendmail(remetente, destinatario, em.as_string())
+
+def emailComprovante(nome_arq, destinatario):
+    subject = "Comprovante de movimentação"
+    body = "Aqui está o comprovante da sua última movimentação."
+    sender_email = "py.nk.fatec@gmail.com"
+    receiver_email = destinatario
+    password = "hjdixtkskjwtvxqr"
+
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+
+    message.attach(MIMEText(body, "plain"))
+
+    filename = nome_arq  
+
+    with open(filename, "rb") as attachment:
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+  
+    encoders.encode_base64(part)
+
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename={filename}"
+    )
+
+    message.attach(part)
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
+        smtp.login(sender_email, password)
+        smtp.sendmail(sender_email, receiver_email, message.as_string())
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
 '401': 'Antes de fazer essa requisição se autentifique. Credenciais inválidas.',
