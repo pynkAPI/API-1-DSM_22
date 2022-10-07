@@ -74,7 +74,7 @@ def home():
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[1]],
                                                         CampoEs=['nome'])
-                print(row[1])
+                
                 nomes2 = [list(row) for row in nomes2]
                 
                 pesquisaSQL[VarContador].append(nomes1[0][0])
@@ -410,7 +410,9 @@ def Transacao():
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        if float(request.form['valor']) > float(session['saldo']) :
+        # print(float(request.form['valor']))
+        if float(request.form['valor']) <= float(session['saldo']) :
+            # print('teste')
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
@@ -418,8 +420,6 @@ def TransacaoConta():
                                                   CampoBd=['numeroconta'],
                                                   CampoFm=[numeroConta],
                                                   CampoEs=['id_conta', 'saldo'])
-            
-            
 
             pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                   CampoBd=['numeroconta'],
