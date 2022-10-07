@@ -37,11 +37,11 @@
                 <a href="{{ url_for('deposito') }}"><i class='bx bx-money'></i></a>
                 <h5>DEPOSITO</h5><br>
                 <a href="{{ url_for('saque') }}"><i class='bx bx-money-withdraw'></i></a>
-                <h5>SAQUE</h5>
+                <h5>SAQUE</h5><br>
                 <a href="{{ url_for('Transacao') }}"><i class='bx bx-money-withdraw'></i></a>
-                <h5>TRANSFERÊNCIA</h5>
+                <h5>TRANSFERÊNCIA</h5><br>
                 <a href="{{ url_for('ReqAlt') }}"><i class='bx bx-money-withdraw'></i></a>
-                <h5>ALTERAÇÃO DE DADOS</h5>
+                <h5>ALTERAÇÃO DE DADOS</h5><br>
                 <a href="{{ url_for('Cancelamento') }}"><i class='bx bx-money-withdraw'></i></a>
                 <h5>CANCELAMENTO DE CONTA</h5>
             </div>
@@ -54,6 +54,17 @@
                             {% endfor %}
                         </tr>
                     </thead>
+                    <tbody>
+                        {% for row in pesquisaSQLTabela %}
+                        <form action="{{ url_for('ConferenciaDeposito') }}" method="POST" name="ConferenciaDeposito">
+                            <tr class="linhaTabela">
+                                {% for cell in row %}
+                                    <td class="celula">{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
