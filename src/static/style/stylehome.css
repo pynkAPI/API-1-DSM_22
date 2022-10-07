@@ -211,7 +211,14 @@ th {
     transition: 0.3s all linear;
 }
 
+#DivExtrato{
+    overflow:auto; 
+    height: 600px; 
+    table-layout: fixed;
+}
+
 #tbExtrato{
-    width: 70%;
+    width: 100%;
     border-collapse: collapse;
+    /* overflow-y: scroll; */
 }

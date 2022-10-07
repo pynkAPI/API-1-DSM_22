@@ -43,8 +43,8 @@ def home():
     else:
         saldo = None
         if session['tipo'] == 1:
-            cabecalho = ('Tipo', 'Valor','Data', 'De:', 'Para:')
-            saldo = f"{session['saldo']:.2f}".replace(".",",")
+            cabecalho = ('Tipo', 'Valor','Data e hora', 'De:', 'Para:')
+            saldo = funcs.ValEmReal(session['saldo'])
             VarContador=0
             
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
@@ -58,8 +58,6 @@ def home():
                                             CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
                                             CampoFm=[1,session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,0,1])
-            
-            # print(pesquisaSQL)
             
             pesquisaSQL = [list(row) for row in pesquisaSQL]
             for row in pesquisaContas:
@@ -79,6 +77,7 @@ def home():
                 
                 pesquisaSQL[VarContador].append(nomes1[0][0])
                 pesquisaSQL[VarContador].append(nomes2[0][0])
+                pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
                 VarContador+=1
                 
             return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
@@ -417,14 +416,14 @@ def TransacaoConta():
             valor = float(request.form['valor'])
 
             pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                                  CampoBd=['numeroconta'],
-                                                  CampoFm=[numeroConta],
-                                                  CampoEs=['id_conta', 'saldo'])
+                                                CampoBd=['numeroconta'],
+                                                CampoFm=[numeroConta],
+                                                CampoEs=['id_conta', 'saldo'])
 
             pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                                  CampoBd=['numeroconta'],
-                                                  CampoFm=[session['conta']],
-                                                  CampoEs=['id_conta', 'saldo'])
+                                                CampoBd=['numeroconta'],
+                                                CampoFm=[session['conta']],
+                                                CampoEs=['id_conta', 'saldo'])
                                                   
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]

@@ -50,7 +50,7 @@
                     <thead>
                         <tr>
                             {% for header in cabecalhoTabela %}
-                                <th>{{header}}</th>
+                            <th>{{header}}</th>
                             {% endfor %}
                         </tr>
                     </thead>
@@ -59,7 +59,7 @@
                         <form action="{{ url_for('ConferenciaDeposito') }}" method="POST" name="ConferenciaDeposito">
                             <tr class="linhaTabela">
                                 {% for cell in row %}
-                                    <td class="celula">{{ cell }}</td>
+                                <td class="celula">{{ cell }}</td>
                                 {% endfor %}
                             </tr>
                         </form>
@@ -73,3 +73,6 @@
 </body>
 
 </html>
+<script>
+    
+</script>
