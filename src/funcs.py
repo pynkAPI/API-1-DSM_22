@@ -2,6 +2,7 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 from importlib.metadata import requires
+from reportlab.pdfgen import canvas
 from flask import Flask, render_template,request, url_for, redirect, session
 from flask_mysqldb import MySQL
 import datetime
@@ -181,27 +182,86 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
                                         CampoFm=[id_ultima_movimentacao[0][0]],
                                         CampoEs=['*'])
     
-    nome_origem = SlcEspecificoMySQL (TabelaBd='tb_usuario',
-                                    CampoBd=[],
-                                    CampoFm=[],
-                                    CampoEs=[])
-    movimentacao = {
-        'conta_origem' : '123456',
-        'nome_origem' : 'Alisson Fabricio da Silva',
-        'conta_destino' : '000193029000',
-        'nome_destino' : 'Otávio Abreu dos Santos Silva',
-        'tipo' : 'Transferência',
-        'dataHora' : '2022-10-06 17:34:51',
-        'id' : '1',
-        'valor' : '20340'
-    }
+    #sera necessario conseguir o id de usuario pra conseguir os nomes
+    #essa função é uma consulta na tb_contabancaria buscando pelo id dos usuario
+    nome_origem = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                            CampoBd=['id_conta'],
+                                            CampoFm=[dados_transacao[0][1]],
+                                            CampoEs=['tb_usuario.nome'])
+
+    nome_destino = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                            CampoBd=['id_conta'],
+                                            CampoFm=[dados_transacao[0][2]],
+                                            CampoEs=['tb_usuario.nome'])
     
+    numero_conta_origem = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                            CampoBd=['id_conta'],
+                                            CampoFm=[dados_transacao[0][1]],
+                                            CampoEs=['numeroconta'])
+    
+    numero_conta_destino = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                            CampoBd=['id_conta'],
+                                            CampoFm=[dados_transacao[0][2]],
+                                            CampoEs=['numeroconta'])
+
+    movimentacao = {
+        'conta_origem' : numero_conta_origem[0][0],
+        'nome_origem' : nome_origem[0][0],
+        'conta_destino' : numero_conta_destino[0][0],
+        'nome_destino' : nome_destino[0][0],
+        'tipo' : tipo,
+        'data': str(data.strftime('%x')),
+        'hora': str(data.strftime('%X')),
+        'id' : id_ultima_movimentacao[0][0],
+        'valor' : valor
+    }
+
+    criaComprovante(movimentacao, numero_conta_origem[0][0])
+
     # if tipo == "Saque":
 
     # elif tipo == "Depósito":
     
     # elif tipo == "Transferência":
     
+def criaComprovante (dicionario, numero_conta):
+    c = canvas.Canvas(f"comp{dicionario['id']}{numero_conta}.pdf")
+    c.setFont("Helvetica", 12)
+    if dicionario ['tipo'] == 'Depósito':
+        c.drawString(80,750,f"Comprovante de Depósito")
+        c.drawString(80,720,f"+R${dicionario['valor']} depositado.")
+        c.line(80,705,510,705)
+        c.drawString(80,680,f"Data do Depósito: {dicionario['data']}")
+        c.drawString(80,650,f"Horário do Depósito: {dicionario['hora']}")
+        c.drawString(80,620,f"ID da Transação: {dicionario['id']}")
+    elif dicionario ['tipo'] == 'Saque':
+        c.drawString(80,750,f"Comprovante de Saque {dicionario['id']}")
+        c.drawString(80,720,f"-R${dicionario['valor']} sacado.")
+        c.line(80,705,510,705)
+        c.drawString(80,680,f"Data do Saque: {dicionario['data']}")
+        c.drawString(80,650,f"Horário do Saque: {dicionario['hora']}")
+        c.drawString(80,620,f"ID da Transação: {dicionario['id']}")
+    elif dicionario['tipo'] == 'transferencia':
+        if numero_conta == dicionario['conta_origem']:
+            c.drawString(80,750,f"Comprovante de Transferência Realizada")
+            c.drawString(80,720,f"R${dicionario['valor']} transferido para {dicionario['nome_destino']}")
+            c.line(80,705,510,705)
+            c.drawString(80,680,f"Data da Transferência: {dicionario['data']}")
+            c.drawString(80,650,f"Horário da Transferência: {dicionario['hora']}")
+            c.drawString(80,620,f"Enviado para: {dicionario['nome_destino']}")
+            c.drawString(80,590,f"Numero de conta: {dicionario['conta_destino']}")
+            c.drawString(80,560,f"ID da Transação: {dicionario['id']}")
+        elif numero_conta == dicionario['conta_destino']:
+            c.drawString(80,750,f"Comprovante de Transferência Recebida")
+            c.drawString(80,720,f"R${dicionario['valor']} recebido de {dicionario['nome_origem']}")
+            c.line(80,705,510,705)
+            c.drawString(80,680,f"Data do depósito: {dicionario['data']}")
+            c.drawString(80,650,f"Horário do Saque: {dicionario['hora']}")
+            c.drawString(80,620,f"Enviado por: {dicionario['nome_origem']}")
+            c.drawString(80,590,f"Numero de conta: {dicionario['conta_origem']}")
+            c.drawString(80,560,f"ID da Transação: {dicionario['id']}")
+    c.showPage()
+    return c.save()
     
 
 def LoadConfig():
