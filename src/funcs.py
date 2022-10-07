@@ -54,6 +54,39 @@ def SlcEspecificoMySQL(TabelaBd,CampoBd,CampoFm, CampoEs):
     cursor.close()
     return resultado
 
+def SlcEspecificoComORMySQL(TabelaBd,CampoBd,CampoFm, CampoEs,CampoWrAO):
+    x=0
+    y=0
+    cursor = mysql.connection.cursor()
+    textoSQL = ''
+    for values in CampoEs:
+        if y==0:
+            textoSQL += f'SELECT {CampoEs[y]}'
+        else:
+            textoSQL += f', {CampoEs[y]}'
+        y+=1
+    textoSQL += f' FROM {TabelaBd}'
+    for values in CampoBd:
+        if CampoWrAO[x] == 0:
+            if x==0:
+                textoSQL+= f' WHERE {CampoBd[x]} = "{CampoFm[x]}" '
+            else:
+                if CampoWrAO[x+1] == 0:
+                    textoSQL+= f' and {CampoBd[x]} = "{CampoFm[x]}"'
+                else:
+                    textoSQL+= f' and ({CampoBd[x]} = "{CampoFm[x]}"'
+        else:
+            if x==0:
+                textoSQL+= f' WHERE {CampoBd[x]} = "{CampoFm[x]}" '
+            else:
+                textoSQL+= f' or {CampoBd[x]} = "{CampoFm[x]}")'
+        x+=1
+    cursor.execute(textoSQL)
+    resultado = cursor.fetchall()
+    mysql.connection.commit()
+    cursor.close()
+    return resultado
+
 def InsMySQL(TabelaBd,CampoBd,CampoFm):
     x=0
     ValuesBD = '('

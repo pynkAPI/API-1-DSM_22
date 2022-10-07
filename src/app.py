@@ -43,9 +43,45 @@ def home():
     else:
         saldo = None
         if session['tipo'] == 1:
-            cabecalho = ('Tipo', 'Valor', 'De:', 'Para:')
+            cabecalho = ('Tipo', 'Valor','Data', 'De:', 'Para:')
             saldo = f"{session['saldo']:.2f}".replace(".",",")
-            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho)
+            VarContador=0
+            
+            pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
+                                            CampoEs=['tipo','valor','Datatime'],
+                                            CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
+                                            CampoFm=[1,session['idContaBK'],session['idContaBK']],
+                                            CampoWrAO=[0,0,1])
+            
+            pesquisaContas = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
+                                            CampoEs=['id_conta_origem', 'id_conta_destino'],
+                                            CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
+                                            CampoFm=[1,session['idContaBK'],session['idContaBK']],
+                                            CampoWrAO=[0,0,1])
+            
+            # print(pesquisaSQL)
+            
+            pesquisaSQL = [list(row) for row in pesquisaSQL]
+            for row in pesquisaContas:
+                
+                nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[0]],
+                                                        CampoEs=['nome'])
+                nomes1 = [list(row) for row in nomes1]
+                                            
+                nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[1]],
+                                                        CampoEs=['nome'])
+                print(row[1])
+                nomes2 = [list(row) for row in nomes2]
+                
+                pesquisaSQL[VarContador].append(nomes1[0][0])
+                pesquisaSQL[VarContador].append(nomes2[0][0])
+                VarContador+=1
+                
+            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
             saldo = f"{session['saldo']:.2f}".replace(".",",")
             return render_template('homeG.html',saldo=saldo)
@@ -188,6 +224,7 @@ def login():
             for row in resultado:
                 session['nome']     = row[1]
                 session['saldo']    = row[15]
+                session['idContaBK']= row[9]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1
@@ -381,11 +418,14 @@ def TransacaoConta():
                                                   CampoBd=['numeroconta'],
                                                   CampoFm=[numeroConta],
                                                   CampoEs=['id_conta', 'saldo'])
+            
+            
 
             pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                   CampoBd=['numeroconta'],
                                                   CampoFm=[session['conta']],
                                                   CampoEs=['id_conta', 'saldo'])
+            
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]
 
@@ -415,6 +455,7 @@ def TransacaoConta():
             funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
 
             return Transacao()
+    return Transacao()
         
 #------------------------------
 
