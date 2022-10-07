@@ -91,6 +91,58 @@ def home():
             return render_template('homeG.html',saldo=saldo)
 #------------------------------
 
+#Aplicar filtro no extrato
+@app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
+def FiltroExtrato():
+    if request.method == "POST":
+        cabecalho   = ('Tipo', 'Valor','Data e hora', 'De:', 'Para:')
+        saldo       = funcs.ValEmReal(session['saldo'])
+        VarContador = 0
+        DataDe      = request.form['DataExtratoDe']
+        DateAte     = request.form['DataExtratoAte']
+        cursor = mysql.connection.cursor()
+        
+        textoSQL = f"""SELECT tipo, valor, Datatime FROM tb_transacao 
+        WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59' 
+        and ( id_conta_origem = "{session['idContaBK']}"or id_conta_destino = "{session['idContaBK']}")"""
+        
+        cursor.execute(textoSQL)
+        pesquisaSQL = cursor.fetchall()
+        mysql.connection.commit()     
+        
+        textoSQL2 = f"""SELECT id_conta_origem, id_conta_destino FROM tb_transacao 
+        WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59'
+        and ( id_conta_origem = "{session['idContaBK']}" or id_conta_destino = "{session['idContaBK']}" )"""
+        
+        cursor.execute(textoSQL2)
+        pesquisaContas = cursor.fetchall()
+        mysql.connection.commit()  
+        
+        
+        cursor.close()   
+            
+        pesquisaSQL = [list(row) for row in pesquisaSQL]
+        for row in pesquisaContas:
+            nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[0]],
+                                                        CampoEs=['nome'])  
+            nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[1]],
+                                                        CampoEs=['nome'])
+            nomes1 = [list(row) for row in nomes1]   
+            nomes2 = [list(row) for row in nomes2]
+                
+            pesquisaSQL[VarContador].append(nomes1[0][0])
+            pesquisaSQL[VarContador].append(nomes2[0][0])
+            pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
+            VarContador+=1
+            
+        return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
+    return render_template('home.html')
+#------------------------------
+
 #Pagina Deposito
 @app.route("/deposito")
 def deposito():
@@ -124,12 +176,19 @@ def SaqueConta():
 
             if valor <= capital_total[0][0]:
                 valor = float(session['saldo']) - valor
+                NewCapTot = capital_total[0][0] - valor
 
                 funcs.upMySQL('tb_contabancaria',
                                CampoBd=['saldo'],
                                CampoFm=[valor],
                                CampoWr=['numeroconta'],
                                CampoPs=[session['conta']])
+                
+                funcs.upMySQL('tb_capitaltotal',
+                               CampoBd=['capitalinicial'],
+                               CampoFm=[NewCapTot],
+                               CampoWr=['id_capitaltotal'],
+                               CampoPs=[1])
 
                 saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
                                                             CampoBd=['numeroconta'],
