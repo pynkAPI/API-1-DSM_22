@@ -1,0 +1,32 @@
+{% extends "home.html" %}
+{% block saldo %}
+{% endblock %}
+{% block func %}
+
+<div class="func">
+    <div class="h1">
+
+        <h1>CANCELE SUA CONTA</h1>
+    </div>
+    <div>
+        <h3>SUA CONTA APENAS PODE SER CANCELADA QUANDO TIVER SALDO 0</h3>
+    </div>
+    <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <label> {{ message }}</label>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+    <form action="{{ url_for('CancelamentoConta') }}" method="POST">
+        <div class="input-button">
+            <input type="submit" value="CANCELAR CONTA" class="btnd solid"><br>
+        </div>
+    </form>
+
+    <a href="{{ url_for('home') }}">Voltar ao Menu</a>
+</div>
+
+{% endblock %}

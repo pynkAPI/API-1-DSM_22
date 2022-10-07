@@ -447,6 +447,22 @@ def AceiteAlteracaoTabela():
 def ReqAlt():
     return render_template('ReqAlt.html')
 
+
+@app.route("/Cancelamento")
+def Cancelamento():
+    return render_template('cancelamento.html')
+
+@app.route("/CancelamentoConta",  methods = ['POST', 'GET'])
+def CancelamentoConta():
+    if request.method == 'POST':
+        id_usuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ',
+                                             CampoBd=['numeroconta'],
+                                             CampoFm=[session['conta']],
+                                             CampoEs=['id_usuario'])
+        funcs.cancelMySQL(id_usuario = id_usuario[0][0])
+    return Cancelamento() 
+    
+
 #------------------------------
 
 #Tratamento de Erros
