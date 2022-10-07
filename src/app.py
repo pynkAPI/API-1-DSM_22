@@ -425,7 +425,7 @@ def TransacaoConta():
                                                   CampoBd=['numeroconta'],
                                                   CampoFm=[session['conta']],
                                                   CampoEs=['id_conta', 'saldo'])
-            
+                                                  
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]
 

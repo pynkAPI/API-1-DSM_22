@@ -251,27 +251,22 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
 
     criaComprovante(movimentacao, numero_conta_origem[0][0])
 
-    # if tipo == "Saque":
-
-    # elif tipo == "Depósito":
-    
-    # elif tipo == "Transferência":
     
 def criaComprovante (dicionario, numero_conta):
     c = canvas.Canvas(f"comp{dicionario['id']}{numero_conta}.pdf")
     c.setFont("Helvetica", 12)
     if dicionario ['tipo'] == 'Depósito':
-        c.drawString(80,750,f"Comprovante de Depósito")
+        c.drawString(80,750,"Comprovante de Depósito")
         c.drawString(80,720,f"+R${dicionario['valor']} depositado.")
         c.line(80,705,510,705)
-        c.drawString(80,680,f"Data do Depósito: {dicionario['data']}")
+        c.drawString(80,680,f"Data do Depósito [mm/dd/aa]: {dicionario['data']}")
         c.drawString(80,650,f"Horário do Depósito: {dicionario['hora']}")
         c.drawString(80,620,f"ID da Transação: {dicionario['id']}")
     elif dicionario ['tipo'] == 'Saque':
-        c.drawString(80,750,f"Comprovante de Saque {dicionario['id']}")
+        c.drawString(80,750,"Comprovante de Saque")
         c.drawString(80,720,f"-R${dicionario['valor']} sacado.")
         c.line(80,705,510,705)
-        c.drawString(80,680,f"Data do Saque: {dicionario['data']}")
+        c.drawString(80,680,f"Data do Saque [mm/dd/aa]: {dicionario['data']}")
         c.drawString(80,650,f"Horário do Saque: {dicionario['hora']}")
         c.drawString(80,620,f"ID da Transação: {dicionario['id']}")
     elif dicionario['tipo'] == 'transferencia':
