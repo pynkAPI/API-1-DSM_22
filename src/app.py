@@ -373,47 +373,48 @@ def Transacao():
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        numeroConta = request.form['numeroConta']
-        valor = float(request.form['valor'])
+        if float(request.form['valor']) > float(session['saldo']) :
+            numeroConta = request.form['numeroConta']
+            valor = float(request.form['valor'])
 
-        pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+            pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                   CampoBd=['numeroconta'],
                                                   CampoFm=[numeroConta],
                                                   CampoEs=['id_conta', 'saldo'])
 
-        pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+            pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                   CampoBd=['numeroconta'],
                                                   CampoFm=[session['conta']],
                                                   CampoEs=['id_conta', 'saldo'])
-        IdContaDestino = pesquisaContaDestino[0][0]
-        IdContaOrigem = pesquisaContaOrigem[0][0]
+            IdContaDestino = pesquisaContaDestino[0][0]
+            IdContaOrigem = pesquisaContaOrigem[0][0]
 
-        valorContaDestino = pesquisaContaDestino[0][1]
-        valorContaOrigem = pesquisaContaOrigem[0][1]
+            valorContaDestino = pesquisaContaDestino[0][1]
+            valorContaOrigem = pesquisaContaOrigem[0][1]
 
-        valorContaDestino = valorContaDestino + valor
-        valorContaOrigem = valorContaOrigem - valor
+            valorContaDestino = valorContaDestino + valor
+            valorContaOrigem = valorContaOrigem - valor
 
-        if IdContaDestino == IdContaOrigem:
-            return render_template('transacao.html')
+            if IdContaDestino == IdContaOrigem:
+                return render_template('transacao.html')
 
-        funcs.upMySQL(TabelaBd='tb_contabancaria',
+            funcs.upMySQL(TabelaBd='tb_contabancaria',
                       CampoBd=['saldo'],
                       CampoFm=[valorContaOrigem],
                       CampoPs=[IdContaOrigem],
                       CampoWr=['id_conta'])
 
-        funcs.upMySQL(TabelaBd='tb_contabancaria',
+            funcs.upMySQL(TabelaBd='tb_contabancaria',
                       CampoBd=['saldo'],
                       CampoFm=[valorContaDestino],
                       CampoPs=[IdContaDestino],
                       CampoWr=['id_conta'])
 
-        session['saldo'] = valorContaOrigem
+            session['saldo'] = valorContaOrigem
 
-        funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
+            funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
 
-        return Transacao()
+            return Transacao()
         
 #------------------------------
 
