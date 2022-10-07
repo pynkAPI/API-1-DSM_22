@@ -171,6 +171,39 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
             CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor', 'status_transacao'],
             CampoFm = [conta_origem, conta_destino, data, tipo, valor, status])
 
+    id_ultima_movimentacao = SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                                CampoBd=['id_conta_origem'],
+                                                CampoFm=[conta_origem],
+                                                CampoEs=['max(id_transacao)'])
+
+    dados_transacao = SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                        CampoBd=['id_transacao'],
+                                        CampoFm=[id_ultima_movimentacao[0][0]],
+                                        CampoEs=['*'])
+    
+    nome_origem = SlcEspecificoMySQL (TabelaBd='tb_usuario',
+                                    CampoBd=[],
+                                    CampoFm=[],
+                                    CampoEs=[])
+    movimentacao = {
+        'conta_origem' : '123456',
+        'nome_origem' : 'Alisson Fabricio da Silva',
+        'conta_destino' : '000193029000',
+        'nome_destino' : 'Otávio Abreu dos Santos Silva',
+        'tipo' : 'Transferência',
+        'dataHora' : '2022-10-06 17:34:51',
+        'id' : '1',
+        'valor' : '20340'
+    }
+    
+    # if tipo == "Saque":
+
+    # elif tipo == "Depósito":
+    
+    # elif tipo == "Transferência":
+    
+    
+
 def LoadConfig():
     config = {}
     conf = open("config.conf", "r")
