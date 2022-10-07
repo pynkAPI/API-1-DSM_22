@@ -414,3 +414,8 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 '500': 'Erro interno do servidor.',
 '503': 'Serviço indisponível.',
 '504': 'Gateway timeout'}
+
+
+def ValEmReal(valor):
+    valor = f"{valor:.2f}".replace(".",",")
+    return valor
