@@ -242,10 +242,6 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
                                             CampoFm=[dados_transacao[0][2]],
                                             CampoEs=['numeroconta'])
 
-    email = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                            CampoBd=['id_conta'],
-                                            CampoFm=[dados_transacao[0][1]],
-                                            CampoEs=['tb_usuario.email'])
     movimentacao = {
         'conta_origem' : numero_conta_origem[0][0],
         'nome_origem' : nome_origem[0][0],
@@ -258,15 +254,29 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
         'valor' : valor
     }
 
+    email = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                            CampoBd=['id_conta'],
+                                            CampoFm=[dados_transacao[0][1]],
+                                            CampoEs=['tb_usuario.email'])
+
     nome_comp = criaComprovante(movimentacao, numero_conta_origem[0][0])
 
     emailComprovante(nome_comp, email[0][0])
 
     os.remove(nome_comp)
 
-    
+    if movimentacao['tipo'] == 'transferencia':
+        email = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                CampoBd=['id_conta'],
+                                                CampoFm=[dados_transacao[0][2]],
+                                                CampoEs=['tb_usuario.email'])
 
-    
+        nome_comp = criaComprovante(movimentacao, numero_conta_destino[0][0])
+
+        emailComprovante(nome_comp, email[0][0])
+
+        os.remove(nome_comp)
+
 def criaComprovante (dicionario, numero_conta):
     nome_comp = f"{dicionario['id']}{numero_conta}.pdf"
     c = canvas.Canvas(nome_comp)
@@ -299,8 +309,8 @@ def criaComprovante (dicionario, numero_conta):
             c.drawString(80,750,f"Comprovante de Transferência Recebida")
             c.drawString(80,720,f"R${dicionario['valor']} recebido de {dicionario['nome_origem']}")
             c.line(80,705,510,705)
-            c.drawString(80,680,f"Data do depósito: {dicionario['data']}")
-            c.drawString(80,650,f"Horário do Saque: {dicionario['hora']}")
+            c.drawString(80,680,f"Data da Transferência: {dicionario['data']}")
+            c.drawString(80,650,f"Horário da Transferência: {dicionario['hora']}")
             c.drawString(80,620,f"Enviado por: {dicionario['nome_origem']}")
             c.drawString(80,590,f"Numero de conta: {dicionario['conta_origem']}")
             c.drawString(80,560,f"ID da Transação: {dicionario['id']}")
