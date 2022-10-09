@@ -221,8 +221,6 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
                                         CampoFm=[id_ultima_movimentacao[0][0]],
                                         CampoEs=['*'])
     
-    #sera necessario conseguir o id de usuario pra conseguir os nomes
-    #essa função é uma consulta na tb_contabancaria buscando pelo id dos usuario
     nome_origem = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
                                             CampoBd=['id_conta'],
                                             CampoFm=[dados_transacao[0][1]],
