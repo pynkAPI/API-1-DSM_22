@@ -19,6 +19,7 @@
     </div>
     <div>
         <h3>SUA CONTA APENAS PODE SER CANCELADA QUANDO TIVER SALDO 0</h3>
+        <h3>CANCELAR A CONTA É UM ATO IRREVERSÍVEL! CASO QUEIRA PROSSEGUIR DIGITE SUA SENHA</h3>
     </div>
     <div>
         {% with messages = get_flashed_messages() %}
@@ -33,6 +34,7 @@
         <div class="input-button">
             <input type="submit" value="CANCELAR CONTA" class="btnd solid"><br>
         </div>
+        <input type="password" class="input-field" placeholder="SENHA" id="SenhaId" name="senha" required>
     </form>
 
     <a href="{{ url_for('home') }}">Voltar ao Menu</a>

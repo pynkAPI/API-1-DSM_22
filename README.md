@@ -82,18 +82,19 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |      1     |    US01   |      F.1      |        RF.3       | Depósito em espécie                                                                       |      ALTA      |     Feito    |
 |      1     |    US02   |      F.2      |        RF.3       | Saque em espécie                                                                          |      ALTA      |     Feito    |
 |      1     |    US10   |      F.3      |        RF.3       | Criação de conta de usuário comum                                                         |      ALTA      |     Feito    |
-|      2     |    US07   |      F.4      |        RF.3       | Emissão de extratos                                                                       |      MÉDIA     | Em andamento |
-|      2     |    US09   |      F.5      |        RF.2       | Conferência de depósito                                                                   |      MÉDIA     | Em andamento |
+|      2     |    US07   |      F.4      |        RF.3       | Geração de extratos                                                                       |      MÉDIA     |     Feito    |
+|      2     |    US07   |      F.4      |        RF.3       | Emissão de Comprovante                                                                    |      MÉDIA     |     Feito    |
+|      2     |    US09   |      F.5      |        RF.2       | Conferência de depósito                                                                   |      MÉDIA     |     Feito    |
 |      2     |    US04   |      F.6      |        RF.3       | Requisição de alteração de dados                                                          |      MÉDIA     | Em andamento |
 |      2     |    US05   |      F.7      |        RF.3       | Requisição de cancelamento de conta                                                       |      MÉDIA     | Em andamento |
 |      2     |    US03   |      F.8      |        RF.3       | Requisição de criação de conta                                                            |      MÉDIA     | Em andamento |
-|      2     |    US06   |      F.9      |        RF.3       | Transferência em contas do mesmo banco*                                                   |      MÉDIA     | Em andamento |
-|      2     |    US18   |      F.10     |        RF.6       | Não aceitar qualquer saque que extrapole o valor total do banco.                          |      MÉDIA     | Em andamento |
-|      2     |    US10   |      F.11     |        RF.2       | Aceite ou recusa de requisição de abertura de conta                                       |      MÉDIA     | Em andamento |
-|      2     |    US11   |      F.12     |        RF.2       | Aceite ou recusa de requisição alteração de dados de usuário                              |      MÉDIA     | Em andamento |
-|      3     |    US12   |      F.13     |        RF.2       | Aceite ou recusa de requisição de fechamento de conta de usuário                          |      MÉDIA     | Em andamento |
-|      3     |    US15   |      F.14     |        RF.1       | Criar Agência                                                                             |      MÉDIA     | Em andamento |
-|      3     |    US14   |      F.15     |        RF.1       | Criar Gerente de Agência                                                                  |      MÉDIA     | Em andamento |
+|      2     |    US06   |      F.9      |        RF.3       | Transferência em contas do mesmo banco*                                                   |      MÉDIA     |     Feito    |
+|      2     |    US18   |      F.10     |        RF.6       | Não aceitar qualquer saque que extrapole o valor total do banco.                          |      MÉDIA     |     Feito    |
+|      2     |    US10   |      F.11     |        RF.2       | Aceite ou recusa de requisição de abertura de conta                                       |      MÉDIA     |     Feito    |
+|      2     |    US11   |      F.12     |        RF.2       | Aceite ou recusa de requisição alteração de dados de usuário                              |      MÉDIA     |     Feito    |
+|      3     |    US12   |      F.13     |        RF.2       | Aceite ou recusa de requisição de fechamento de conta de usuário                          |      MÉDIA     |  Em aguardo  |
+|      3     |    US15   |      F.14     |        RF.1       | Criar Agência                                                                             |      MÉDIA     |  Em aguardo  |
+|      3     |    US14   |      F.15     |        RF.1       | Criar Gerente de Agência                                                                  |      MÉDIA     |  Em aguardo  |
 |      3     |    US14   |      F.16     |        RF.1       | Alterar dados de Gerente de Agência                                                       |      BAIXA     |  Em aguardo  |
 |      3     |    US14   |      F.17     |        RF.1       | Deletar Gerente de Agência                                                                |      BAIXA     |  Em aguardo  |
 |      3     |    US14   |      F.18     |        RF.1       | Atrelar Gerente de Agência a uma Agência                                                  |      BAIXA     |  Em aguardo  |

@@ -26,10 +26,6 @@ app.config['MYSQL_DB'] = config['db']
 mysql = MySQL(app)
 # Bloco de Paginas.
 
-# Resumo dos comandos
-    #Route  -> Caminho das paginas.
-    #Def    -> Função de exibição da pagina.
-
 #Pagina inicial
 @app.route("/")
 def index():
@@ -168,12 +164,6 @@ def SaqueConta():
                                                     CampoBd=['id_capitaltotal'],
                                                     CampoFm=['1'],
                                                     CampoEs=['capitalinicial'])
-
-            capital_externo = funcs.SlcEspecificoMySQL('tb_capitaltotal',
-                                                    CampoBd=['id_capitaltotal'],
-                                                    CampoFm=['1'],
-                                                    CampoEs=['capitalexterno'])
-
             if valor <= capital_total[0][0]:
                 valor = float(session['saldo']) - valor
                 NewCapTot = capital_total[0][0] - valor
@@ -313,40 +303,6 @@ def login():
                 abort(401)
     else:
         abort(401)
-#------------------------------
-
-#Bloco de requisição padrão
-
-# @app.route("/deletarConta",  methods = ['POST', 'GET'])
-# def deletarConta():
-
-#     id_usuario = request.form['IdUsuario']
-
-#     funcs.DelMySQL(TabelaBd='tb_usuario',
-#                    CampoBd=['id_usuario'],
-#                    CampoFm=[id_usuario])
-
-#     return RequisicaoPadrao()
-
-
-#------------------------------
-
-#Bloco de requisição padrão
-
-# @app.route("/a")
-# def RequisicaoPadrao():
-#     cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
-
-#     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
-#                                            CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
-#                                            CampoBd=[],
-#                                            CampoFm=[])
-
-
-#     return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
-
-
-#------------------------------
 
 #Bloco de conferência de depósito pendentes
 
@@ -473,9 +429,7 @@ def Transacao():
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        # print(float(request.form['valor']))
-        if float(request.form['valor']) <= float(session['saldo']) :
-            # print('teste')
+        if float(request.form['valor']) <= float(session['saldo']) and float(request.form['valor']) > 0:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
@@ -563,10 +517,43 @@ def CancelamentoConta():
         id_usuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ',
                                              CampoBd=['numeroconta'],
                                              CampoFm=[session['conta']],
-                                             CampoEs=['id_usuario'])
-        funcs.cancelMySQL(id_usuario = id_usuario[0][0])
-    return Cancelamento() 
-    
+                                             CampoEs=['tb_usuario.id_usuario'])
+        senha = request.form['senha']
+        funcs.cancelMySQL(id_usuario = id_usuario[0][0], senha= senha, numeroconta= session['conta'])
+        
+
+#------------------------------
+
+#Bloco de requisição de Abertura de Conta
+
+@app.route("/RequisicaoAberturaConta")
+def RequisicaoAberturaConta():
+    return render_template('RequisicaoAberturaConta.html')
+
+@app.route("/AberturaConta", methods = ['POST', 'GET'])
+def AberturaConta():
+    if request.method == 'POST':
+
+        tipoConta = request.form['tipoconta']
+        conta = session['conta']
+
+        pesquisaUsario = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                           CampoEs=['tb_usuario.id_usuario', 'tb_usuario.cpf', 'tb_usuario.nome'],
+                                           CampoBd=['numeroconta'],
+                                           CampoFm=[conta])
+        
+        idUsuario = pesquisaUsario[0][0]
+        cpf = pesquisaUsario[0][1]
+        nome = pesquisaUsario[0][2]
+        numeroConta = funcs.geraId(str(nome),str(1),str(cpf))
+        
+        funcs.InsMySQL(TabelaBd='tb_contabancaria',
+                        CampoBd=['tipo', 'id_usuario', 'id_agencia', 'numeroconta', 'data_abertura', 'saldo', 'status_contabancaria'],
+                        CampoFm=[tipoConta, idUsuario, 1, numeroConta, datetime.today(), 0, '0'])    
+
+        return RequisicaoAberturaConta()
+
+
 
 #------------------------------
 

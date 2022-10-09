@@ -1,3 +1,4 @@
+from logging import raiseExceptions
 import os
 from email.message import EmailMessage
 from email import encoders
@@ -8,7 +9,7 @@ import ssl
 import smtplib
 from importlib.metadata import requires
 from reportlab.pdfgen import canvas
-from flask import Flask, render_template,request, url_for, redirect, session
+from flask import Flask, render_template,request, url_for, redirect, session, abort
 from flask_mysqldb import MySQL
 import datetime
 import random
@@ -340,22 +341,28 @@ def LoadConfig():
     conf.close()
     return config
 
-def cancelMySQL(id_usuario):
-    saldo = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                               CampoBd=['id_usuario'],
-                               CampoFm=[id_usuario], 
-                               CampoEs=['saldo'])
-    if saldo > 0:
-        return "Saque seu dinheiro antes de cancelar sua conta!"
-    elif saldo < 0:
-        return "Corrija sua situação bancária antes de cancelar sua conta!"
+def cancelMySQL(id_usuario, senha, numeroconta):
+    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                               CampoBd=['tb_usuario.id_usuario', 'tb_contabancaria.numeroconta'],
+                               CampoFm=[id_usuario, numeroconta], 
+                               CampoEs=['saldo', 'tb_usuario.senha'])
+    saldo = pesquisa[0][0]
+    senhaUsuario = pesquisa[0][1]
+    if senha == senhaUsuario:
+        if saldo > 0: 
+            raise Exception('601')
+        elif saldo < 0:
+            raise Exception('602')
+        else:
+            upMySQL(TabelaBd='tb_contabancaria',
+                CampoBd=['status_contabancaria'],
+                CampoFm=[2],
+                CampoWr=['id_usuario', 'numeroconta'],
+                CampoPs=[id_usuario, numeroconta])
+            raise Exception('603')
+
     else:
-        upMySQL(TabelaBd='tb_usuario',
-                CampoBd=['ativo'],
-                CampoFm=[0],
-                CampoWr=['id_usuario'],
-                CampoPs=[id_usuario])
-        return "Cancelamento efetuado com sucesso"
+        raise Exception('401')
 
 def emailCadastro(id, destinatario, aceite):
     remetente = "py.nk.fatec@gmail.com"
@@ -427,7 +434,10 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 '403': 'Acesso restrito.',
 '500': 'Erro interno do servidor.',
 '503': 'Serviço indisponível.',
-'504': 'Gateway timeout'}
+'504': 'Gateway timeout',
+'601' : 'Você ainda possui saldo em conta, realize o saque e depois prossiga com o cancelamento',
+'602' : 'Você ainda possui pendências  com o banco, regularize sua situação antes de prosseguir com o cancelamento',
+'603' : 'Você cancelou a sua conta com sucesso.'}
 
 
 def ValEmReal(valor):
