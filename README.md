@@ -32,6 +32,17 @@ A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como com
 
 <img src="/doc/img/Gif Programa Sprint 1.gif">
 
+#### •Sprint 2
+A Sprint 2 apresentou mudanças muito claras em relação a Sprint 1, muitas delas em decorrência de um momento mais maduro do grupo como um todo em quesitos técnicos, pessoais e etc. Em questões de desenvolvimento foi uma Sprint bem performática, funcionalidades centrais do sistema foram adicionadas e orquestradas com certa facilidade, a grande barreira foi realmente a divergência e a dificuldade em manejar situações pessoais que atrasaram e prejudicaram o grupo como um todo, dessa forma, após as reuniões do final da Sprint é possível que alguns integrantes saiam do grupo.
+**Nota:** A reunião de Sprint Review não foi realizada ainda, portanto dados como o destaque e acertos e erros gerais encontrados pela equipe ainda não foram levantados.
+
+**Burndown Chart da Sprint 2**:
+
+<img src="/doc/img/Burndown Sprint 2.png">
+
+**GIF do Produto entregue na Sprint 2**:
+
+<img src="/doc/img/Gif Programa Sprint 2.gif">
 
 • [To the top ↑](#top)
 
@@ -77,6 +88,7 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 | US19 | Eu, enquanto Usuário comum, desejo que quando meu saldo fique negativo minha conta em status de cheque especial, para que eu posso realizar empréstimos do banco                                  |    4   |
 
 #### Product Backlog
+#### Product Backlog
 | **Sprint** | **ID US** | **ID Função** | **ID Requisição** | **Funções**                                                                               | **Prioridade** | **Status**   |
 |------------|-----------|---------------|-------------------|-------------------------------------------------------------------------------------------|----------------|--------------|
 |      1     |    US01   |      F.1      |        RF.3       | Depósito em espécie                                                                       |      ALTA      |     Feito    |
@@ -86,8 +98,8 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |      2     |    US07   |      F.4      |        RF.3       | Emissão de Comprovante                                                                    |      MÉDIA     |     Feito    |
 |      2     |    US09   |      F.5      |        RF.2       | Conferência de depósito                                                                   |      MÉDIA     |     Feito    |
 |      2     |    US04   |      F.6      |        RF.3       | Requisição de alteração de dados                                                          |      MÉDIA     | Em andamento |
-|      2     |    US05   |      F.7      |        RF.3       | Requisição de cancelamento de conta                                                       |      MÉDIA     | Em andamento |
-|      2     |    US03   |      F.8      |        RF.3       | Requisição de criação de conta                                                            |      MÉDIA     | Em andamento |
+|      2     |    US05   |      F.7      |        RF.3       | Requisição de cancelamento de conta                                                       |      MÉDIA     |     Feito    |
+|      2     |    US03   |      F.8      |        RF.3       | Requisição de criação de conta                                                            |      MÉDIA     |     Feito    |
 |      2     |    US06   |      F.9      |        RF.3       | Transferência em contas do mesmo banco*                                                   |      MÉDIA     |     Feito    |
 |      2     |    US18   |      F.10     |        RF.6       | Não aceitar qualquer saque que extrapole o valor total do banco.                          |      MÉDIA     |     Feito    |
 |      2     |    US10   |      F.11     |        RF.2       | Aceite ou recusa de requisição de abertura de conta                                       |      MÉDIA     |     Feito    |
@@ -104,6 +116,7 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |      4     |    US18   |      F.22     |     RF.4, RF.5    | Alteração do capital total do banco de acordo com os saques e Depósitos                   |      BAIXA     |  Em aguardo  |
 |      4     |    US19   |      F.23     |    RF.12, RF.13   | Função de cheque especial                                                                 |      BAIXA     |  Em aguardo  |
 |      4     |    US20   |      F.24     |        RF.7       | Truncamento dos valores com as correções apropriadas para evitar inconsistência de dados. |      BAIXA     |  Em aguardo  |
+
 
 
 </div>
