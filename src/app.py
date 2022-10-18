@@ -191,6 +191,7 @@ def SaqueConta():
                                                             CampoEs=['id_conta'])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
+                funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
@@ -356,10 +357,12 @@ def ConferenciaDeposito():
             valorTotalBanco = valor + valorTotalBanco
 
             funcs.upMySQL(TabelaBd='tb_transacao',
-                      CampoBd=['status_transacao'],
-                      CampoFm=[1],
+                      CampoBd=['status_transacao', 'Datatime'],
+                      CampoFm=[1, datetime.today()],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
+            
+            funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
             funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
@@ -470,7 +473,7 @@ def TransacaoConta():
             session['saldo'] = valorContaOrigem
 
             funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
-
+            funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
             return Transacao()
     return Transacao()
         

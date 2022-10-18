@@ -211,6 +211,8 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
             CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor', 'status_transacao'],
             CampoFm = [conta_origem, conta_destino, data, tipo, valor, status])
 
+def email(conta_origem, tipo, valor):
+    data = datetime.datetime.now()
     id_ultima_movimentacao = SlcEspecificoMySQL(TabelaBd='tb_transacao',
                                                 CampoBd=['id_conta_origem'],
                                                 CampoFm=[conta_origem],
