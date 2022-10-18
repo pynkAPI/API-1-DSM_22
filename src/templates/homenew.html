@@ -11,7 +11,54 @@
     {% endblock %}
 </head>
 <body>
-    <div class="menu-content">
+    {% block sidebar %}
+    <div class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <!-- <img src="pynklogo.png"> -->
+            </div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="#">
+                    <i class='bx bx-user'></i>
+                    <span class="links_name">Sua Conta</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="req_btn">
+                    <i class='bx bx-wallet' ></i>
+                    <span class="links_name">Depósito</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="req_btn">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span class="links_name">Saque</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="req_btn">
+                    <i class='bx bx-transfer' ></i>
+                    <span class="links_name">Transferência</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="req_btn">
+                    <i class='bx bx-cog' ></i>
+                    <span class="links_name">Configurações</span>
+                </a>
+            </li>
+        </ul>
+        <div class="profile_content">
+            <div class="profile">
+                <i class='bx bx-log-out' id="log_out"></i>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <div class="home_content">
         <div class="panels">
             <div class="left-panels">
                     {% block cabecalho %}
@@ -23,22 +70,13 @@
                         </div>
                     </div> 
                     {% endblock %}
-
                         {% block saldo %}
                         <div class="saldo">
                             <h3>Seu Saldo</h3>
                             <label>R$ {{saldo}}</label>
                         </div>  
                         {% endblock %}
-
-                            {% block func %}
-                            <div class="func">
-                                <a href="#">SAQUE</a>
-                                <a href="#">DEPOSITE</a>
-                                <a href="#">TRANSFIRA</a>
-                            </div> 
             </div> 
-                            {% endblock %} 
                 {% block extrato %}        
                 <div class="right-panels">
                     <div class="extrato">
@@ -80,6 +118,19 @@
                 {% endblock %} 
             </div>  
         </div>
-    </div>    
+    </div>  
+    <script>
+        let btn = document.querySelector("#btn");
+        let sidebar = document.querySelector(".sidebar");
+        btn.onclick = function() {
+            sidebar.classList.toggle("active")
+        }
+        sidebar.onclick = function() {
+            sidebar.classList.toggle("active")
+        }
+        $('.req_btn').click(function(){
+            $('.sidebar ul .req_show').toggleClass("show");
+        });
+    </script>  
 </body>
 </html>
