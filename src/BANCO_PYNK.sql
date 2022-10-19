@@ -70,6 +70,25 @@ FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario),
 descricao VARCHAR(255)
 );
 
+CREATE TABLE tb_cheque_especial(
+id_cheque_especial INT  AUTO_INCREMENT PRIMARY KEY,
+id_conta INT NOT NULL,
+data_inicio DATE NOT NULL,
+data_final DATE,
+valor_devido FLOAT NOT NULL,
+ativo boolean NOT NULL
+);
+
+ALTER TABLE tb_cheque_especial ADD FOREIGN KEY(id_conta) REFERENCES tb_contabancaria (id_conta);
+
+CREATE TABLE tb_regra_operacoes(
+id_regra_operacoes int AUTO_INCREMENT PRIMARY KEY,
+descricao varchar(255) NOT NULL,
+porcentagem float NOT NULL,
+frequencia VARCHAR(55) NOT NULL);
+
+
+
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
 

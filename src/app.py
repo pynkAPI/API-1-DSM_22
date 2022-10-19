@@ -167,7 +167,7 @@ def SaqueConta():
             if valor <= capital_total[0][0]:
                 valor = float(session['saldo']) - valor
                 NewCapTot = capital_total[0][0] - valor
-
+                     
                 funcs.upMySQL('tb_contabancaria',
                                CampoBd=['saldo'],
                                CampoFm=[valor],
@@ -189,6 +189,12 @@ def SaqueConta():
                                                             CampoBd=['numeroconta'],
                                                             CampoFm=[session['conta']],
                                                             CampoEs=['id_conta'])
+                
+                if valor < 0:
+                    
+                    funcs.InsMySQL(TabelaBd='tb_cheque_especial',
+                                   CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
+                                   CampoFm=[idConta[0][0],  datetime.today(), None, valor, True])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
                 funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
