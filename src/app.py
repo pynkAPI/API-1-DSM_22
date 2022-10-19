@@ -81,7 +81,7 @@ def home():
                 pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
                 VarContador+=1
                 
-            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
+            return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
             saldo = f"{session['saldo']:.2f}".replace(".",",")
             return render_template('homeG.html',saldo=saldo)
@@ -477,6 +477,21 @@ def TransacaoConta():
             return Transacao()
     return Transacao()
         
+#------------------------------
+
+#Página configurações
+
+@app.route("/Config")
+def Config():
+    return render_template("u_config.html")
+
+#------------------------------
+
+#Página Sua Conta
+@app.route("/SuaConta")
+def SuaConta():
+    return render_template("homenew.html")
+
 #------------------------------
 
 #Bloco de requisição de Abertura de Conta

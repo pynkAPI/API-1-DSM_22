@@ -163,12 +163,16 @@ body{
     position: absolute;
     height: 100%;
     width: calc(100%-78px);
-    left: 7.8vh;
+    left: 45vh;
     transition: all 0.5s ease;
 }
-.sidebar.active ~ .home_content{
+.conf_content{
+    width: calc(100%-78px);
+    left: 45vh;
+}
+/* .sidebar.active ~ .home_content{
     width: calc(100%-240px);
-    left: 24vh;
+    left: 24vh; */
 }
 img{
     width: 100%;
@@ -186,18 +190,15 @@ li{
 }
 .panels{
    display: flex;
+   flex-direction: grid;
    margin-top: 5vh;
-   margin-left: 5vh;
 }
-.menu-content{
-    /* height: 100%;
-    max-height: 600px; */
-    max-width: 120vh;
-    width: 100%;
-    margin-top: 4%;
+.left-panels{
+    padding-right:10vh;
 }
 .mensagem{
-    display: flex;
+    display:flex;
+    padding: 1.5vh;
 }
 .m-text{
     width: 40vh;

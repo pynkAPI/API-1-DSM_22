@@ -11,6 +11,7 @@
     {% endblock %}
 </head>
 <body>
+    {% block body %}
     {% block sidebar %}
     <div class="sidebar">
         <div class="logo_content">
@@ -21,7 +22,7 @@
         </div>
         <ul class="nav-list">
             <li>
-                <a href="#">
+                <a href="SuaConta">
                     <i class='bx bx-user'></i>
                     <span class="links_name">Sua Conta</span>
                 </a>
@@ -46,7 +47,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="req_btn">
+                <a href="Config" class="req_btn">
                     <i class='bx bx-cog' ></i>
                     <span class="links_name">Configurações</span>
                 </a>
@@ -60,13 +61,13 @@
     </div>
     {% endblock %}
     <div class="home_content">
+    {% block panels %}
         <div class="panels">
             <div class="left-panels">
                     {% block cabecalho %}
                     <div class="mensagem">
-                        <img src="../static/img/assistente.svg" class="m-img">
                         <div class="m-text">
-                            <h2>Olá, {{Nome}}</h2>
+                            <h2>Olá, {{nome}}</h2>
                             <h3>Acompanhe o status da sua conta:</h3>
                         </div>
                     </div> 
@@ -116,6 +117,7 @@
                         </div>
                     </div>   
                 </div>
+                {% endblock %}
                 {% endblock %} 
             </div>  
         </div>
@@ -131,6 +133,7 @@
         $('.req_btn').click(function(){
             $('.sidebar ul .req_show').toggleClass("show");
         });
-    </script>  
+    </script> 
+    {% endblock %} 
 </body>
 </html>
