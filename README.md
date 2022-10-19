@@ -33,8 +33,9 @@ A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como com
 <img src="/doc/img/Gif Programa Sprint 1.gif">
 
 #### •Sprint 2
-A Sprint 2 apresentou mudanças muito claras em relação a Sprint 1, muitas delas em decorrência de um momento mais maduro do grupo como um todo em quesitos técnicos, pessoais e etc. Em questões de desenvolvimento foi uma Sprint bem performática, funcionalidades centrais do sistema foram adicionadas e orquestradas com certa facilidade, a grande barreira foi realmente a divergência e a dificuldade em manejar situações pessoais que atrasaram e prejudicaram o grupo como um todo, dessa forma, após as reuniões do final da Sprint é possível que alguns integrantes saiam do grupo.
-**Nota:** A reunião de Sprint Review não foi realizada ainda, portanto dados como o destaque e acertos e erros gerais encontrados pela equipe ainda não foram levantados.
+A Sprint 2 apresentou mudanças muito claras em relação a Sprint 1, muitas delas em decorrência de um momento mais maduro do grupo como um todo em quesitos técnicos, pessoais e etc. Em questões de desenvolvimento foi uma Sprint bem performática, funcionalidades centrais do sistema foram adicionadas e orquestradas com certa facilidade, a grande barreira foi realmente a divergência e a dificuldade em manejar situações pessoais que atrasaram e prejudicaram o grupo como um todo, dessa forma, após as reuniões do final da Sprint é possível que alguns integrantes saiam do grupo. Os acertos percebidos foram **organização** e **produtividade**. Enquanto que os erros observados foram **integrantes improdutivos**, **negligência do projeto por condições pessoais** e **irresponsabilidade**.
+
+**Destaques da Sprint 2 (empate)**: Miguel Carvalho Soares e Otávio Abreu dos Santos Silva.
 
 **Burndown Chart da Sprint 2**:
 
@@ -88,7 +89,7 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 | US19 | Eu, enquanto Usuário comum, desejo que quando meu saldo fique negativo minha conta em status de cheque especial, para que eu posso realizar empréstimos do banco                                  |    4   |
 
 #### Product Backlog
-#### Product Backlog
+
 | **Sprint** | **ID US** | **ID Função** | **ID Requisição** | **Funções**                                                                               | **Prioridade** | **Status**   |
 |------------|-----------|---------------|-------------------|-------------------------------------------------------------------------------------------|----------------|--------------|
 |      1     |    US01   |      F.1      |        RF.3       | Depósito em espécie                                                                       |      ALTA      |     Feito    |
@@ -100,7 +101,7 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |      2     |    US04   |      F.6      |        RF.3       | Requisição de alteração de dados                                                          |      MÉDIA     | Em andamento |
 |      2     |    US05   |      F.7      |        RF.3       | Requisição de cancelamento de conta                                                       |      MÉDIA     |     Feito    |
 |      2     |    US03   |      F.8      |        RF.3       | Requisição de criação de conta                                                            |      MÉDIA     |     Feito    |
-|      2     |    US06   |      F.9      |        RF.3       | Transferência em contas do mesmo banco*                                                   |      MÉDIA     |     Feito    |
+|      2     |    US06   |      F.9      |        RF.3       | Transferência em contas do mesmo banco                                                   |      MÉDIA     |     Feito    |
 |      2     |    US18   |      F.10     |        RF.6       | Não aceitar qualquer saque que extrapole o valor total do banco.                          |      MÉDIA     |     Feito    |
 |      2     |    US10   |      F.11     |        RF.2       | Aceite ou recusa de requisição de abertura de conta                                       |      MÉDIA     |     Feito    |
 |      2     |    US11   |      F.12     |        RF.2       | Aceite ou recusa de requisição alteração de dados de usuário                              |      MÉDIA     |     Feito    |
@@ -133,7 +134,6 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |      Miguel Carvalho Soares     |      P.O.      |     https://github.com/Miguel-C1    |  https://www.linkedin.com/in/miguel-carvalho-soares-722b161a3/ |
 |  Otávio Abreu dos Santos Silva  |     Master     |   https://github.com/otavioabreu27  |              https://www.linkedin.com/in/o-abreu/              |
 |    Yasmin Helena Souza Mosena   | Desenvolvedora |      https://github.com/ymosena     |    https://www.linkedin.com/in/yasmin-m%C3%B3sena-11b256249/   |
-|     Matheus Guermandi Costa     |  Desenvolvedor |  https://github.com/mguermandi1204  | https://www.linkedin.com/in/matheus-guermandi-costa-07a029244/ |
 | Pedro Henrique Silva De Almeida |  Desenvolvedor | https://github.com/PedroHSdeAlmeida |          https://www.linkedin.com/in/pedrohsalmeidaa/          |
 |        Felipe Silva Alves       |  Desenvolvedor |     https://github.com/fealvesfe    |    https://www.linkedin.com/in/felipe-silva-alves-b43651200/   |
 |      Augusto Henrique Buin      |  Desenvolvedor |    https://github.com/AugustoBuin   |  https://www.linkedin.com/in/augusto-henrique-buin-a58bb0208/  |
@@ -158,6 +158,7 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 
 •UTILIZANDO A APLICAÇÃO
 1. Crie um diretório
+   
 - Crie um diretório e navegue até ele atraves da linha de comando.
 
 ```console
@@ -185,44 +186,51 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 
 4. Executar o ambiente virtual
 
-- No Windows:
+- No CMD do Windows:
 
 ```console
     cd <nome do ambiente>\Scripts
     activate.bat
 ```
 
+- No PowerShell do Windows:
+
+```console
+    .\<nome do ambiente>\Scripts\Activate.ps1
+```  
+
 - No Unix(Linux)/MacOS:
 ```console
     source <nome do ambiente>/bin/activate
 ```
 
-5. Instalando dependências:
+5. Instale as dependências:
 
 - Navegue até a raiz do diretório e execute o comando:
 ```console
     pip install -r requirements.txt
 ```
 
-6. Executando a aplicação
+6. Configure o Banco de dados
+   
+    6.1. Abra o seu SGBD e importe o Script SQL
+      - Dentro do seu sistema de gerenciamento de banco de dados procure pela opção de importar Script SQL.
+      - Após importado execute todas as linhas.
+  
+    6.2. Credenciais do Banco
+      - Dentro da pasta src existe um arquivo chamado "config.conf", altere as credenciais do banco respeitando os espaçamentos de acordo com o seu ambiente, para isso utilize o editor de texto de sua preferência.
+
+7. Executando a aplicação
 
 - Navegue até a pasta src dentro dessa pasta raíz através da linha de comando e execute o arquivo 'app.py'.
 
 ```console
     cd src
     python app.py
-```  
+```
 
-7. Entrando na aplicação
-- Abra o navegador e digite a url que aparecerá no cmd após a execução do 'app.py'.
-- **IMPORTANTE:** Não feche a janela do cmd enquanto estiver utilizando a aplicação.
-
-•Banco de dados
-1. Abra o seu SGBD e importe o Script SQL
-- Dentro do seu sistema de gerenciamento de banco de dados procure pela opção de importar Script SQL.
-- Após importado execute todas as linhas.
-
-2. Credenciais do Banco
-- Dentro da pasta src existe um arquivo chamado "config.conf", altere as credenciais do banco respeitando os espaçamentos de acordo com o seu ambiente, para isso utilize o editor de texto de sua preferência.
+- Entrando na aplicação
+  - Abra o navegador e digite a url que aparecerá no terminal após a execução do 'app.py'.
+  - **IMPORTANTE:** Não feche a janela do terminal enquanto estiver utilizando a aplicação.
 
 • [To the top ↑](#top)
