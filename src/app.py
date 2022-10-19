@@ -1,5 +1,10 @@
+import os
 import email
 from email.message import EmailMessage
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from datetime import datetime
 from tokenize import Double
 from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
@@ -21,10 +26,6 @@ app.config['MYSQL_DB'] = config['db']
 mysql = MySQL(app)
 # Bloco de Paginas.
 
-# Resumo dos comandos
-    #Route  -> Caminho das paginas.
-    #Def    -> Função de exibição da pagina.
-
 #Pagina inicial
 @app.route("/")
 def index():
@@ -42,16 +43,100 @@ def home():
         abort(401)
     else:
         saldo = None
-        itens = []
-        idusu = []
         if session['tipo'] == 1:
-            cabecalho = ('Tipo', 'Valor', 'De:', 'Para:')
-            saldo = f"{session['saldo']:.2f}".replace(".",",")
-            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho)
+            cabecalho = ('Tipo', 'Valor','Data e hora', 'De:', 'Para:')
+            saldo = funcs.ValEmReal(session['saldo'])
+            VarContador=0
+            
+            pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
+                                            CampoEs=['tipo','valor','Datatime'],
+                                            CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
+                                            CampoFm=[1,session['idContaBK'],session['idContaBK']],
+                                            CampoWrAO=[0,0,1])
+            
+            pesquisaContas = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
+                                            CampoEs=['id_conta_origem', 'id_conta_destino'],
+                                            CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
+                                            CampoFm=[1,session['idContaBK'],session['idContaBK']],
+                                            CampoWrAO=[0,0,1])
+            
+            pesquisaSQL = [list(row) for row in pesquisaSQL]
+            for row in pesquisaContas:
+                
+                nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[0]],
+                                                        CampoEs=['nome'])
+                nomes1 = [list(row) for row in nomes1]
+                                            
+                nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[1]],
+                                                        CampoEs=['nome'])
+                
+                nomes2 = [list(row) for row in nomes2]
+                
+                pesquisaSQL[VarContador].append(nomes1[0][0])
+                pesquisaSQL[VarContador].append(nomes2[0][0])
+                pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
+                VarContador+=1
+                
+            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
-            # return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
             saldo = f"{session['saldo']:.2f}".replace(".",",")
-            return render_template('homeG.html',saldo=saldo,itens=itens)
+            return render_template('homeG.html',saldo=saldo)
+#------------------------------
+
+#Aplicar filtro no extrato
+@app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
+def FiltroExtrato():
+    if request.method == "POST":
+        cabecalho   = ('Tipo', 'Valor','Data e hora', 'De:', 'Para:')
+        saldo       = funcs.ValEmReal(session['saldo'])
+        VarContador = 0
+        DataDe      = request.form['DataExtratoDe']
+        DateAte     = request.form['DataExtratoAte']
+        cursor = mysql.connection.cursor()
+        
+        textoSQL = f"""SELECT tipo, valor, Datatime FROM tb_transacao 
+        WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59' 
+        and ( id_conta_origem = "{session['idContaBK']}"or id_conta_destino = "{session['idContaBK']}")"""
+        
+        cursor.execute(textoSQL)
+        pesquisaSQL = cursor.fetchall()
+        mysql.connection.commit()     
+        
+        textoSQL2 = f"""SELECT id_conta_origem, id_conta_destino FROM tb_transacao 
+        WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59'
+        and ( id_conta_origem = "{session['idContaBK']}" or id_conta_destino = "{session['idContaBK']}" )"""
+        
+        cursor.execute(textoSQL2)
+        pesquisaContas = cursor.fetchall()
+        mysql.connection.commit()  
+        
+        
+        cursor.close()   
+            
+        pesquisaSQL = [list(row) for row in pesquisaSQL]
+        for row in pesquisaContas:
+            nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[0]],
+                                                        CampoEs=['nome'])  
+            nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoBd=['tb_contabancaria.id_conta'],
+                                                        CampoFm=[row[1]],
+                                                        CampoEs=['nome'])
+            nomes1 = [list(row) for row in nomes1]   
+            nomes2 = [list(row) for row in nomes2]
+                
+            pesquisaSQL[VarContador].append(nomes1[0][0])
+            pesquisaSQL[VarContador].append(nomes2[0][0])
+            pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
+            VarContador+=1
+            
+        return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
+    return render_template('home.html')
 #------------------------------
 
 #Pagina Deposito
@@ -73,26 +158,27 @@ def saque():
 @app.route("/SaqueConta",  methods = ['POST', 'GET'])
 def SaqueConta():
     if request.method == "POST":
-        valor = Double(request.form['valor'])
+        valor = float(request.form['valor'])
         if valor >= 0:
             capital_total = funcs.SlcEspecificoMySQL('tb_capitaltotal',
                                                     CampoBd=['id_capitaltotal'],
                                                     CampoFm=['1'],
                                                     CampoEs=['capitalinicial'])
-
-            capital_externo = funcs.SlcEspecificoMySQL('tb_capitaltotal',
-                                                    CampoBd=['id_capitaltotal'],
-                                                    CampoFm=['1'],
-                                                    CampoEs=['capitalexterno'])
-
             if valor <= capital_total[0][0]:
-                valor = Double(session['saldo']) - valor
+                valor = float(session['saldo']) - valor
+                NewCapTot = capital_total[0][0] - valor
 
                 funcs.upMySQL('tb_contabancaria',
                                CampoBd=['saldo'],
                                CampoFm=[valor],
                                CampoWr=['numeroconta'],
                                CampoPs=[session['conta']])
+                
+                funcs.upMySQL('tb_capitaltotal',
+                               CampoBd=['capitalinicial'],
+                               CampoFm=[NewCapTot],
+                               CampoWr=['id_capitaltotal'],
+                               CampoPs=[1])
 
                 saldoAtualizado = funcs.SlcEspecificoMySQL('tb_contabancaria ',
                                                             CampoBd=['numeroconta'],
@@ -104,7 +190,8 @@ def SaqueConta():
                                                             CampoFm=[session['conta']],
                                                             CampoEs=['id_conta'])
 
-                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', Double(request.form['valor']), '1')
+                funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
+                funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
@@ -191,6 +278,7 @@ def login():
             for row in resultado:
                 session['nome']     = row[1]
                 session['saldo']    = row[15]
+                session['idContaBK']= row[9]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1
@@ -213,43 +301,9 @@ def login():
                     session['saldo']  = row2[1]
                 return home()
             else:
-                return index()
+                abort(401)
     else:
         abort(401)
-#------------------------------
-
-#Bloco de requisição padrão
-
-@app.route("/deletarConta",  methods = ['POST', 'GET'])
-def deletarConta():
-
-    id_usuario = request.form['IdUsuario']
-
-    funcs.DelMySQL(TabelaBd='tb_usuario',
-                   CampoBd=['id_usuario'],
-                   CampoFm=[id_usuario])
-
-    return RequisicaoPadrao()
-
-
-#------------------------------
-
-#Bloco de requisição padrão
-
-@app.route("/a")
-def RequisicaoPadrao():
-    cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Endereço', 'Genero', '')
-
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
-                                           CampoEs=['id_usuario','nome', 'cpf','datanascimento','endereco','genero'],
-                                           CampoBd=[],
-                                           CampoFm=[])
-
-
-    return render_template("requisicao.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
-
-
-#------------------------------
 
 #Bloco de conferência de depósito pendentes
 
@@ -284,26 +338,45 @@ def ConferenciaDeposito():
                                                         CampoFm=[IdTransacao])
 
             IdContaOrigem = pesquisaSQLTransacao[0][1]
-            valorTransacao = pesquisaSQLTransacao[0][0]
+            valorTransacao = float(pesquisaSQLTransacao[0][0])
 
             pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
                                                         CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
                                                         CampoFm=[IdTransacao, IdContaOrigem])
-            saldoConta = pesquisaSQLConta[0][1]
+            
+            pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                        CampoEs=['capitalinicial'],
+                                                        CampoBd=['id_capitaltotal'],
+                                                        CampoFm=[1])
+                                            
+            valorTotalBanco = float(pesquisaTotalBanco[0][0])
+            saldoConta = float(pesquisaSQLConta[0][1])
             valor = valorTransacao + saldoConta
 
+            valorTotalBanco = valor + valorTotalBanco
+
             funcs.upMySQL(TabelaBd='tb_transacao',
-                      CampoBd=['status_transacao'],
-                      CampoFm=[1],
+                      CampoBd=['status_transacao', 'Datatime'],
+                      CampoFm=[1, datetime.today()],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
+            
+            funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
             funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
                           CampoFm=[valor],
                           CampoWr=['id_conta'],
                           CampoPs=[IdContaOrigem])
+
+            funcs.upMySQL(TabelaBd='tb_capitaltotal',
+                          CampoBd=['capitalinicial'],
+                          CampoFm=[valorTotalBanco],
+                          CampoWr=['id_capitaltotal'],
+                          CampoPs=[1])
+            session['saldo'] = valorTotalBanco
+            
             return ConferenciaDepositoTabela()
         else:
             funcs.upMySQL(TabelaBd='tb_transacao',
@@ -334,15 +407,76 @@ def AceiteConta():
         if botao['botao'] == 'Confirmar':
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.mandaEmail(IdConta, email, True)  
+            funcs.emailCadastro(IdConta, email, True)  
             return AceiteContaTabela()
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.mandaEmail(IdConta, email, False)  
+            funcs.emailCadastro(IdConta, email, False)  
             return AceiteContaTabela()
        
+#------------------------------
 
+#Bloco de renderização da tela de Transação
+
+@app.route("/Transacao")
+def Transacao():
+    if session['saldo'] != None:
+        saldo = f"{session['saldo']:.2f}".replace(".",",")
+    return render_template('transacao.html',saldo=saldo)
+
+#------------------------------
+
+#Bloco de transação entre contas
+
+@app.route("/TransacaoConta",  methods = ['POST', 'GET'])
+def TransacaoConta():
+    if request.method == 'POST':
+        if float(request.form['valor']) <= float(session['saldo']) and float(request.form['valor']) > 0:
+            numeroConta = request.form['numeroConta']
+            valor = float(request.form['valor'])
+
+            pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                                CampoBd=['numeroconta'],
+                                                CampoFm=[numeroConta],
+                                                CampoEs=['id_conta', 'saldo'])
+
+            pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                                CampoBd=['numeroconta'],
+                                                CampoFm=[session['conta']],
+                                                CampoEs=['id_conta', 'saldo'])
+                                                  
+            IdContaDestino = pesquisaContaDestino[0][0]
+            IdContaOrigem = pesquisaContaOrigem[0][0]
+
+            valorContaDestino = pesquisaContaDestino[0][1]
+            valorContaOrigem = pesquisaContaOrigem[0][1]
+
+            valorContaDestino = valorContaDestino + valor
+            valorContaOrigem = valorContaOrigem - valor
+
+            if IdContaDestino == IdContaOrigem:
+                return render_template('transacao.html')
+
+            funcs.upMySQL(TabelaBd='tb_contabancaria',
+                      CampoBd=['saldo'],
+                      CampoFm=[valorContaOrigem],
+                      CampoPs=[IdContaOrigem],
+                      CampoWr=['id_conta'])
+
+            funcs.upMySQL(TabelaBd='tb_contabancaria',
+                      CampoBd=['saldo'],
+                      CampoFm=[valorContaDestino],
+                      CampoPs=[IdContaDestino],
+                      CampoWr=['id_conta'])
+
+            session['saldo'] = valorContaOrigem
+
+            funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
+            funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
+            return Transacao()
+    return Transacao()
+        
 #------------------------------
 
 #Bloco de requisição de Abertura de Conta
@@ -359,6 +493,71 @@ def AceiteContaTabela():
 
     return render_template("AceiteConta.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
+@app.route("/AceiteAlteracaoTabela")    
+def AceiteAlteracaoTabela():
+
+    cabecalho = ('Nome', 'CPF', 'Data Nasc', 'Número Conta', 'Tipo Conta', 'Descrição')
+
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_requisicoes ON tb_usuario.id_usuario = tb_requisicoes.id_usuario',
+                                           CampoEs=['tb_contabancaria.id_conta', 'tb_usario.id_usuario','tb_usuario.nome', 'tb_usuario.cpf', 'tb_contabancaria.numeroconta','tb_usuario.datanascimento', 'tb_contabancaria.tipo' , 'tb_requisicoes'],
+                                           CampoBd=['status_alteracao'],
+                                           CampoFm=[0])
+
+    return render_template("ReqAlt.html", cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+
+@app.route("/ReqAlt")
+def ReqAlt():
+    return render_template('ReqAlt.html')
+
+
+@app.route("/Cancelamento")
+def Cancelamento():
+    return render_template('cancelamento.html')
+
+@app.route("/CancelamentoConta",  methods = ['POST', 'GET'])
+def CancelamentoConta():
+    if request.method == 'POST':
+        id_usuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ',
+                                             CampoBd=['numeroconta'],
+                                             CampoFm=[session['conta']],
+                                             CampoEs=['tb_usuario.id_usuario'])
+        senha = request.form['senha']
+        funcs.cancelMySQL(id_usuario = id_usuario[0][0], senha= senha, numeroconta= session['conta'])
+        
+
+#------------------------------
+
+#Bloco de requisição de Abertura de Conta
+
+@app.route("/RequisicaoAberturaConta")
+def RequisicaoAberturaConta():
+    return render_template('RequisicaoAberturaConta.html')
+
+@app.route("/AberturaConta", methods = ['POST', 'GET'])
+def AberturaConta():
+    if request.method == 'POST':
+
+        tipoConta = request.form['tipoconta']
+        conta = session['conta']
+
+        pesquisaUsario = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                           CampoEs=['tb_usuario.id_usuario', 'tb_usuario.cpf', 'tb_usuario.nome'],
+                                           CampoBd=['numeroconta'],
+                                           CampoFm=[conta])
+        
+        idUsuario = pesquisaUsario[0][0]
+        cpf = pesquisaUsario[0][1]
+        nome = pesquisaUsario[0][2]
+        numeroConta = funcs.geraId(str(nome),str(1),str(cpf))
+        
+        funcs.InsMySQL(TabelaBd='tb_contabancaria',
+                        CampoBd=['tipo', 'id_usuario', 'id_agencia', 'numeroconta', 'data_abertura', 'saldo', 'status_contabancaria'],
+                        CampoFm=[tipoConta, idUsuario, 1, numeroConta, datetime.today(), 0, '0'])    
+
+        return RequisicaoAberturaConta()
+
+
+
 #------------------------------
 
 #Tratamento de Erros
@@ -369,6 +568,6 @@ def excecao(e):
     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 
-#Bloco para subir o site.
+    #Bloco para subir o site.
 if __name__ == "__main__":
      app.run(debug=True)

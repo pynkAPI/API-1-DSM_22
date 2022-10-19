@@ -76,11 +76,11 @@ ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contaba
 INSERT INTO tb_capitaltotal 
 VALUES(1, 10000,0);
 
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo) 
-VALUES('GERENTE AGÊNCIA', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1');
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
+VALUES('GERENTE AGÊNCIA', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'doxito007@gmail.com');
 
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo) 
-VALUES('Miguel Carvalho', '123',  'OUTROS', 'TESTE', curdate(), 'teste', '1');
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
+VALUES('Miguel Carvalho', '123',  'OUTROS', 'TESTE', curdate(), 'teste', '1', 'doxito007@gmail.com');
 
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
 VALUES(2, 1, 'CONTA CORRENTE', 1234, curdate(), 0, '1');
@@ -93,6 +93,3 @@ VALUES('SP', 1, '0001');
 
 INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
 VALUES ('0',1,'desejo alterar meu cpf para ...');
-
-
-

@@ -26,6 +26,7 @@
                     <span class="links_name">Sua Conta</span>
                 </a>
             </li>
+
             <li>
                 <a href="#" class="req_btn">
                     <i class='bx bx-wallet' ></i>
@@ -101,7 +102,7 @@
                                             {% if row[0] == cell %}
                                             <input type="hidden" value="{{ cell }}" name="IdUsuario">
                                             {% else %}
-                                             <a href="#"><td class="celula">{{ cell }}</td></a>
+                                            <a href="#"><td class="celula">{{ cell }}</td></a>
                                             {% endif %}
                                         {% endfor %}
                                         <!-- <td> 
@@ -118,7 +119,6 @@
                 {% endblock %} 
             </div>  
         </div>
-    </div>  
     <script>
         let btn = document.querySelector("#btn");
         let sidebar = document.querySelector(".sidebar");

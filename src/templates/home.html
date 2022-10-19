@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Py.nk</title>
-    <!-- <link rel="stylesheet" href="../static/style/stylehome.css"> -->
+    <link rel="stylesheet" href="../static/style/stylehome.css">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}"> -->
     {% endblock %}
 </head>
 
@@ -37,17 +37,44 @@
                 <a href="{{ url_for('deposito') }}"><i class='bx bx-money'></i></a>
                 <h5>DEPOSITO</h5><br>
                 <a href="{{ url_for('saque') }}"><i class='bx bx-money-withdraw'></i></a>
-                <h5>SAQUE</h5>
+                <h5>SAQUE</h5><br>
+                <a href="{{ url_for('Transacao') }}"><i class='bx bx-money-withdraw'></i></a>
+                <h5>TRANSFERÊNCIA</h5><br>
+                <a href="{{ url_for('RequisicaoAberturaConta') }}"><i class='bx bx-money-withdraw'></i></a>
+                <h5>ABRIR NOVA CONTA</h5>
+                <!-- <a href="{{ url_for('ReqAlt') }}"><i class='bx bx-money-withdraw'></i></a>
+                <h5>ALTERAÇÃO DE DADOS</h5><br>  -->
+                <a href="{{ url_for('Cancelamento') }}"><i class='bx bx-money-withdraw'></i></a>
+                <h5>CANCELAMENTO DE CONTA</h5>
             </div>
+            
             <div id="DivExtrato">
+                <div>
+                    <form action="FiltroExtrato" method="POST">
+                        De:<input type="date" class="input-date" name="DataExtratoDe">
+                        Até:<input type="date" class="input-date" name="DataExtratoAte">
+                        <input type="submit" class="btnd" value="Pesquisar">
+                    </form>
+                </div>
                 <table id="tbExtrato">
                     <thead>
                         <tr>
                             {% for header in cabecalhoTabela %}
-                                <th>{{header}}</th>
+                            <th>{{header}}</th>
                             {% endfor %}
                         </tr>
                     </thead>
+                    <tbody>
+                        {% for row in pesquisaSQLTabela %}
+                        <form action="{{ url_for('ConferenciaDeposito') }}" method="POST" name="ConferenciaDeposito">
+                            <tr class="linhaTabela">
+                                {% for cell in row %}
+                                <td class="celula">{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -56,3 +83,6 @@
 </body>
 
 </html>
+<script>
+    
+</script>
