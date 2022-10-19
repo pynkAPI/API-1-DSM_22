@@ -24,105 +24,87 @@ li{
 }
 .container{  
     width: 100%;
-    max-width: 2000px;
+    max-width: 200vh;
     display: grid;
+    margin: auto;
 }
 .panels{
    display: flex;
+   margin-top: 5vh;
+   margin-left: 5vh;
 }
-/* .conta{
-    width: 100%;
-    background-color: #647bff;
-} */
-/* .logo{
-   width: 1.9%;
-   height: 1%;
-}
-.bx{
-    font-size: 2.3rem;
-    padding: 10px;
-    border-radius:0.5rem;
-    color: #B71258;
-    background: whitesmoke;
-}
-.bx:hover{
-    color: #B71258;
-    background:#EBEBEB; 
-    transition: 0.3s all linear;
-} */
 .menu-content{
     /* height: 100%;
     max-height: 600px; */
-    max-width: 1200px;
+    max-width: 120vh;
     width: 100%;
-    margin: auto;
     margin-top: 4%;
 }
 .mensagem{
     display: flex;
 }
 .m-text{
-    width: 400px;
+    width: 40vh;
 }
 .m-img{
-    width: 52px;
-    height: 57px;
-    left: 207px;
-    top: 99px;
-    margin-right: 20px;
+    width: 5.2vh;
+    height: 5.7vh;
+    left: 20.7vh;
+    top: 9.9vh;
+    margin-right: 2vh;
 }
 .saldo{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 16px 40px 16px 16px;
-    gap: 8px;
-    width: 400px;
-    height: 98px;
+    padding: 1.6vh 4vh 1.6vh 1.6vh;
+    gap: 0.8vh;
+    width: 40vh;
+    height: 9.8vh;
     background: whitesmoke;
-    border-radius: 10px;
+    border-radius: 1vh;
     border-style: solid;
     border-width: 1px;
     border-color:  #CC5587;
 }
 .saldo h3{
     font-weight: 400;
-    font-size: 12px;
-    line-height: 15px;
+    font-size: 1.2vh;
+    line-height: 1.5vh;
 }
 .saldo label{
     font-family: 'Manrope';
     font-weight: 800;
-    font-size: 32px;
-    line-height: 44px;
+    font-size: 3.2vh;
+    line-height: 4.4vh;
 }
 .extrato{
     align-items: center;
-    background: whitesmoke#;
-    width: 700px;
-    padding:30px;
-    border-radius: 20px;
+    background: whitesmoke;
+    width: 70vh;
+    padding:3vh;
+    border-radius: 2vh;
 }
 
 .func{
     color: #D3E1F5;
 }
 .func:hover{
-     color: #647bff;
+    color: #647bff;
     background:#171b3c ;
     transition: 0.3s all linear;
 }
 .scroll-div{
-    width: 650px;
+    width: 65vh;
     background:whitesmoke;
-    height: 700px;
+    height: 70vh;
     overflow: hidden;
     overflow-y: scroll;
 }
 .scroll-object{
     
-    font-size: 19px;
-    padding: 20px;
+    font-size: 1.9vh;
+    padding: 2vh;
 }
 .scroll-div::-webkit-scrollbar{
     width: 1em;
@@ -143,7 +125,7 @@ table {
 
 th, td {
     text-align: center;
-    padding: 8px;
+    padding: 0.8vh;
     border-bottom: 1px solid #ddd;
 }
 
@@ -161,18 +143,18 @@ th {
     top: 0;
     left: 0;
     height: 100%;
-    width: 78px;
+    width: 7.8vh;
     background: whitesmoke;
-    padding: 6px 14px;
+    padding: 0.6vh 1.4vh;
     transition: all 0.5s ease;
 }
 .sidebar.active{
-    width:240px ;
+    width:24vh ;
 }
 .sidebar .logo_content .logo {
     align-items: center;
-    height: 50px;
-    width:30px;
+    height: 5vh;
+    width:3vh;
     opacity: 0;
     pointer-events: none;
     transition: all 0.5s ease;
@@ -185,25 +167,25 @@ th {
     position:absolute;
     color: #b71258;
     left:50%;
-    top: 6px;
-    font-size: 20px;
-    height: 50px;
-    width: 50px;
+    top: 0.6vh;
+    font-size: 2vh;
+    height: 5vh;
+    width: 5vh;
     text-align: center;
-    line-height:50px ;
+    line-height:5vh ;
     transform: translateX(-50%);
 }
 .sidebar.active #btn{
     left: 90%;
 }
 .sidebar ul{
-    margin-top: 20px;
+    margin-top: 2vh;
 }
 .sidebar ul li{
     position: relative;
-    height: 60px;
+    height: 6vh;
     width: 100%;
-    margin: 0 5px;
+    margin: 0 0.5vh;
     list-style: none;
 }
 .sidebar ul li a{
@@ -212,7 +194,7 @@ th {
     align-items: center;
     text-decoration: none;
     transition: all 0.4 ease;
-    border-radius: 12px;
+    border-radius: 1.2vh;
     white-space: nowrap;
 }
 .sidebar ul li a:hover{
@@ -224,18 +206,18 @@ th {
     /* display: none; */
 }
 .sidebar ul ul li{
-    line-height: 42px;
+    line-height: 4.2vh;
     border-bottom: none;
 }
 .sidebar ul ul li a{
 
 }
 .sidebar ul li i{
-    font-size: 30px;
-    height: 50px;
-    min-width: 50px;
-    border-radius: 12px;
-    line-height: 50px;
+    font-size: 3vh;
+    height: 5vh;
+    min-width: 5vh;
+    border-radius: 1.2vh;
+    line-height: 5vh;
 }
 .sidebar .links_name{
     opacity: 0;
@@ -256,8 +238,8 @@ th {
 }
 .sidebar .profile_content .profile{
     position: relative;
-    padding: 10px 6px;
-    height: 60px;
+    padding: 1vh 0.6vh;
+    height: 6vh;
     background: #f1f1f1;
 }
 .sidebar .profile_content .profile .profile_details{
@@ -275,28 +257,28 @@ th {
   
 }
 .sidebar .profile_content  img{
-    height: 45px ;
-    width: 45px;
+    height: 4.5vh ;
+    width: 4.5vh;
 }
 .sidebar .profile_content .name_job{
-    margin-left: 10px;
+    margin-left: 1vh;
 }
 .sidebar .profile_content .name{
-    font-size: 18px;
+    font-size: 1.8vh;
     font-weight: 400;
 }
 .sidebar .profile_content .job{
-    font-size: 15px;
+    font-size: 1.5vh;
 }
 .profile #log_out{
     position: absolute;
     left: 50%;
-    bottom: 5px;
+    bottom: 0.5vh;
     transform: translateX(-50%);
-    min-width: 50px;
-    line-height: 50px;
-    font-size: 30px;
-    border-radius: 12px;
+    min-width: 5vh;
+    line-height: 5vh;
+    font-size: 3vh;
+    border-radius: 1.2vh;
     text-align: center;
 }
 .sidebar.active .profile #log_out{
@@ -306,10 +288,10 @@ th {
     position: absolute;
     height: 100%;
     width: calc(100%-78px);
-    left: 78px;
+    left: 7.8vh;
     transition: all 0.5s ease;
 }
 .sidebar.active ~ .home_content{
     width: calc(100%-240px);
-    left: 240px;
+    left: 24vh;
 }
