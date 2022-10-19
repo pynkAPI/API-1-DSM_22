@@ -81,7 +81,7 @@ def home():
                 pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
                 VarContador+=1
                 
-            return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
+            return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
             saldo = f"{session['saldo']:.2f}".replace(".",",")
             return render_template('homeG.html',saldo=saldo)
@@ -166,7 +166,7 @@ def SaqueConta():
                                                     CampoEs=['capitalinicial'])
             if valor <= capital_total[0][0]:
                 valor = float(session['saldo']) - valor
-                NewCapTot = capital_total[0][0] - valor
+                NewCapTot = capital_total[0][0] - float(request.form['valor'])
                      
                 funcs.upMySQL('tb_contabancaria',
                                CampoBd=['saldo'],
@@ -191,10 +191,24 @@ def SaqueConta():
                                                             CampoEs=['id_conta'])
                 
                 if valor < 0:
-                    
-                    funcs.InsMySQL(TabelaBd='tb_cheque_especial',
-                                   CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
-                                   CampoFm=[idConta[0][0],  datetime.today(), None, valor, True])
+                    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                           CampoBd=['id_conta', 'ativo'],
+                                                           CampoFm=[idConta[0][0], True],
+                                                           CampoEs=['valor_devido'])
+                    valor_devido = pesquisaSQL[0][0]
+                    if valor_devido:
+                        pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                          CampoBd=['id_regra_operacoes'],
+                                                                          CampoFm=[1],
+                                                                          CampoEs=['porcentagem', 'valor_fixo'])
+                        valor_devido = valor_devido + valor
+                        funcs.InsMySQL(TabelaBd='tb_cheque_especial',
+                                       CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
+                                       CampoFm=[idConta[0][0],  datetime.today(), None, valor_devido, True])
+                    else:
+                        funcs.InsMySQL(TabelaBd='tb_cheque_especial',
+                                       CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
+                                       CampoFm=[idConta[0][0],  datetime.today(), None, valor, True])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
                 funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
