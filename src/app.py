@@ -5,7 +5,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
+from datetime import date, datetime
 from tokenize import Double
 from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
 from flask_mysqldb import MySQL
@@ -193,18 +193,24 @@ def SaqueConta():
                 if valor < 0:
                     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                            CampoBd=['id_conta', 'ativo'],
-                                                           CampoFm=[idConta[0][0], True],
-                                                           CampoEs=['valor_devido'])
-                    valor_devido = pesquisaSQL[0][0]
-                    if valor_devido:
+                                                           CampoFm=[idConta[0][0], 1],
+                                                           CampoEs=['valor_devido', 'data_inicio'])
+                    if pesquisaSQL:
+                        valorDevido = pesquisaSQL[0][0]
+                        data = pesquisaSQL[0][1]
+
+                        dataPeriodo = funcs.periodoEntreDatas(data1=str(data),data2=str(date.today()))
+
                         pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
                                                                           CampoBd=['id_regra_operacoes'],
                                                                           CampoFm=[1],
                                                                           CampoEs=['porcentagem', 'valor_fixo'])
-                        valor_devido = valor_devido + valor
+                        
+                        
+                        valorDevido = valorDevido + valor
                         funcs.InsMySQL(TabelaBd='tb_cheque_especial',
                                        CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
-                                       CampoFm=[idConta[0][0],  datetime.today(), None, valor_devido, True])
+                                       CampoFm=[idConta[0][0],  datetime.today(), None, valorDevido, True])
                     else:
                         funcs.InsMySQL(TabelaBd='tb_cheque_especial',
                                        CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
@@ -596,12 +602,12 @@ def AberturaConta():
 #------------------------------
 
 #Tratamento de Erros
-@app.errorhandler(Exception)
-def excecao(e):
-    cod_excecao = str(e)
-    cod_excecao = cod_excecao[:3]
-    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
+# @app.errorhandler(Exception)
+# def excecao(e):
+#     cod_excecao = str(e)
+#     cod_excecao = cod_excecao[:3]
+#     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+#     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 
     #Bloco para subir o site.
 if __name__ == "__main__":
