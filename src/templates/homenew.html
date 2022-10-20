@@ -79,10 +79,21 @@
                         </div>  
                         {% endblock %}
             </div> 
-                {% block extrato %}        
+                {% block contenttabela %}        
                 <div class="right-panels">
                     <div class="extrato">
+                    {% block selecttabela %}
                         <h2>Extrato</h2>
+                        <div id="DivExtrato">
+                            <div>
+                                <form action="FiltroExtrato" method="POST">
+                                    De:<input type="date" class="input-date" name="DataExtratoDe">
+                                    Até:<input type="date" class="input-date" name="DataExtratoAte">
+                                    <input type="submit" class="btnd" value="Pesquisar">
+                                </form>
+                            </div>
+                        {% endblock %}
+                        {% block tabela %}
                         <div class="scroll-div">
                             <div class="scroll-object">
                                 <table class="tabelaRequisicao">
@@ -117,6 +128,7 @@
                         </div>
                     </div>   
                 </div>
+                {% endblock %}
                 {% endblock %}
                 {% endblock %} 
             </div>  

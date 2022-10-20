@@ -2,25 +2,27 @@
 {% block saldo %}
 <label>Saldo do banco: R$ {{saldo}}</label>
 {% endblock %}
-{% block func %}
-<div class="func">
-    <h1>Contas esperando abertura</h1>
-    <!--{% for teste in itens %}
-    <form action="ReqAbertura" method="POST">
-        <label>Abertura {{teste[0]}}</label><br>
-        <input type="radio" name="verificacao" value="1">
-        <label for="css">Sim</label>
-        <input type="radio" name="verificacao" value="2">
-        <label for="html">Não</label>
-        <input type="submit" class="btnd solid">
-        <input type="hidden" value="{{teste[1]}}" name="IdConta">
-    </form><br>
-    {% endfor %} -->
-    <h1>Contas</h1>
-    <a href="{{ url_for('ConferenciaDepositoTabela') }}"><i class='bx bx-money'></i></a>
-    <h5>CONFERENCIA DEPOSITO</h5><br>
-    <a href="{{ url_for('AceiteContaTabela') }}"><i class='bx bx-money'></i></a>
-    <h5>REQUISIÇÕES DE ABERTURA DE CONTAS</h5><br>
-</div>
-</div>
+{% selecttabela %}
+    <h2>Usuários</h2>
+    <div id="DivExtrato">
+        <div>
+            <form action="FiltroExtrato" method="POST">
+                <div class="select">
+                    <select name="format" id="format">
+                    <option selected disabled>Pesquisar por</option>
+                    <option>CPF</option>
+                    <option>Nome</option>
+                    <option>Conta</option>
+                    <option>Agência</option>
+                    </select>                  
+                </div>      
+                <div class="pesquisa">
+                    <input type="text" >
+                </div>          
+        </div>
+                <input type="submit" class="btnd" value="Pesquisar">
+            </form>
+        </div>
+{% endblock %}
+{% block tabela %}
 {% endblock %}
