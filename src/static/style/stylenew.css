@@ -302,12 +302,14 @@ th {
 .DivExtrato{
     display: flex;
     flex-direction: column;
+    
 }
 .form-date{
     font-size: 1.5vh;
     line-height: 2.4vh;
     padding-bottom: 0.8vh;
     padding: 0.5vh;
+    margin-bottom: 10vh;
 }
 .input-date{
     padding: 0.5vh;
