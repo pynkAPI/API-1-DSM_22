@@ -81,8 +81,6 @@ ativo boolean NOT NULL
 
 ALTER TABLE tb_cheque_especial ADD FOREIGN KEY(id_conta) REFERENCES tb_contabancaria (id_conta);
 
-INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_final, valor_devido, ativo) VALUES(1, curdate(), NULL, -200, 1);
-
 CREATE TABLE tb_regra_operacoes(
 id_regra_operacoes int AUTO_INCREMENT PRIMARY KEY,
 descricao varchar(255) NOT NULL,
@@ -105,7 +103,7 @@ INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativ
 VALUES('Miguel Carvalho', '123',  'OUTROS', 'TESTE', curdate(), 'teste', '1', 'doxito007@gmail.com');
 
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(2, 1, 'CONTA CORRENTE', 1234, curdate(), 0, '1');
+VALUES(2, 1, 'CONTA CORRENTE', 1234, curdate(), -200, '1');
 
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
 VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1');
@@ -115,3 +113,5 @@ VALUES('SP', 1, '0001');
 
 INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
 VALUES ('0',1,'desejo alterar meu cpf para ...');
+
+INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_final, valor_devido, ativo) VALUES(1, curdate(), NULL, -200, 1);

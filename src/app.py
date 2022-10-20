@@ -205,12 +205,14 @@ def SaqueConta():
                                                                           CampoBd=['id_regra_operacoes'],
                                                                           CampoFm=[1],
                                                                           CampoEs=['porcentagem', 'valor_fixo'])
-                        
+                        porcentagem = pesquisaSQLRegraCheque[0][0]
+                        valor_fixo = pesquisaSQLRegraCheque[0][1]
+                        valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
                         
                         valorDevido = valorDevido + valor
                         funcs.InsMySQL(TabelaBd='tb_cheque_especial',
                                        CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
-                                       CampoFm=[idConta[0][0],  datetime.today(), None, valorDevido, True])
+                                       CampoFm=[idConta[0][0],  datetime.now(), None, valorDevido, True])
                     else:
                         funcs.InsMySQL(TabelaBd='tb_cheque_especial',
                                        CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],

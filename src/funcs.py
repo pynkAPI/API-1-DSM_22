@@ -1,4 +1,5 @@
 from logging import raiseExceptions
+import math
 import os
 from email.message import EmailMessage
 from email import encoders
@@ -445,6 +446,11 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 '602' : 'Você ainda possui pendências  com o banco, regularize sua situação antes de prosseguir com o cancelamento',
 '603' : 'Você cancelou a sua conta com sucesso.'}
 
+def calculaChequeEspecial(valorDevido, tempo, porecentagem):
+    valor = ((1+porecentagem)**tempo)*valorDevido
+    valorFormatadado = float(f'{valor:.2f}')
+    valorRestante = valorFormatadado-valor
+    return valorFormatadado
 
 def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
