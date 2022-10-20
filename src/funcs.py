@@ -11,7 +11,7 @@ from importlib.metadata import requires
 from reportlab.pdfgen import canvas
 from flask import Flask, render_template,request, url_for, redirect, session, abort
 from flask_mysqldb import MySQL
-import datetime
+from datetime import datetime
 import random
 
 app = Flask(__name__)
@@ -393,6 +393,12 @@ def emailCadastro(id, destinatario, aceite):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
         smtp.login(remetente, senha)
         smtp.sendmail(remetente, destinatario, em.as_string())
+
+
+def periodoEntreDatas(data1, data2):
+    data1 = datetime.strptime(data1, "%Y-%m-%d")
+    data2 = datetime.strptime(data2, "%Y-%m-%d")
+    return abs((data2 - data1).days)
 
 def emailComprovante(nome_arq, destinatario):
     subject = "Comprovante de movimentação"

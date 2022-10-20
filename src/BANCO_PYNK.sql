@@ -81,16 +81,19 @@ ativo boolean NOT NULL
 
 ALTER TABLE tb_cheque_especial ADD FOREIGN KEY(id_conta) REFERENCES tb_contabancaria (id_conta);
 
+INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_final, valor_devido, ativo) VALUES(1, curdate(), NULL, -200, 1);
+
 CREATE TABLE tb_regra_operacoes(
 id_regra_operacoes int AUTO_INCREMENT PRIMARY KEY,
 descricao varchar(255) NOT NULL,
 porcentagem float NOT NULL,
+valor_fixo float NOT NULL,
 frequencia VARCHAR(55) NOT NULL);
-
-
 
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
+
+INSERT INTO tb_regra_operacoes(descricao, porcentagem, valor_fixo, frequencia) VALUES('CHEQUE ESPECIAL',  0.10, 10, 'Diário');
 
 INSERT INTO tb_capitaltotal 
 VALUES(1, 10000,0);
