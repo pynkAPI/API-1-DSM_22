@@ -27,21 +27,20 @@
                     <span class="links_name">Sua Conta</span>
                 </a>
             </li>
-
             <li>
-                <a href="#" class="req_btn">
+                <a href="{{ url_for('deposito') }}" class="req_btn">
                     <i class='bx bx-wallet' ></i>
                     <span class="links_name">Depósito</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="req_btn">
+                <a href="{{ url_for('saque') }}" class="req_btn">
                     <i class='bx bx-money-withdraw'></i>
                     <span class="links_name">Saque</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="req_btn">
+                <a href="{{ url_for('Transacao') }}" class="req_btn">
                     <i class='bx bx-transfer' ></i>
                     <span class="links_name">Transferência</span>
                 </a>
@@ -55,7 +54,7 @@
         </ul>
         <div class="profile_content">
             <div class="profile">
-                <i class='bx bx-log-out' id="log_out"></i>
+                <a href="{{ url_for('index') }}" class="logout"><i class='bx bx-log-out' id="log_out"></i></a>
             </div>
         </div>
     </div>
@@ -87,8 +86,10 @@
                         <div id="DivExtrato">
                             <div>
                                 <form action="FiltroExtrato" method="POST">
-                                    De:<input type="date" class="input-date" name="DataExtratoDe">
-                                    Até:<input type="date" class="input-date" name="DataExtratoAte">
+                                    <label class="form-date" for="input-date">De:</label>
+                                    <input type="date" class="input-date" name="DataExtratoDe">
+                                    <label class="form-date" for="input-date">Até:</label>
+                                    <input type="date" class="input-date" name="DataExtratoAte">
                                     <input type="submit" class="btnd" value="Pesquisar">
                                 </form>
                             </div>
@@ -105,7 +106,7 @@
                                         {% endfor %}
                                     </tr> -->
                                     {% for row in pesquisaSQLTabela %}
-                                    <form action="{{ url_for('deletarConta') }}" method="POST">
+                                    
                                     <tr class="linhaTabela">
                                         <!-- Forma as linhas da tabela -->
                                         {% for cell in row %}
@@ -121,7 +122,7 @@
                                             <input type="submit" name="delete" value="Deletar" class="btnd solid">
                                         </td> -->
                                     </tr>
-                                    </form>
+                                    
                                 {% endfor %}
                                 </table>
                             </div>

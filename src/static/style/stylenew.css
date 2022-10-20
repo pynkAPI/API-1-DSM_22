@@ -124,6 +124,9 @@ body{
     pointer-events: none;
     white-space: nowrap;
 }
+.logout i{
+    color: #b71258;
+}
 .sidebar.active .profile .profile_details{
     display: flex;
     align-items: center;
@@ -243,15 +246,6 @@ li{
     border-radius: 2vh;
 }
 
-.func{
-    color:#b71258;
-    display: grid;
-}
-.func:hover{
-    color: #647bff;
-    background:#171b3c ;
-    transition: 0.3s all linear;
-}
 .scroll-div{
     width: 65vh;
     background:whitesmoke;
@@ -299,10 +293,51 @@ th, td {
 
 tr:nth-child(even){background-color: #DDA0DD}
 
-tr:hover{background-color:#DDA0DD}
+tr:hover{background-color:#e7e7e7}
 
 th {
     background-color: #CC5587;
     color: white;
 }
-
+.DivExtrato{
+    display: flex;
+    flex-direction: column;
+    
+}
+.form-date{
+    font-size: 1.5vh;
+    line-height: 2.4vh;
+    padding-bottom: 0.8vh;
+    padding: 0.5vh;
+    margin-bottom: 10vh;
+}
+.input-date{
+    padding: 0.5vh;
+    appearance: none;
+    color: #b71258;
+    font-size: 1vh;
+    border: 1px solid #b71258;
+    border-radius: 1vh;
+    background: #e7e7e7;
+    display: inline-block;
+    visibility: visible;
+}
+.input-date:focus{
+    outline: #DDA0DD;
+    border-color: #CC5587;
+    box-shadow: 0 0 0 0.05rem #DDA0DD;
+}
+.btnd{
+    font-size: 1.1vh;
+    margin-left: 25vh;
+    padding: 0.5vh;
+    color: #EBEBEB;
+    background-color: #b71258;
+    border: 1px solid #b71258;
+    border-radius: 1vh;
+}
+.btnd:hover{
+    background-color: #CC5587;
+    border-color: #CC5587;
+    box-shadow: 0 0 0 0.05rem #DDA0DD;
+}
