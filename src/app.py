@@ -599,8 +599,20 @@ def AberturaConta():
 
         return RequisicaoAberturaConta()
 
+#------------------------------
 
+#Bloco de alteração do saldo do banco
 
+@app.route("/AltSaldo",  methods = ['POST', 'GET'])
+def AltSaldo():
+    if request.method == 'POST': 
+        NovoSaldoBK = request.form['ValNovoSaldo']
+        session['saldo'] =float(NovoSaldoBK)
+        funcs.upMySQL('tb_capitaltotal',CampoBd=['capitalinicial'],CampoFm=[NovoSaldoBK],CampoWr=['id_capitaltotal'],CampoPs=['1'])
+        
+    saldo = f"{session['saldo']:.2f}".replace(".",",")
+    saldoV = f"{session['saldo']:.2f}"
+    return render_template('AltSaldo.html',saldo=saldo,saldoV=saldoV)    
 #------------------------------
 
 #Tratamento de Erros
@@ -611,6 +623,7 @@ def AberturaConta():
 #     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
 #     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 
-    #Bloco para subir o site.
+
+#Bloco para subir o site.
 if __name__ == "__main__":
      app.run(debug=True)

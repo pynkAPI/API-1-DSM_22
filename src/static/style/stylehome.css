@@ -52,6 +52,10 @@ header {
     column-gap: 3rem;
 }
 
+.liHomeH{
+    height: 200px;
+}
+
 .nav-link {
     font-size: 1.2rem;
     padding: 8px;
@@ -182,7 +186,8 @@ header {
 }
 
 .func a {
-    width: 80px;
+    text-align: center;
+    width: 200px;
 }
 
 .func h5 {

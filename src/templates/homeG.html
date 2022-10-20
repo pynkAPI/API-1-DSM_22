@@ -4,25 +4,27 @@
 {% endblock %}
 {% block func %}
 <div class="func">
-    <h1>Contas esperando abertura</h1>
-    <!--{% for teste in itens %}
-    <form action="ReqAbertura" method="POST">
-        <label>Abertura {{teste[0]}}</label><br>
-        <input type="radio" name="verificacao" value="1">
-        <label for="css">Sim</label>
-        <input type="radio" name="verificacao" value="2">
-        <label for="html">Não</label>
-        <input type="submit" class="btnd solid">
-        <input type="hidden" value="{{teste[1]}}" name="IdConta">
-    </form><br>
-    {% endfor %} -->
-    <h1>Contas</h1>
-    <a href="{{ url_for('ConferenciaDepositoTabela') }}"><i class='bx bx-money'></i></a>
-    <h5>CONFERENCIA DEPOSITO</h5><br>
-    <a href="{{ url_for('AceiteContaTabela') }}"><i class='bx bx-money'></i></a>
-    <h5>REQUISIÇÕES DE ABERTURA DE CONTAS</h5><br>
-    <a href="{{ url_for('AceiteAlteracaoTabela') }}"><i class='bx bx-money'></i></a>
-    <h5>REQUISIÇÕES DE ALTERAÇÃO DE DADOS</h5><br>
-</div>
+    <div>
+        <nav>
+            <ul class="navbar">
+                <li class="liHomeH">
+                    <a href="ConferenciaDepositoTabela"><i class='bx bx-money'></i></a>
+                    <h5>CONFERENCIA DEPOSITO</h5>
+                </li>
+                <li class="liHomeH">
+                    <a href="AceiteContaTabela"><i class='bx bx-money'></i></a>
+                    <h5>REQUISIÇÕES DE ABERTURA DE CONTAS</h5>
+                </li>
+                <li class="liHomeH">
+                    <a href="AceiteAlteracaoTabela"><i class='bx bx-money'></i></a>
+                    <h5>REQUISIÇÕES DE ALTERAÇÃO DE DADOS</h5>
+                </li>
+                <li class="liHomeH">
+                    <a href="AltSaldo"><i class='bx bx-money'></i></a>
+                    <h5>ALTERAR SALDO DO BANCO</h5>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 {% endblock %}

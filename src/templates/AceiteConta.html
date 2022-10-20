@@ -1,13 +1,4 @@
 {% extends "home.html" %}
-{% block nav %}
-<div class="logo">
-    <a href="{{ url_for('home') }}"><img src="../static/img/pynkpng2.png" alt="logo"></a>
-</div>
-<ul class="navbar">
-    <li><a href="{{ url_for('home') }}" class="nav-link">Menu</a></li>
-    <li><a href="{{ url_for('index') }}" class="nav-link"><i class='bx bx-log-out'></i></a></li>
-</ul>
-{% endblock %}
 {% block saldo %}
 <!-- <label>Saldo do banco: R$ {{saldo}}</label> -->
 {% endblock %}
