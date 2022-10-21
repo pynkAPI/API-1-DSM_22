@@ -100,10 +100,19 @@ INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativ
 VALUES('GERENTE AGÊNCIA', '0',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'doxito007@gmail.com');
 
 INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('Miguel Carvalho', '123',  'OUTROS', 'TESTE', curdate(), 'teste', '1', 'doxito007@gmail.com');
+VALUES('GERENTE GERAL', '1',  'OUTROS', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'doxito007@gmail.com');
+
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
+VALUES('Miguel Carvalho', '23207568092',  'O', 'TESTE1', curdate(), 'teste', '1', 'doxito007@gmail.com');
+
+INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
+VALUES('Felipe Augusto Graciano', '91074953070',  'M', 'TESTE2', '2003-09-08', '123', '1', 'felipe98ju@hotmail.com');
 
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(2, 1, 'CONTA CORRENTE', 1234, curdate(), -200, '1');
+VALUES(2, 1, 'CONTA CORRENTE', 1234, curdate(), 0, '1');
+
+INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
+VALUES(3, 1, 'CONTA CORRENTE', 4321, curdate(), 0, '1');
 
 INSERT INTO tb_agencia(localidade, numero_agencia)
 VALUES('SP', '0001');
@@ -113,6 +122,9 @@ VALUES('RJ', '0002');
 
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login, id_agencia) 
 VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1',1);
+
+INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login, id_agencia) 
+VALUES('GERENTE GERAL', '0', 2, 'GG',1);
 
 INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
 VALUES ('0',1,'desejo alterar meu cpf para ...');

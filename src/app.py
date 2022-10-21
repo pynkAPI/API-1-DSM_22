@@ -83,8 +83,12 @@ def home():
                 
             return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
-            saldo = f"{session['saldo']:.2f}".replace(".",",")
-            return render_template('homeG.html',saldo=saldo)
+            if session['tipo'] == 2:
+                saldo = f"{session['saldo']:.2f}".replace(".",",")
+                return render_template('homeG.html',saldo=saldo)
+            else:
+                saldo = f"{session['saldo']:.2f}".replace(".",",")
+                return render_template('homeGG.html',saldo=saldo)
 #------------------------------
 
 #Aplicar filtro no extrato
@@ -318,15 +322,22 @@ def login():
                                             ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
                                         CampoBd=['login','senha'],
                                         CampoFm=[numeroconta,senha])
+            
             resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
             if resultado:
                 for row in resultado:
                     session['nome'] = row[1]
+                    papel = row[12]
                 session['login']    = True
                 session['conta']    = numeroconta
-                session['tipo']     = 2
                 for row2 in resultadocap:
                     session['saldo']  = row2[1]
+                    
+                if papel == 'GERENTE DE AGÊNCIA':
+                    session['tipo']  = 2
+                else:
+                    session['tipo']  = 3
+                    
                 return home()
             else:
                 abort(401)
