@@ -613,7 +613,6 @@ def AberturaConta():
 #------------------------------
 
 #Bloco de alteração do saldo do banco
-
 @app.route("/AltSaldo",  methods = ['POST', 'GET'])
 def AltSaldo():
     if request.method == 'POST': 
@@ -626,6 +625,13 @@ def AltSaldo():
     return render_template('AltSaldo.html',saldo=saldo,saldoV=saldoV)    
 #------------------------------
 
+#Bloco de Listagem de gerentes de agencia
+@app.route("/ListGA",  methods = ['POST', 'GET'])
+def ListGA():
+    # if request.method == 'POST': 
+    return render_template('ListGA.html')    
+#------------------------------
+
 #Tratamento de Erros
 @app.errorhandler(Exception)
 def excecao(e):
@@ -633,7 +639,7 @@ def excecao(e):
     cod_excecao = cod_excecao[:3]
     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
-
+#------------------------------
 
 #Bloco para subir o site.
 if __name__ == "__main__":
