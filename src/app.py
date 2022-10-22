@@ -486,7 +486,7 @@ def ConferenciaDeposito():
             
             return ConferenciaDepositoTabela()
         else:
-            funcs.upMySQL(TabelaBd='tb_transacao',
+            funcs.upMySQL(TabelaBd='tb_transacao', 
                       CampoBd=['status_transacao'],
                       CampoFm=[2],
                       CampoPs=[IdTransacao],
@@ -538,7 +538,7 @@ def Transacao():
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        if float(request.form['valor']) <= float(session['saldo']) and float(request.form['valor']) > 0:
+        if  float(session['saldo']) > 0  and float(request.form['valor']) > 0 and float(request.form['valor']) < float(session['saldo']):
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
@@ -554,15 +554,59 @@ def TransacaoConta():
                                                   
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]
+            if IdContaDestino == IdContaOrigem:
+                return Transacao()
+
+            pesquisaSQLContaDestinoCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                                     CampoBd=['ativo', 'id_conta'],
+                                                                     CampoFm=['1', IdContaDestino],
+                                                                     CampoEs=['valor_devido', 'data_inicio'])
+            if pesquisaSQLContaDestinoCheque:
+
+                valorDevido = pesquisaSQLContaDestinoCheque[0][0]
+                dataInicio = pesquisaSQLContaDestinoCheque[0][1]
+                diasPeriodo = funcs.periodoEntreDatas(data1=str(dataInicio), data2=str(date.today()))
+
+                if diasPeriodo > 0:
+                    pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                          CampoBd=['id_regra_operacoes'],
+                                                                          CampoFm=[1],
+                                                                          CampoEs=['porcentagem', 'valor_fixo'])
+                    porcentagem = pesquisaSQLRegraCheque[0][0]
+                    valorDevido = funcs.calculaChequeEspecial(tempo=diasPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
+
+                valorContaOrigem = pesquisaContaOrigem[0][1]
+
+                valorContaOrigem = valorContaOrigem - valor
+                valorDevido = valorDevido + valor
+
+                if valorDevido < 0:
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                      CampoBd=['valor_devido', 'data_inicio'],
+                                      CampoFm=[valorDevido, date.today()],
+                                      CampoPs=[IdContaDestino],
+                                      CampoWr=['id_conta'])
+
+                funcs.upMySQL(TabelaBd='tb_contabancaria',
+                                  CampoBd=['saldo'],
+                                  CampoFm=[valorContaOrigem],
+                                  CampoPs=[IdContaOrigem],
+                                  CampoWr=['id_conta'])
+
+                funcs.upMySQL(TabelaBd='tb_contabancaria',
+                                  CampoBd=['saldo'],
+                                  CampoFm=[valorDevido],
+                                  CampoPs=[IdContaDestino],
+                                  CampoWr=['id_conta'])
+                funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
+                funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
+                return Transacao()
 
             valorContaDestino = pesquisaContaDestino[0][1]
             valorContaOrigem = pesquisaContaOrigem[0][1]
 
             valorContaDestino = valorContaDestino + valor
             valorContaOrigem = valorContaOrigem - valor
-
-            if IdContaDestino == IdContaOrigem:
-                return render_template('transacao.html')
 
             funcs.upMySQL(TabelaBd='tb_contabancaria',
                       CampoBd=['saldo'],
