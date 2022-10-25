@@ -2,7 +2,40 @@
 {% block saldo %}
 {% endblock %}
 {% block func %}
+{% set i = 0 %}
 <div class="func">
+    <table class="tabelaRequisicao">
+        <tr class="linhaTabela">
+            {% for header in cabecalhoTabela %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in pesquisaSQL %}
+        <form action="ListGA" method="POST" name="ConferenciaDeposito">
+            <tr class="linhaTabela">
+                {% for cell in row %}
+                <td class="celula">{{ cell }}</td>
+                {% endfor %}
+                {% set LocalAnt = row[1] %}
+                <input type="hidden" name="LocalAnt" value="{{LocalAnt}}">
+                <td class="celula">
+                    <select name="SelectTRA">
+                        {% for Lagencia in LocAgencias %}
+                        {% for localidade in Lagencia %}
+                        <option {% if localidade == LocalAnt %} selected {% endif %}>{{ localidade }}</option>
+                        {% endfor %}
+                        {% endfor %}
+                    </select>
+                </td>
 
+                <td class="celula">
+                    <input type="hidden" name="IdFuncTRA" value="{{IdFunc[i][0]}}">
+                    <input type="submit" name="botao" value="Confirmar" class="btnd solid" id="btnConfirmar">
+                </td>
+            </tr>
+        </form>
+        {% set i=i+1 %}
+        {% endfor %}
+    </table>
 </div>
 {% endblock %}

@@ -739,8 +739,30 @@ def AltSaldo():
 #Bloco de Listagem de gerentes de agencia
 @app.route("/ListGA",  methods = ['POST', 'GET'])
 def ListGA():
-    # if request.method == 'POST': 
-    return render_template('ListGA.html')    
+    if request.method == 'POST': 
+        IdFuncTRA = request.form['IdFuncTRA']
+        SelectTRA = request.form['SelectTRA']
+        LocalAnt  = request.form['LocalAnt']
+        funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
+        funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[1],CampoWr=['localidade'],CampoPs=[LocalAnt])
+        
+    cabecalho = ('Nome', 'agencia','Trocar Agencia','')
+    cursor = mysql.connection.cursor()
+        
+    textoSQL = f"SELECT localidade FROM tb_agencia"
+    cursor.execute(textoSQL)
+    LocAgencias = cursor.fetchall()
+    
+    textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
+    cursor.execute(textoSQL)
+    IdFunc = cursor.fetchall()
+    mysql.connection.commit() 
+    
+    pesquisaSQL = funcs.SlcEspecificoMySQL('tb_agencia as TAG inner join tb_funcionario as TF ON TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario',
+                                        CampoBd=['papel'],CampoFm=['GERENTE DE AGÊNCIA'],CampoEs=['nome','localidade'])
+    print(LocAgencias)
+    print(pesquisaSQL)
+    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,LocAgencias=LocAgencias,IdFunc=IdFunc)    
 #------------------------------
 
 #Tratamento de Erros
