@@ -13,19 +13,20 @@
 <body>
     {% block body %}
     <body>
+        {% block container %}
         <div class="container">
             {% block sidebar %}
             <aside>
-                <div class="top">
+                <div class="topo">
                     <div class="logo">
                         <img src="../static/img/logorosa2.png">
                     </div>
-                    <div class="close" id="close-btn">
+                    <div class="fechar" id="fechar-btn">
                         <span class="material-cons-sharp">close</span>
                     </div>
                 </div>
                 <div class="sidebar" >
-                    <a href="SuaConta" class="active">
+                    <a href="SuaConta">
                         <span class="material-symbols-outlined">person</span>
                         <h3>Sua Conta</h3>
                     </a>
@@ -52,13 +53,14 @@
                 </div>
             </aside>
             {% endblock %}
+            {% block conteudo-home %}
             <main>
-               
-                <div class="insights">
+                {% block info %}
+                <div class="bloco-info">
                     <div class="saldo">
                         <span class="material-symbols-outlined">attach_money</span>
-                        <div class="middle">
-                            <div class="left">
+                        <div class="conteudo-saldo">
+                            <div class="text-saldo">
                                 <h3>Seu Saldo</h3>
                                 <h1>R$ {{saldo}}</h1>
                             </div>
@@ -67,8 +69,8 @@
                     </div>
                     <div class="saldo">
                         <span class="material-symbols-outlined">attach_money</span>
-                        <div class="middle">
-                            <div class="left">
+                        <div class="conteudo-saldo">
+                            <div class="text-saldo">
                                 <h3>Seu Saldo</h3>
                                 <h1>R$ {{saldo}}</h1>
                             </div>
@@ -77,8 +79,8 @@
                     </div>
                     <div class="saldo">
                         <span class="material-symbols-outlined">attach_money</span>
-                        <div class="middle">
-                            <div class="left">
+                        <div class="conteudo-saldo">
+                            <div class="text-saldo">
                                 <h3>Seu Saldo</h3>
                                 <h1>R$ {{saldo}}</h1>
                             </div>
@@ -86,7 +88,9 @@
                         <small class="text-muted">Ultima Atualização:</small>
                     </div>
                 </div>
-                <div class="date">
+                {% endblock %}
+                {% block data %}
+                <div class="data">
                     <form action="FiltroData" method="POST">
                         <label class="form-date" for="input-date">De:</label>
                         <input type="date" class="input-date" name="DataExtratoDe">
@@ -95,6 +99,8 @@
                         <input type="submit" class="btnd" value="Pesquisar">
                     </form>
                 </div>
+                {% endblock %}
+                {% block Tabela %}
                 <div class="scroll-div">
                     <div class="scroll-object">
                         <table class="tabelaRequisicao">
@@ -106,7 +112,6 @@
                                 {% endfor %}
                             </tr> -->
                             {% for row in pesquisaSQLTabela %}
-                            
                             <tr class="linhaTabela">
                                 <!-- Forma as linhas da tabela -->
                                 {% for cell in row %}
@@ -121,14 +126,15 @@
                                 <!-- <td> 
                                     <input type="submit" name="delete" value="Deletar" class="btnd solid">
                                 </td> -->
-                            </tr>
-                            
+                            </tr>  
                         {% endfor %}
                         </table>
                     </div>
                 </div>
-                    
+                {% endblock %}
                 </div>
+                {% endblock %}
             </main>
+            {% endblock %}
         </div>
         {% endblock %}
