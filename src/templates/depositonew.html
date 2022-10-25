@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Py.nk</title>
+    <link rel="stylesheet" href="../static/style/stylenew.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+</head>
+<body>
+    <div class="conteudo">
+        <img src="../static/img/logorosa2.png" id="logoConteudo">
+        <div class="elemento">
+            <span id="tituloElemento">Depósito</span>
+            <div class="blocoElemento">
+                <div class="inputElemento">
+                    <span id="textoInputElemento">Insira o valor:</span>
+                    <form action="{{ url_for('depositoConta') }}" method="POST">
+                        <div class="inputValor">
+                            <input required type="number" placeholder="00,00" step="0.01" name="valor">
+                        </div>
+                    </div>
+                        <div class="botaoElemento">
+                            <input type="submit" id="botaoSubmit" value="Deposite">
+                    </form>
+                    <input type="button" id="botaoVoltar" value="Voltar">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

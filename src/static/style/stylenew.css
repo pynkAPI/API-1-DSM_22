@@ -315,3 +315,122 @@ th {
     border-color: #CC5587;
     box-shadow: 0 0 0 0.05rem #DDA0DD;
 } */
+
+/* Deposito */
+.conteudo{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6vh;
+    padding: 10vh 20vw;
+    background-color: #050624;
+    width: 100vw;
+    min-height: 100vh;
+}
+
+#logoConteudo{
+    height: 10vh;
+    width: auto;
+    align-self: center;
+}
+
+.elemento{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 2vh;
+    padding: 2vh 4vw;
+}
+
+#tituloElemento{
+    color: white;
+    font-weight: 800;
+    font-size: 3vh;
+}
+
+.blocoElemento{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5vh;
+    width: 20vw;
+    height: 40vh;
+    padding: 6vh 8vw 4vh 8vw;
+    background: rgba(211, 225, 245, 0.15);
+    border-radius: 10px;
+}
+
+.inputElemento{
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    padding: 2vh 1vw 3vh 1vw;
+    gap: 2vh;
+    height: 14vh;
+    text-align: left;
+    background: rgba(250, 251, 252, 0.23);
+    border: 0.01vh solid #D3E1F5;
+    border-radius: 10px;
+}
+
+#textoInputElemento{
+    text-align: left;
+    font-weight: 600;
+    font-size: 2vh;
+    color: white;
+}
+
+.inputValor{
+    border-bottom: 0.01vh solid #D3E1F5;
+    
+}
+
+.botaoElemento{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    gap: 3vw;
+}
+
+#botaoSubmit{
+    height: 4vh;
+    width: 7vw;
+    background: #B71258;
+    border-radius: 8px;
+    color: white;
+}
+
+#botaoVoltar{
+    height: 4vh;
+    width: 7vw;
+    background: white;
+    border-radius: 8px;
+    color: #B71258;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  background-color: rgba(211, 225, 245, 0.15);
+  color: white;
+  height: 5vh;
+  font-size: 2vh;
+  font-weight: 600;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  background-color: rgba(211, 225, 245, 0.15);
+  outline: none;
+  color: white;
+  height: 5vh;
+  font-size: 2vh;
+  font-weight: 600;
+}
