@@ -12,7 +12,7 @@
     --color-light:rgba(132,139,200,0.18);
     --color-primary-variant:#677483;
     --color-dark-variant:#677483;
-    --color-backgorund:#f6f6f9;
+    --color-background:#f6f6f9;
     /* bordas */
     --card-border-radius:2rem;
     --border-radius-1:0.4rem;
@@ -43,7 +43,7 @@ body{
     height: 100vh;
     font-family: poppins, sans-serif;
     font-size: 0.88rem;
-    background: var(--color-backgorund);
+    background: var(--color-background);
     user-select: none;
     overflow-x:hidden;
     color: var(--color-dark);
@@ -222,7 +222,7 @@ main .bloco-info .h3{
 
 .scroll-div{
     width: 65vh;
-    background:whitesmoke;
+    background:var(--color-background);
     height: 70vh;
 }
 .links_name:hover{
@@ -232,7 +232,7 @@ main .bloco-info .h3{
 }
 .scroll-div{
     width: 65vh;
-    background:#EBEBEB;
+    background:var(--color-background);
     height: 70vh;
     overflow: hidden;
     overflow-y: scroll;
@@ -247,10 +247,10 @@ main .bloco-info .h3{
    
 }
 .scroll-div::-webkit-scrollbar-track{
-    background-color:#e7e7e7;
+    background-color:var(--color-background);
 }
 .scroll-div::-webkit-scrollbar-thumb{
-    background-color:#e7e7e7;
+    background-color:var(--color-background);
 }
 
 
@@ -265,9 +265,9 @@ th, td {
     border-bottom: 1px solid #ddd;
 }
 
-tr:nth-child(even){background-color: #DDA0DD}
+tr:nth-child(even){background-color: var(--color-background)}
 
-tr:hover{background-color:#e7e7e7}
+tr:hover{background-color:var(--color-background)}
 
 th {
     background-color: #CC5587;
