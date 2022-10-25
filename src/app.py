@@ -84,9 +84,11 @@ def home():
             return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
             if session['tipo'] == 2:
+                print('teste1')
                 saldo = f"{session['saldo']:.2f}".replace(".",",")
                 return render_template('homeG.html',saldo=saldo)
             else:
+                print('teste2')
                 saldo = f"{session['saldo']:.2f}".replace(".",",")
                 return render_template('homeGG.html',saldo=saldo)
 #------------------------------
@@ -739,15 +741,25 @@ def AltSaldo():
 #Bloco de Listagem de gerentes de agencia
 @app.route("/ListGA",  methods = ['POST', 'GET'])
 def ListGA():
+    cursor = mysql.connection.cursor()
     if request.method == 'POST': 
         IdFuncTRA = request.form['IdFuncTRA']
         SelectTRA = request.form['SelectTRA']
         LocalAnt  = request.form['LocalAnt']
+        
+        textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE localidade = '{SelectTRA}'"
+        cursor.execute(textoSQL)
+        VerFuncionario = cursor.fetchall()
+        
+        if VerFuncionario:
+            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (localidade = '{LocalAnt}');"
+        else:
+            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (localidade = '{LocalAnt}');"
+        
+        cursor.execute(textoSQLUp)
         funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
-        funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[1],CampoWr=['localidade'],CampoPs=[LocalAnt])
         
     cabecalho = ('Nome', 'agencia','Trocar Agencia','')
-    cursor = mysql.connection.cursor()
         
     textoSQL = f"SELECT localidade FROM tb_agencia"
     cursor.execute(textoSQL)
@@ -756,12 +768,15 @@ def ListGA():
     textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
     cursor.execute(textoSQL)
     IdFunc = cursor.fetchall()
+    
+    SelectGA = f"""SELECT nome, localidade FROM tb_agencia as TAG inner join tb_funcionario as TF ON 
+    TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario WHERE papel = 'GERENTE DE AGÊNCIA'
+    order by TF.id_funcionario"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
     mysql.connection.commit() 
     
-    pesquisaSQL = funcs.SlcEspecificoMySQL('tb_agencia as TAG inner join tb_funcionario as TF ON TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario',
-                                        CampoBd=['papel'],CampoFm=['GERENTE DE AGÊNCIA'],CampoEs=['nome','localidade'])
-    print(LocAgencias)
-    print(pesquisaSQL)
     return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,LocAgencias=LocAgencias,IdFunc=IdFunc)    
 #------------------------------
 
