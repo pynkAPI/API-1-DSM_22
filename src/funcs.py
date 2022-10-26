@@ -447,13 +447,22 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 '603' : 'Você cancelou a sua conta com sucesso.'}
 
 def calculaChequeEspecial(valorDevido, tempo, porecentagem):
+    #Calcula o juros composto por dia
     valor = ((1+porecentagem)**tempo)*valorDevido
+    #realiza o truncamento para maior precisão 
     valorTruncado = truncar(numero=valor,casaDecimal=3)
+    #realiza a correção de acordo com a regra feita pelo cliente
+    valorTruncado = valorTruncado - 0.005
+    #realiza o truncamento para a correção do valor em duas casas decimais
+    valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
     return valorTruncado
 
 def truncar(numero, casaDecimal):
+   #separa o numero em duas partes, a parte antes da casa decimal e depois da casa decimal 
    sp = str(numero).split('.')
-   return '.'.join([sp[0], sp[:casaDecimal]])
+   #faz a junção dos dois valores de acordo com as casas decimais espcificadas
+   valorTruncado = '.'.join([sp[0], sp[1][:casaDecimal]])
+   return float(valorTruncado)
 
 def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
