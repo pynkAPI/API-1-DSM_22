@@ -59,6 +59,7 @@ id_agencia int AUTO_INCREMENT PRIMARY KEY,
 localidade varchar(255) NOT NULL,
 id_funcionario int,
 numero_agencia VARCHAR(25) NOT NULL,
+status_agencia VARCHAR(1) NOT NULL
 FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 );
 

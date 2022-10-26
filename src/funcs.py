@@ -464,13 +464,13 @@ def DelAG(id_agencia):
                                 CampoBd= ['id_agencia'],
                                 CampoFm= [id_agencia],
                                 CampoEs= ['id_conta']) 
-    for i in pesquisa: 
+    for id_conta in pesquisa: 
          upMySQL(TabelaBd='tb_contabancaria',
             CampoBd=['id_agencia'],
             CampoFm=[id_agencia],
             CampoWr=['id_conta'],
             CampoPs=[id_conta])
-    
+
     upMySQL(TabelaBd='tb_agencia',
         CampoBd=['status_agencia'],
         CampoFm=[0],
