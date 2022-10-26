@@ -449,7 +449,7 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     valor = ((1+porecentagem)**tempo)*valorDevido
     valorTruncado = truncar(numero=valor,casaDecimal=3)
-    return valorFormatadado
+    return valorTruncado
 
 def truncar(numero, casaDecimal):
    sp = str(numero).split('.')
