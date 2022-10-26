@@ -44,21 +44,21 @@ def home():
     else:
         saldo = None
         if session['tipo'] == 1:
-            cabecalho = ('Tipo', 'Valor','Data e hora', 'De:', 'Para:')
+            cabecalho = ('Tipo', 'Valor', 'Data e hora', 'Status', 'De:', 'Para:')
             saldo = funcs.ValEmReal(session['saldo'])
             VarContador=0
             
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
-                                            CampoEs=['tipo','valor','Datatime'],
-                                            CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
-                                            CampoFm=[1,session['idContaBK'],session['idContaBK']],
-                                            CampoWrAO=[0,0,1])
+                                            CampoEs=['tipo','valor','Datatime','status_transacao'],
+                                            CampoBd=['id_conta_origem','id_conta_destino'],
+                                            CampoFm=[session['idContaBK'],session['idContaBK']],
+                                            CampoWrAO=[0,1])
             
             pesquisaContas = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
                                             CampoEs=['id_conta_origem', 'id_conta_destino'],
-                                            CampoBd=['status_transacao','id_conta_origem','id_conta_destino'],
-                                            CampoFm=[1,session['idContaBK'],session['idContaBK']],
-                                            CampoWrAO=[0,0,1])
+                                            CampoBd=['id_conta_origem','id_conta_destino'],
+                                            CampoFm=[session['idContaBK'],session['idContaBK']],
+                                            CampoWrAO=[0,1])
             
             pesquisaSQL = [list(row) for row in pesquisaSQL]
             for row in pesquisaContas:
@@ -79,9 +79,16 @@ def home():
                 pesquisaSQL[VarContador].append(nomes1[0][0])
                 pesquisaSQL[VarContador].append(nomes2[0][0])
                 pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
+                print(pesquisaSQL[VarContador][3])
+                if pesquisaSQL[VarContador][3] == '1':
+                    pesquisaSQL[VarContador][3] = "Efetuado"
+                else:
+                    if pesquisaSQL[VarContador][3] == '2':
+                        pesquisaSQL[VarContador][3] = "Rejeitado"
+                    else:
+                        pesquisaSQL[VarContador][3] = "Aguardando"
                 VarContador+=1
                 
-                print(pesquisaSQL)
             return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
             print(session['tipo'])
