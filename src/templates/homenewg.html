@@ -10,15 +10,15 @@
                     </div>
                 </div>
                 <div class="sidebar" >
-                    <a href="SuaConta">
+                    <a href="home">
                         <span class="material-symbols-outlined">home</span>
                         <h3>Home</h3>
                     </a>
-                    <a href="{{ url_for('deposito') }}" class="req_btn">
-                        <span class="material-symbols-outlined">manage_accounts</span>
-                        <h3>Usuarios</h3>
+                    <a href="SuaConta">
+                        <span class="material-symbols-outlined">person</span>
+                        <h3>Sua Conta</h3>
                     </a>
-                    <a href="{{ url_for('saque') }}" class="req_btn">
+                    <a href="#" class="req_btn">
                         <span class="material-symbols-outlined">playlist_add_check</span>
                         <h3>Requisições</h3>
                     </a>
@@ -28,4 +28,6 @@
                     </a>
                 </div>
             </aside>
-        {% endblock %}
+{% endblock %}
+{% block conteudo %}
+{% endblock %}
