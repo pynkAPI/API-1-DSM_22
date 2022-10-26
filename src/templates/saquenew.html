@@ -16,17 +16,17 @@
                 <span id="tituloSaldo">Seu saldo</span>
                 <span id="saldo">R$ {{saldo}}</span>
             </div>
-            <span id="tituloElemento">Depósito</span>
+            <span id="tituloElemento">Saque</span>
             <div class="blocoElemento">
                 <div class="inputElemento">
                     <span id="textoInputElemento">Insira o valor:</span>
-                    <form action="{{ url_for('depositoConta') }}" method="POST">
+                    <form action="{{ url_for('saqueConta') }}" method="POST">
                         <div class="inputValor">
                             <input required type="number" placeholder="00,00" name="valor">
                         </div>
                     </div>
                         <div class="botaoElemento">
-                            <input type="submit" id="botaoSubmit" value="Deposite">
+                            <input type="submit" id="botaoSubmit" value="Saque">
                     </form>
                     <input type="button" id="botaoVoltar" value="Voltar">
                 </div>

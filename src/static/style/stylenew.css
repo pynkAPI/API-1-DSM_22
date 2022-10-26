@@ -340,7 +340,6 @@ th {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
     gap: 2vh;
     padding: 2vh 4vw;
 }
@@ -357,8 +356,8 @@ th {
     justify-content: space-between;
     align-items: center;
     width: 20vw;
-    height: 40vh;
-    padding: 6vh 8vw 4vh 8vw;
+    height: 30vh;
+    padding: 4vh 8vw 4vh 8vw;
     background: rgba(211, 225, 245, 0.15);
     border-radius: 10px;
 }
@@ -401,6 +400,8 @@ th {
     background: #B71258;
     border-radius: 8px;
     color: white;
+    font-size: 2.5vh;
+    font-weight: 400;
 }
 
 #botaoVoltar{
@@ -409,6 +410,8 @@ th {
     background: white;
     border-radius: 8px;
     color: #B71258;
+    font-size: 2.5vh;
+    font-weight: 400;
 }
 
 .saldo{
@@ -419,22 +422,25 @@ th {
     width: 20vw;
     height: 8vh;
     padding: 1vh 2vw 1vh 2vw;
+    margin-bottom: 2vh;
     background: rgba(211, 225, 245, 0.15);
     color: white;
     border-radius: 10px;
     border: 0.01vh solid #4B6EAC;
 }
 
-.tituloSaldo{
-    font-weight: 400;
-    font-size: 2vh;
-    color: white; 
+#tituloSaldo{
+    font-weight: 500;
+    font-size: 2.25vh;
+    color: white;
+    text-align: left;
 }
 
-.saldo{
+#saldo{
     font-weight: 600;
-    font-size: 2vh;
+    font-size: 2.25vh;
     color: white;
+    text-align: left;
 }
 
 /* Chrome, Safari, Edge, Opera */
