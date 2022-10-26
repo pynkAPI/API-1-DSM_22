@@ -356,7 +356,6 @@ th {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 5vh;
     width: 20vw;
     height: 40vh;
     padding: 6vh 8vw 4vh 8vw;
@@ -410,6 +409,32 @@ th {
     background: white;
     border-radius: 8px;
     color: #B71258;
+}
+
+.saldo{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+    width: 20vw;
+    height: 8vh;
+    padding: 1vh 2vw 1vh 2vw;
+    background: rgba(211, 225, 245, 0.15);
+    color: white;
+    border-radius: 10px;
+    border: 0.01vh solid #4B6EAC;
+}
+
+.tituloSaldo{
+    font-weight: 400;
+    font-size: 2vh;
+    color: white; 
+}
+
+.saldo{
+    font-weight: 600;
+    font-size: 2vh;
+    color: white;
 }
 
 /* Chrome, Safari, Edge, Opera */
