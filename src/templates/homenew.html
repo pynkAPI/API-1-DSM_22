@@ -51,32 +51,30 @@
                                 <tr class="linhaTabela">
                                     <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)     -->
                                     {% for header in cabecalhoTabela %}
-                                        <th >{{ header }}</th>
+                                    <th>{{ header }}</th>
                                     {% endfor %}
                                 </tr>
                                 {% for row in pesquisaSQLTabela %}
                                 <tr class="linhaTabela">
                                     <!-- Forma as linhas da tabela -->
                                     {% for cell in row %}
-                                        <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
-                                        <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                                        {% if row[0] == cell %}
-                                        <input type="hidden" value="{{ cell }}" name="IdUsuario">
-                                        {% else %}
-                                        <a href="#"><td class="celula">{{ cell }}</td></a>
-                                        {% endif %}
+                                    <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                                    <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                                    <a href="#">
+                                        <td class="celula">{{ cell }}</td>
+                                    </a>
                                     {% endfor %}
                                     <!-- <td> 
                                         <input type="submit" name="delete" value="Deletar" class="btnd solid">
                                     </td> -->
-                                </tr>  
-                            {% endfor %}
+                                </tr>
+                                {% endfor %}
                             </table>
                         </div>
                     </div>
-                    {% endblock %}
-                </main>
+                {% endblock %}
             </div>
-        {% endblock %}
-</body>       
+        </main>
+    {% endblock %}
+    </body>
 </html>
