@@ -460,19 +460,20 @@ def ValEmReal(valor):
     return valor
 
 def DelAG(id_agencia):
-   pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                CampoBd= ['id_agencia'],
-                                CampoFm= [id_agencia],
-                                CampoEs= ['id_conta']) 
-    for id_conta in pesquisa: 
-         upMySQL(TabelaBd='tb_contabancaria',
-            CampoBd=['id_agencia'],
-            CampoFm=[id_agencia],
-            CampoWr=['id_conta'],
-            CampoPs=[id_conta])
+#    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+#                                 CampoBd= ['id_agencia'],
+#                                 CampoFm= [id_agencia],
+#                                 CampoEs= ['id_conta']) 
+#     for id_conta in pesquisa: 
+#          upMySQL(TabelaBd='tb_contabancaria',
+#             CampoBd=['id_agencia'],
+#             CampoFm=[id_agencia],
+#             CampoWr=['id_conta'],
+#             CampoPs=[id_conta])
 
-    upMySQL(TabelaBd='tb_agencia',
-        CampoBd=['status_agencia'],
-        CampoFm=[0],
-        CampoWr=['id_agencia'],
-        CampoPs=[id_agencia])
+#     upMySQL(TabelaBd='tb_agencia',
+#         CampoBd=['status_agencia'],
+#         CampoFm=[0],
+#         CampoWr=['id_agencia'],
+#         CampoPs=[id_agencia])
+    return
