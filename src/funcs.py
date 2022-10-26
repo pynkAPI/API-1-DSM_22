@@ -448,8 +448,12 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 
 def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     valor = ((1+porecentagem)**tempo)*valorDevido
-    valorFormatadado = float(f'{valor:.2f}')
+    valorTruncado = truncar(numero=valor,casaDecimal=3)
     return valorFormatadado
+
+def truncar(numero, casaDecimal):
+   sp = str(numero).split('.')
+   return '.'.join([sp[0], sp[:casaDecimal]])
 
 def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
