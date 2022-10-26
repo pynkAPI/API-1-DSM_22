@@ -320,19 +320,13 @@ th {
 .conteudo{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     gap: 4vh;
     padding: 6vh 20vw;
     background-color: #050624;
     width: 90vw;
     min-height: 100vh;
-}
-
-#logoConteudo{
-    height: 10vh;
-    width: auto;
-    align-self: center;
 }
 
 .elemento{
