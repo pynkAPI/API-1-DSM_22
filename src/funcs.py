@@ -459,21 +459,21 @@ def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
     return valor
 
-def DelAG(id_agencia):
-   pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                CampoBd= ['id_agencia'],
-                                CampoFm= [id_agencia],
-                                CampoEs= ['id_conta']) 
-    for id_conta in pesquisa: 
-         upMySQL(TabelaBd='tb_contabancaria',
-            CampoBd=['id_agencia'],
-            CampoFm=[id_agencia],
-            CampoWr=['id_conta'],
-            CampoPs=[id_conta])
+# def DelAG(id_agencia):
+#    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+#                                 CampoBd= ['id_agencia'],
+#                                 CampoFm= [id_agencia],
+#                                 CampoEs= ['id_conta']) 
+#     for id_conta in pesquisa: 
+#          upMySQL(TabelaBd='tb_contabancaria',
+#             CampoBd=['id_agencia'],
+#             CampoFm=[id_agencia],
+#             CampoWr=['id_conta'],
+#             CampoPs=[id_conta])
 
-    upMySQL(TabelaBd='tb_agencia',
-        CampoBd=['status_agencia'],
-        CampoFm=[0],
-        CampoWr=['id_agencia'],
-        CampoPs=[id_agencia])
-    return
+#     upMySQL(TabelaBd='tb_agencia',
+#         CampoBd=['status_agencia'],
+#         CampoFm=[0],
+#         CampoWr=['id_agencia'],
+#         CampoPs=[id_agencia])
+#     return
