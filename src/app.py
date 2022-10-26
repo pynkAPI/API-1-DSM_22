@@ -666,11 +666,11 @@ def Config():
 
 #------------------------------
 
-Página Sua Conta
+# Página Sua Conta
 @app.route("/SuaConta")
 def SuaConta():
     return render_template("homenew.html")
-------------------------------
+# ------------------------------
 
 #Bloco de requisição de Abertura de Conta
 
