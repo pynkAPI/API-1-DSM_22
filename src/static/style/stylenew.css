@@ -262,13 +262,18 @@ main .Extrato .tabelaRequisicao:hover{
 }
 main .tabelaRequisicao .linhaTabela td{
     height: 3rem;
+    font-weight: 550;
     border-bottom: 1px solid var(--color-light);
-    color: var(--color-dark-variant);
+    color: var(--color-dark);
+}
+main .tabelaRequisicao .linhaTabela th{
+    height: 3rem;
+    font-weight: 750;
+    color: black;
 }
 main .tabelaRequisicao .linhaTabela tr:last-child td{
     border: none;
 }
-
 tr:hover{background-color:var(--color-background)} 
 
 .scroll-div{
@@ -295,16 +300,6 @@ tr:hover{background-color:var(--color-background)}
 .scroll-div::-webkit-scrollbar-thumb{
     background-color:var(--color-background);
 }
-.modos-perfil{
-    margin-top: 1.4rem;
-}
-.modos-perfil .topo{
-    display: felx;
-    justify-content: end;
-    gap: 2rem;
-    background: gray;
-}
-
 /* Deposito */
 .conteudo{
     display: flex;
