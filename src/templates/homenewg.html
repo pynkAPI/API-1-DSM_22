@@ -1,28 +1,31 @@
-{% extends "homenew.html" %}
-{% block saldo %}
-<label>Saldo do banco: R$ {{saldo}}</label>
-{% endblock %}
-{% selecttabela %}
-    <h2>Usuários</h2>
-    <div id="DivExtrato">
-        <div>
-            <form action="FiltroExtrato" method="POST">
-                <div class="select">
-                    <select name="format" id="format">
-                    <option selected disabled>Pesquisar por</option>
-                    <option>CPF</option>
-                    <option>Nome</option>
-                    <option>Conta</option>
-                    <option>Agência</option>
-                    </select>                  
-                </div>      
-                <div class="pesquisa">
-                    <input type="text" >
-                </div>          
-        </div>
-                <input type="submit" class="btnd" value="Pesquisar">
-            </form>
-        </div>
-{% endblock %}
-{% block tabela %}
-{% endblock %}
+{% extends "layout.html" %}
+{% block sidebar %}
+            <aside>
+                <div class="topo">
+                    <div class="logo">
+                        <img src="../static/img/logorosa2.png">
+                    </div>
+                    <div class="fechar" id="fechar-btn">
+                        <span class="material-cons-sharp">close</span>
+                    </div>
+                </div>
+                <div class="sidebar" >
+                    <a href="SuaConta">
+                        <span class="material-symbols-outlined">home</span>
+                        <h3>Home</h3>
+                    </a>
+                    <a href="{{ url_for('deposito') }}" class="req_btn">
+                        <span class="material-symbols-outlined">manage_accounts</span>
+                        <h3>Usuarios</h3>
+                    </a>
+                    <a href="{{ url_for('saque') }}" class="req_btn">
+                        <span class="material-symbols-outlined">playlist_add_check</span>
+                        <h3>Requisições</h3>
+                    </a>
+                    <a href="{{ url_for('index') }}" class="logout">
+                        <span class="material-symbols-outlined">logout</span>
+                        <h3>Sair</h3>
+                    </a>
+                </div>
+            </aside>
+        {% endblock %}

@@ -59,6 +59,7 @@ id_agencia int AUTO_INCREMENT PRIMARY KEY,
 localidade varchar(255) NOT NULL,
 id_funcionario int,
 numero_agencia VARCHAR(25) NOT NULL,
+status_agencia VARCHAR(1) NOT NULL
 FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 );
 
@@ -74,6 +75,7 @@ CREATE TABLE tb_cheque_especial(
 id_cheque_especial INT  AUTO_INCREMENT PRIMARY KEY,
 id_conta INT NOT NULL,
 data_inicio DATE NOT NULL,
+data_atualizacao DATE NOT NULL,
 data_final DATE,
 valor_devido FLOAT NOT NULL,
 ativo boolean NOT NULL
@@ -112,10 +114,10 @@ INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativ
 VALUES('Felipe Augusto Graciano', '91074953070',  'M', 'TESTE2', '2003-09-08', '123', '1', 'felipe98ju@hotmail.com');
 
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(3, 1, 'CONTA CORRENTE', 1234, curdate(), 0, '1');
+VALUES(4, 1, 'CONTA CORRENTE', 1234, curdate(), -200, '1');
 
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(4, 1, 'CONTA CORRENTE', 4321, curdate(), 0, '1');
+VALUES(5, 1, 'CONTA CORRENTE', 4321, curdate(), 0, '1');
 
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
 VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1');
@@ -126,13 +128,13 @@ VALUES('GERENTE DE AGÊNCIA', '0', 2, 'GA2');
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
 VALUES('GERENTE GERAL', '0', 3, 'GG');
 
-INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)
-VALUES('SP',2, '0001');
+INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)
+VALUES('SP',2, '0001', 1);
 
-INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)
-VALUES('RJ',1,'0002');
+INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)
+VALUES('RJ',1,'0002', 1);
 
 INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
 VALUES ('0',1,'desejo alterar meu cpf para ...');
 
-INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_final, valor_devido, ativo) VALUES(1, curdate(), NULL, -200, 1);
+INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_atualizacao,data_final, valor_devido, ativo) VALUES(1, '2022-10-01','2022-10-01', NULL, -200, 1);

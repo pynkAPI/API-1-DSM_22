@@ -447,11 +447,41 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 '603' : 'Você cancelou a sua conta com sucesso.'}
 
 def calculaChequeEspecial(valorDevido, tempo, porecentagem):
+    #Calcula o juros composto por dia
     valor = ((1+porecentagem)**tempo)*valorDevido
-    valorFormatadado = float(f'{valor:.2f}')
-    valorRestante = valorFormatadado-valor
-    return valorFormatadado
+    #realiza o truncamento para maior precisão 
+    valorTruncado = truncar(numero=valor,casaDecimal=3)
+    #realiza a correção de acordo com a regra feita pelo cliente
+    valorTruncado = valorTruncado - 0.005
+    #realiza o truncamento para a correção do valor em duas casas decimais
+    valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
+    return valorTruncado
 
+def truncar(numero, casaDecimal):
+   #separa o numero em duas partes, a parte antes da casa decimal e depois da casa decimal 
+   sp = str(numero).split('.')
+   #faz a junção dos dois valores de acordo com as casas decimais espcificadas
+   valorTruncado = '.'.join([sp[0], sp[1][:casaDecimal]])
+   return float(valorTruncado)
 def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
     return valor
+
+# def DelAG(id_agencia):
+#    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+#                                 CampoBd= ['id_agencia'],
+#                                 CampoFm= [id_agencia],
+#                                 CampoEs= ['id_conta']) 
+#     for id_conta in pesquisa: 
+#          upMySQL(TabelaBd='tb_contabancaria',
+#             CampoBd=['id_agencia'],
+#             CampoFm=[id_agencia],
+#             CampoWr=['id_conta'],
+#             CampoPs=[id_conta])
+
+#     upMySQL(TabelaBd='tb_agencia',
+#         CampoBd=['status_agencia'],
+#         CampoFm=[0],
+#         CampoWr=['id_agencia'],
+#         CampoPs=[id_agencia])
+#     return
