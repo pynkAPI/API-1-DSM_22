@@ -447,7 +447,7 @@ def ConferenciaDeposito():
                                                         CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
                                                         CampoFm=[IdTransacao, IdContaOrigem])
                 saldoContaOrigem = pesquisaSQLConta[0][1]
-
+            
                 if valorDevido < saldoContaOrigem:
                     funcs.upMySQL('tb_contabancaria',
                                   CampoBd=['saldo'],
