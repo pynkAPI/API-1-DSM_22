@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% block head %}
     <meta charset="UTF-8">
@@ -7,11 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Py.nk</title>
     <link rel="stylesheet" href="../static/style/stylenew.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     {% endblock %}
 </head>
+
 <body>
     {% block body %}
+
     <body>
         {% block container %}
         <div class="container">
@@ -25,20 +29,20 @@
                         <span class="material-cons-sharp">close</span>
                     </div>
                 </div>
-                <div class="sidebar" >
-                    <a href="SuaConta">
+                <div class="sidebar">
+                    <a href="home">
                         <span class="material-symbols-outlined">person</span>
                         <h3>Sua Conta</h3>
                     </a>
-                    <a href="{{ url_for('deposito') }}" class="req_btn">
+                    <a href="deposito" class="req_btn">
                         <span class="material-symbols-outlined">account_balance_wallet</span>
                         <h3>Depósito</h3>
                     </a>
-                    <a href="{{ url_for('saque') }}" class="req_btn">
+                    <a href="saque" class="req_btn">
                         <span class="material-symbols-outlined">payments</span>
                         <h3>Saque</h3>
                     </a>
-                    <a href="{{ url_for('Transacao') }}" class="req_btn">
+                    <a href="Transacao" class="req_btn">
                         <span class="material-symbols-outlined">currency_exchange</span>
                         <h3>Transferência</h3>
                     </a>
@@ -46,7 +50,7 @@
                         <span class="material-symbols-outlined">settings</span>
                         <h3>Configurações</h3>
                     </a>
-                    <a href="{{ url_for('index') }}" class="logout">
+                    <a href="/" class="logout">
                         <span class="material-symbols-outlined">logout</span>
                         <h3>Sair</h3>
                     </a>
@@ -64,7 +68,7 @@
                                 <h3>Seu Saldo</h3>
                                 <h1>R$ {{saldo}}</h1>
                             </div>
-                        </div>      
+                        </div>
                     </div>
                     <div class="saldo">
                         <span class="material-symbols-outlined">attach_money</span>
@@ -73,7 +77,7 @@
                                 <h3>Seu Saldo</h3>
                                 <h1>R$ {{saldo}}</h1>
                             </div>
-                        </div>      
+                        </div>
                     </div>
                     <div class="saldo">
                         <span class="material-symbols-outlined">attach_money</span>
@@ -82,7 +86,7 @@
                                 <h3>Seu Saldo</h3>
                                 <h1>R$ {{saldo}}</h1>
                             </div>
-                        </div>      
+                        </div>
                     </div>
                 </div>
                 {% endblock %}
@@ -109,33 +113,33 @@
                                 <tr class="linhaTabela">
                                     <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)     -->
                                     {% for header in cabecalhoTabela %}
-                                        <th >{{ header }}</th>
+                                    <th>{{ header }}</th>
                                     {% endfor %}
                                 </tr>
                                 {% for row in pesquisaSQLTabela %}
                                 <tr class="linhaTabela">
                                     <!-- Forma as linhas da tabela -->
                                     {% for cell in row %}
-                                        <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
-                                        <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                                        {% if row[0] == cell %}
-                                        <input type="hidden" value="{{ cell }}" name="IdUsuario">
-                                        {% else %}
-                                        <a href="#"><td class="celula">{{ cell }}</td></a>
-                                        {% endif %}
+                                    <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                                    <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                                    <a href="#">
+                                        <td class="celula">{{ cell }}</td>
+                                    </a>
                                     {% endfor %}
                                     <!-- <td> 
                                         <input type="submit" name="delete" value="Deletar" class="btnd solid">
                                     </td> -->
-                                </tr>  
-                            {% endfor %}
+                                </tr>
+                                {% endfor %}
                             </table>
                         </div>
                     </div>
                     {% endblock %}
-                </main>
-                {% endblock %}
-            </div>
+            </main>
+            {% endblock %}
+        </div>
         {% endblock %}
-</body>       
+    </body>
+    {% endblock %}
+
 </html>

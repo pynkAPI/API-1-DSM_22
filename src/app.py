@@ -81,8 +81,10 @@ def home():
                 pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
                 VarContador+=1
                 
+                print(pesquisaSQL)
             return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
         else:
+            print(session['tipo'])
             if session['tipo'] == 2:
                 saldo = f"{session['saldo']:.2f}".replace(".",",")
                 return render_template('homeG.html',saldo=saldo)
@@ -330,12 +332,13 @@ def login():
             if resultado:
                 for row in resultado:
                     session['nome'] = row[1]
-                    papel = row[12]
+                    papel = row[11]
                 session['login']    = True
                 session['conta']    = numeroconta
                 for row2 in resultadocap:
                     session['saldo']  = row2[1]
                     
+                print(papel)
                 if papel == 'GERENTE DE AGÊNCIA':
                     session['tipo']  = 2
                 else:
@@ -657,10 +660,9 @@ def Config():
 #------------------------------
 
 #Página Sua Conta
-@app.route("/SuaConta")
-def SuaConta():
-    return render_template("homenew.html")
-
+# @app.route("/SuaConta")
+# def SuaConta():
+#     return render_template("homenew.html")
 #------------------------------
 
 #Bloco de requisição de Abertura de Conta
@@ -759,42 +761,62 @@ def AltSaldo():
 @app.route("/ListGA",  methods = ['POST', 'GET'])
 def ListGA():
     cursor = mysql.connection.cursor()
-    if request.method == 'POST': 
-        IdFuncTRA = request.form['IdFuncTRA']
-        SelectTRA = request.form['SelectTRA']
-        LocalAnt  = request.form['LocalAnt']
+    # if request.method == 'POST': 
+    #     IdFuncTRA = request.form['IdFuncTRA']
+    #     SelectTRA = request.form['SelectTRA']
+    #     LocalAnt  = request.form['LocalAnt']
         
-        textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE localidade = '{SelectTRA}'"
-        cursor.execute(textoSQL)
-        VerFuncionario = cursor.fetchall()
+    #     textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE localidade = '{SelectTRA}'"
+    #     cursor.execute(textoSQL)
+    #     VerFuncionario = cursor.fetchall()
         
-        if VerFuncionario:
-            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (localidade = '{LocalAnt}');"
-        else:
-            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (localidade = '{LocalAnt}');"
+    #     if VerFuncionario:
+    #         textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (localidade = '{LocalAnt}');"
+    #     else:
+    #         textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (localidade = '{LocalAnt}');"
         
-        cursor.execute(textoSQLUp)
-        funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
+    #     cursor.execute(textoSQLUp)
+    #     funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
         
-    cabecalho = ('Nome', 'agencia','Trocar Agencia','')
+    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
         
-    textoSQL = f"SELECT localidade FROM tb_agencia"
-    cursor.execute(textoSQL)
-    LocAgencias = cursor.fetchall()
+    # textoSQL = f"SELECT localidade FROM tb_agencia"
+    # cursor.execute(textoSQL)
+    # LocAgencias = cursor.fetchall()
     
-    textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
-    cursor.execute(textoSQL)
-    IdFunc = cursor.fetchall()
+    # textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
+    # cursor.execute(textoSQL)
+    # IdFunc = cursor.fetchall()
     
-    SelectGA = f"""SELECT nome, localidade FROM tb_agencia as TAG inner join tb_funcionario as TF ON 
-    TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario WHERE papel = 'GERENTE DE AGÊNCIA'
-    order by TF.id_funcionario"""
+    # SelectGA = f"""SELECT nome, localidade FROM tb_agencia as TAG inner join tb_funcionario as TF ON 
+    # TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario WHERE papel = 'GERENTE DE AGÊNCIA'
+    # order by TF.id_funcionario"""
+    # cursor.execute(SelectGA)
+    # pesquisaSQL = cursor.fetchall()
+    
+    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
     mysql.connection.commit() 
     
-    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,LocAgencias=LocAgencias,IdFunc=IdFunc)
+    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+#------------------------------
+
+#Bloco de Listagem das agencias
+@app.route("/ListAG",  methods = ['POST', 'GET'])
+def ListAG():
+    cursor = mysql.connection.cursor()
+       
+    cabecalho = ('Localidade','numero_agencia','Alterar Dados')
+       
+    SelectGA = f"""SELECT localidade,numero_agencia FROM tb_agencia order by localidade"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+   
+    mysql.connection.commit() 
+   
+    return render_template('ListAG.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
 
 #Tratamento de Erros
