@@ -1,92 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% block head %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Py.nk</title>
-    <link rel="stylesheet" href="../static/style/stylenew.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
-    {% endblock %}
-</head>
-<body>
-    {% block body %}
-    <body>
-        {% block container %}
-        <div class="container">
-            {% block sidebar %}
-            <aside>
-                <div class="topo">
-                    <div class="logo">
-                        <img src="../static/img/logorosa2.png">
-                    </div>
-                    <div class="fechar" id="fechar-btn">
-                        <span class="material-cons-sharp">close</span>
-                    </div>
+{% extends "layout.html" %}
+    {% block conteudo %}
+        <main>
+            <div class="bloco-info">
+                <div class="saldo">
+                    <span class="material-symbols-outlined">attach_money</span>
+                    <div class="conteudo-saldo">
+                        <div class="text-saldo">
+                            <h3>Seu Saldo</h3>
+                            <h1>R$ {{saldo}}</h1>
+                        </div>
+                    </div>      
                 </div>
-                <div class="sidebar" >
-                    <a href="SuaConta">
-                        <span class="material-symbols-outlined">person</span>
-                        <h3>Sua Conta</h3>
-                    </a>
-                    <a href="{{ url_for('deposito') }}" class="req_btn">
-                        <span class="material-symbols-outlined">account_balance_wallet</span>
-                        <h3>Depósito</h3>
-                    </a>
-                    <a href="{{ url_for('saque') }}" class="req_btn">
-                        <span class="material-symbols-outlined">payments</span>
-                        <h3>Saque</h3>
-                    </a>
-                    <a href="{{ url_for('Transacao') }}" class="req_btn">
-                        <span class="material-symbols-outlined">currency_exchange</span>
-                        <h3>Transferência</h3>
-                    </a>
-                    <a href="Config" class="req_btn">
-                        <span class="material-symbols-outlined">settings</span>
-                        <h3>Configurações</h3>
-                    </a>
-                    <a href="{{ url_for('index') }}" class="logout">
-                        <span class="material-symbols-outlined">logout</span>
-                        <h3>Sair</h3>
-                    </a>
+                <div class="saldo">
+                    <span class="material-symbols-outlined">attach_money</span>
+                    <div class="conteudo-saldo">
+                        <div class="text-saldo">
+                            <h3>Seu Saldo</h3>
+                            <h1>R$ {{saldo}}</h1>
+                        </div>
+                    </div>      
                 </div>
-            </aside>
-            {% endblock %}
-            {% block conteudoHome %}
-            <main>
-                {% block info %}
-                <div class="bloco-info">
-                    <div class="saldo">
-                        <span class="material-symbols-outlined">attach_money</span>
-                        <div class="conteudo-saldo">
-                            <div class="text-saldo">
-                                <h3>Seu Saldo</h3>
-                                <h1>R$ {{saldo}}</h1>
-                            </div>
-                        </div>      
-                    </div>
-                    <div class="saldo">
-                        <span class="material-symbols-outlined">attach_money</span>
-                        <div class="conteudo-saldo">
-                            <div class="text-saldo">
-                                <h3>Seu Saldo</h3>
-                                <h1>R$ {{saldo}}</h1>
-                            </div>
-                        </div>      
-                    </div>
-                    <div class="saldo">
-                        <span class="material-symbols-outlined">attach_money</span>
-                        <div class="conteudo-saldo">
-                            <div class="text-saldo">
-                                <h3>Seu Saldo</h3>
-                                <h1>R$ {{saldo}}</h1>
-                            </div>
-                        </div>      
-                    </div>
+                <div class="saldo">
+                    <span class="material-symbols-outlined">attach_money</span>
+                    <div class="conteudo-saldo">
+                        <div class="text-saldo">
+                            <h3>Seu Saldo</h3>
+                            <h1>R$ {{saldo}}</h1>
+                        </div>
+                    </div>      
                 </div>
-                {% endblock %}
-                {% block data %}
+            </div>
                 <div class="data">
                     <form action="FiltroData" method="POST">
                         <label class="form-date" for="input-date">De:</label>
@@ -96,7 +39,6 @@
                         <input type="submit" class="btnd" value="Pesquisar">
                     </form>
                 </div>
-                {% endblock %}
                 {% block Tabela %}
                 <div class="Extrato">
                     <div class="texto-extrato">
@@ -134,7 +76,6 @@
                     </div>
                     {% endblock %}
                 </main>
-                {% endblock %}
             </div>
         {% endblock %}
 </body>       

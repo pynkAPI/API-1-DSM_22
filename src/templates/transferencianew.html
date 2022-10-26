@@ -2,10 +2,6 @@
 {% block conteudo %}
     <div class="conteudo">
         <div class="elemento">
-            <div class="saldo-dep">
-                <span id="tituloSaldo">Seu saldo</span>
-                <span id="saldo">R$ {{saldo}}</span>
-            </div>
             <span id="tituloElemento">Transferência</span>
             <div class="blocoElemento">
                 <div class="inputElemento">
@@ -27,6 +23,10 @@
                     <input type="button" id="botaoVoltar" value="Voltar">
                 </div>
             </div>
+                 <div class="saldo-dep">
+                <span id="tituloSaldo">Seu saldo</span>
+                <span id="saldo">R$ {{saldo}}</span>
+            </div> 
         </div>
     </div>
 {% endblock %}

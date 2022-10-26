@@ -117,11 +117,11 @@ aside .sidebar{
     top: 1rem;
 }
 aside h3{
-    font-weight: 600;
+    font-weight: 70vh;
 }
 aside .sidebar a{
     display: flex;
-    color: var(--color-info-dark);
+    color: var(--color-dark);
     margin-left: 2rem;
     gap: 1rem;
     align-items: center;
@@ -278,7 +278,7 @@ tr:hover{background-color:var(--color-background)}
 .scroll-div{
     width: 100%;
     background:var(--color-background);
-    height: 60vh;
+    height: 100vh;
     overflow: hidden;
     overflow-y: scroll;
 }
@@ -375,10 +375,7 @@ tr:hover{background-color:var(--color-background)}
     gap: 1vh;
     height: auto;
     text-align: left;
-    /* border: 0.01vh solid #D3E1F5; */
-    border-radius: 10px;
     border-bottom: 0.01vh solid #D3E1F5;
-    
 }
 
 .botaoElemento{
@@ -418,7 +415,7 @@ tr:hover{background-color:var(--color-background)}
     padding: 1vh 2vw 1vh 2vw;
     margin-bottom: 2vh;
     background: var(--color-white);
-    color: white;
+    color: var(--color-white);
     border-radius: 10px;
     box-shadow: var(--box-shadow);
 }
