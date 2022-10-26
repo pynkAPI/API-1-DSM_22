@@ -127,11 +127,11 @@ VALUES('GERENTE DE AGÊNCIA', '0', 2, 'GA2');
 INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
 VALUES('GERENTE GERAL', '0', 3, 'GG');
 
-INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)
-VALUES('SP',2, '0001');
+INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)
+VALUES('SP',2, '0001', 1);
 
-INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia)
-VALUES('RJ',1,'0002');
+INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)
+VALUES('RJ',1,'0002', 1);
 
 INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
 VALUES ('0',1,'desejo alterar meu cpf para ...');
