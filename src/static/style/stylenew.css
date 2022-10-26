@@ -324,7 +324,7 @@ th {
     align-items: center;
     gap: 4vh;
     padding: 6vh 20vw;
-    background-color: #050624;
+    background-color: var(--color-background);
     width: 90vw;
     min-height: 100vh;
 }
@@ -339,7 +339,7 @@ th {
 }
 
 #tituloElemento{
-    color: white;
+    color: var(--color-dark);
     font-weight: 800;
     font-size: 3vh;
 }
@@ -353,7 +353,8 @@ th {
     height: auto;
     gap: 4vh;
     padding: 2vh 4vw 2vh 4vw;
-    background: rgba(211, 225, 245, 0.15);
+    background: var(--color-white);
+    box-shadow: var(--box-shadow);
     border-radius: 10px;
 }
 
@@ -372,7 +373,7 @@ th {
     text-align: left;
     font-weight: 600;
     font-size: 2vh;
-    color: white;
+    color: var(--color-dark-variant);
 }
 
 .inputValor{
@@ -385,7 +386,7 @@ th {
     gap: 1vh;
     height: auto;
     text-align: left;
-    border: 0.01vh solid #D3E1F5;
+    /* border: 0.01vh solid #D3E1F5; */
     border-radius: 10px;
     border-bottom: 0.01vh solid #D3E1F5;
     
@@ -401,19 +402,19 @@ th {
 #botaoSubmit{
     height: 4vh;
     width: 7vw;
-    background: #B71258;
+    background: var(--color-primary);
     border-radius: 8px;
-    color: white;
-    font-size: 2.5vh;
-    font-weight: 400;
+    color: var(--color-white);
+    font-size: 2vh;
+    font-weight: 300;
 }
 
 #botaoVoltar{
     height: 4vh;
     width: 7vw;
-    background: white;
+    background: var(--color-white);
     border-radius: 8px;
-    color: #B71258;
+    color: var(--color-primary);
     font-size: 2.5vh;
     font-weight: 400;
 }
@@ -427,23 +428,23 @@ th {
     height: 8vh;
     padding: 1vh 2vw 1vh 2vw;
     margin-bottom: 2vh;
-    background: rgba(211, 225, 245, 0.15);
+    background: var(--color-white);
     color: white;
     border-radius: 10px;
-    border: 0.01vh solid #4B6EAC;
+    box-shadow: var(--box-shadow);
 }
 
 #tituloSaldo{
-    font-weight: 500;
-    font-size: 2.25vh;
-    color: white;
+    font-weight: 400;
+    font-size: 1.5vh;
+    color: var(--color-dark);
     text-align: left;
 }
 
 #saldo{
     font-weight: 600;
     font-size: 2.25vh;
-    color: white;
+    color: var(--color-dark-variant);
     text-align: left;
 }
 

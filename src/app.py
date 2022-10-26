@@ -214,10 +214,7 @@ def SaqueConta():
 
                         if dataPeriodo > 0:
                             valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
-                        
                         valorDevido = valorDevido - float(request.form['valor'])
-                        valorDevido = f'{valorDevido:.2f}'
-                        valorDevido = float(valorDevido)
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoPs=[idConta[0][0], '1'],
                                       CampoWr=['id_conta', 'ativo'],
@@ -396,16 +393,16 @@ def ConferenciaDeposito():
                 #pega a quantidade de dias passados desde o dia em que ele entrou em cheque especial
                 dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
 
-                pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                #verifica se a qtd de dias é > 0
+                if dataPeriodo > 0:
+                    pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
                                                                           CampoBd=['id_regra_operacoes'],
                                                                           CampoFm=[1],
                                                                           CampoEs=['porcentagem', 'valor_fixo'])
-                porcentagem = pesquisaSQLRegraCheque[0][0]
-                #verifica se a qtd de dias é > 0
-                if dataPeriodo > 0:
+                    porcentagem = pesquisaSQLRegraCheque[0][0]
                     valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
-                valorDevido = f'{valorDevido + valorTransacao}'
-                valorDevido = float(valorDevido)
+                valorDevido = valorDevido + valorTransacao
+                
                 funcs.upMySQL(TabelaBd='tb_cheque_especial',
                               CampoPs=[IdContaOrigem, '1'],
                               CampoWr=['id_conta', 'ativo'],
@@ -416,7 +413,8 @@ def ConferenciaDeposito():
                                                             CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
                                                             CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
                                                             CampoFm=[IdTransacao, IdContaOrigem])
-            
+
+
                 pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
                                                               CampoEs=['capitalinicial'],
                                                               CampoBd=['id_capitaltotal'],
@@ -443,7 +441,19 @@ def ConferenciaDeposito():
                                   CampoPs=[IdContaOrigem, '0'],
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoBd=['valor_devido', 'data_final'],
-                                  CampoFm=[ valorDevido, date.today()])
+                                  CampoFm=[ 0, date.today()])
+                pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
+                                                        CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
+                                                        CampoFm=[IdTransacao, IdContaOrigem])
+                saldoContaOrigem = pesquisaSQLConta[0][1]
+
+                if valorDevido < saldoContaOrigem:
+                    funcs.upMySQL('tb_contabancaria',
+                                  CampoBd=['saldo'],
+                                  CampoFm=[valorDevido],
+                                  CampoWr=['id_conta'],
+                                  CampoPs=[IdContaOrigem])
 
                 #Atualiza o valor total do Banco
                 funcs.upMySQL(TabelaBd='tb_capitaltotal',
@@ -568,13 +578,14 @@ def TransacaoConta():
             pesquisaSQLContaDestinoCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                                      CampoBd=['ativo', 'id_conta'],
                                                                      CampoFm=['1', IdContaDestino],
-                                                                     CampoEs=['valor_devido', 'data_inicio'])
+                                                                     CampoEs=['valor_devido', 'data_atualizacao'])
+            #verifica se o usuário da conta Destino está na situação de cheque especial da conta 
             if pesquisaSQLContaDestinoCheque:
-
+                #pega o valor de quanto a conta Destino está devendo ao banco
                 valorDevido = pesquisaSQLContaDestinoCheque[0][0]
+                #pega o dia da ultima atualização da conta destino
                 dataInicio = pesquisaSQLContaDestinoCheque[0][1]
                 diasPeriodo = funcs.periodoEntreDatas(data1=str(dataInicio), data2=str(date.today()))
-
                 if diasPeriodo > 0:
                     pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
                                                                           CampoBd=['id_regra_operacoes'],
