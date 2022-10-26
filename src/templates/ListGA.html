@@ -2,7 +2,6 @@
 {% block saldo %}
 {% endblock %}
 {% block func %}
-{% set i = 0 %}
 <div class="func">
     <table class="tabelaRequisicao">
         <tr class="linhaTabela">
@@ -10,6 +9,7 @@
             <th>{{ header }}</th>
             {% endfor %}
         </tr>
+        {% set p = namespace(value=0) %}
         {% for row in pesquisaSQL %}
         <form action="ListGA" method="POST" name="ConferenciaDeposito">
             <tr class="linhaTabela">
@@ -27,14 +27,13 @@
                         {% endfor %}
                     </select>
                 </td>
-
                 <td class="celula">
-                    <input type="hidden" name="IdFuncTRA" value="{{IdFunc[i][0]}}">
+                    <input type="hidden" name="IdFuncTRA" value="{{ IdFunc[p.value][0] }}">
                     <input type="submit" name="botao" value="Confirmar" class="btnd solid" id="btnConfirmar">
                 </td>
             </tr>
         </form>
-        {% set i=i+1 %}
+        {% set p.value = p.value + 1 %}
         {% endfor %}
     </table>
 </div>

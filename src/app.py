@@ -198,12 +198,12 @@ def SaqueConta():
                     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                            CampoBd=['id_conta', 'ativo'],
                                                            CampoFm=[idConta[0][0], 1],
-                                                           CampoEs=['valor_devido', 'data_inicio'])
+                                                           CampoEs=['valor_devido', 'data_atualizacao'])
                     if pesquisaSQL:
                         valorDevido = pesquisaSQL[0][0]
-                        data = pesquisaSQL[0][1]
+                        dataAtualizacao = pesquisaSQL[0][1]
 
-                        dataPeriodo = funcs.periodoEntreDatas(data1=str(data),data2=str(date.today()))
+                        dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao),data2=str(date.today()))
 
                         pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
                                                                           CampoBd=['id_regra_operacoes'],
@@ -216,15 +216,17 @@ def SaqueConta():
                             valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
                         
                         valorDevido = valorDevido - float(request.form['valor'])
+                        valorDevido = f'{valorDevido:.2f}'
+                        valorDevido = float(valorDevido)
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoPs=[idConta[0][0], '1'],
                                       CampoWr=['id_conta', 'ativo'],
-                                      CampoBd=['valor_devido','data_inicio'],
+                                      CampoBd=['valor_devido','data_atualizacao'],
                                       CampoFm=[ valorDevido, datetime.today()])
                     else:
                         funcs.InsMySQL(TabelaBd='tb_cheque_especial',
-                                       CampoBd=['id_conta', 'data_inicio', 'data_final', 'valor_devido', 'ativo'],
-                                       CampoFm=[idConta[0][0],  datetime.today(), None, valor, '1'])
+                                       CampoBd=['id_conta', 'data_inicio', 'data_atualizacao','data_final', 'valor_devido', 'ativo'],
+                                       CampoFm=[idConta[0][0],  datetime.today(), datetime.today(), None, valor, '1'])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
                 funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
@@ -386,13 +388,13 @@ def ConferenciaDeposito():
             pesquisaSQLCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                          CampoBd=['id_conta'],
                                                          CampoFm=[IdContaOrigem],
-                                                         CampoEs=['valor_devido', 'data_inicio'])
+                                                         CampoEs=['valor_devido', 'data_atualizacao'])
             #verifica se quem está depositando está devendo ao banco, caso sim será realizado uma processo especial.       
             if pesquisaSQLCheque:
                 valorDevido = pesquisaSQLCheque[0][0]
-                dataInicio = pesquisaSQLCheque[0][1]
+                dataAtualizacao = pesquisaSQLCheque[0][1]
                 #pega a quantidade de dias passados desde o dia em que ele entrou em cheque especial
-                dataPeriodo = funcs.periodoEntreDatas(data1=str(dataInicio), data2=str(date.today()))
+                dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
 
                 pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
                                                                           CampoBd=['id_regra_operacoes'],
@@ -402,11 +404,12 @@ def ConferenciaDeposito():
                 #verifica se a qtd de dias é > 0
                 if dataPeriodo > 0:
                     valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
-                valorDevido = valorDevido + valorTransacao
+                valorDevido = f'{valorDevido + valorTransacao}'
+                valorDevido = float(valorDevido)
                 funcs.upMySQL(TabelaBd='tb_cheque_especial',
                               CampoPs=[IdContaOrigem, '1'],
                               CampoWr=['id_conta', 'ativo'],
-                              CampoBd=['valor_devido','data_inicio'],
+                              CampoBd=['valor_devido','data_atualizacao'],
                               CampoFm=[ valorDevido, datetime.today()])
                 
                 pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
@@ -436,6 +439,11 @@ def ConferenciaDeposito():
                                   CampoFm=[valorDevido],
                                   CampoWr=['id_conta'],
                                   CampoPs=[IdContaOrigem])
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                  CampoPs=[IdContaOrigem, '0'],
+                                  CampoWr=['id_conta', 'ativo'],
+                                  CampoBd=['valor_devido', 'data_final'],
+                                  CampoFm=[ valorDevido, date.today()])
 
                 #Atualiza o valor total do Banco
                 funcs.upMySQL(TabelaBd='tb_capitaltotal',
@@ -739,15 +747,25 @@ def AltSaldo():
 #Bloco de Listagem de gerentes de agencia
 @app.route("/ListGA",  methods = ['POST', 'GET'])
 def ListGA():
+    cursor = mysql.connection.cursor()
     if request.method == 'POST': 
         IdFuncTRA = request.form['IdFuncTRA']
         SelectTRA = request.form['SelectTRA']
         LocalAnt  = request.form['LocalAnt']
+        
+        textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE localidade = '{SelectTRA}'"
+        cursor.execute(textoSQL)
+        VerFuncionario = cursor.fetchall()
+        
+        if VerFuncionario:
+            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (localidade = '{LocalAnt}');"
+        else:
+            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (localidade = '{LocalAnt}');"
+        
+        cursor.execute(textoSQLUp)
         funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
-        funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[1],CampoWr=['localidade'],CampoPs=[LocalAnt])
         
     cabecalho = ('Nome', 'agencia','Trocar Agencia','')
-    cursor = mysql.connection.cursor()
         
     textoSQL = f"SELECT localidade FROM tb_agencia"
     cursor.execute(textoSQL)
@@ -756,13 +774,16 @@ def ListGA():
     textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
     cursor.execute(textoSQL)
     IdFunc = cursor.fetchall()
+    
+    SelectGA = f"""SELECT nome, localidade FROM tb_agencia as TAG inner join tb_funcionario as TF ON 
+    TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario WHERE papel = 'GERENTE DE AGÊNCIA'
+    order by TF.id_funcionario"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
     mysql.connection.commit() 
     
-    pesquisaSQL = funcs.SlcEspecificoMySQL('tb_agencia as TAG inner join tb_funcionario as TF ON TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario',
-                                        CampoBd=['papel'],CampoFm=['GERENTE DE AGÊNCIA'],CampoEs=['nome','localidade'])
-    print(LocAgencias)
-    print(pesquisaSQL)
-    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,LocAgencias=LocAgencias,IdFunc=IdFunc)    
+    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,LocAgencias=LocAgencias,IdFunc=IdFunc)
 #------------------------------
 
 #Tratamento de Erros
