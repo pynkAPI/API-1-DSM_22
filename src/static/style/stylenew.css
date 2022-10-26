@@ -414,7 +414,7 @@ th {
     font-weight: 400;
 }
 
-.saldo{
+.saldo-dep{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
