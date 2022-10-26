@@ -378,7 +378,6 @@ tr:hover{background-color:var(--color-background)}
     /* border: 0.01vh solid #D3E1F5; */
     border-radius: 10px;
     border-bottom: 0.01vh solid #D3E1F5;
-    
 }
 
 .botaoElemento{
@@ -406,6 +405,7 @@ tr:hover{background-color:var(--color-background)}
     color: var(--color-primary);
     font-size: 2.5vh;
     font-weight: 400;
+    cursor: pointer;
 }
 
 .saldo-dep{
@@ -462,7 +462,7 @@ input[type=number] {
   -moz-appearance: textfield;
   background-color: rgba(211, 225, 245, 0.15);
   outline: none;
-  color: white;
+  color: black;
   height: 5vh;
   font-size: 2vh;
   font-weight: 600;
