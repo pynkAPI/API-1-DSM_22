@@ -14,13 +14,13 @@
                         <span class="material-symbols-outlined">home</span>
                         <h3>Home</h3>
                     </a>
-                    <a href="SuaConta">
+                    <a href="SuaContaG">
                         <span class="material-symbols-outlined">person</span>
                         <h3>Sua Conta</h3>
                     </a>
                     <a href="#" class="req_btn">
-                        <span class="material-symbols-outlined">playlist_add_check</span>
-                        <h3>Requisições</h3>
+                        <span class="material-symbols-outlined">folder_shared</span>
+                        <h3>Usuários</h3>
                     </a>
                     <a href="{{ url_for('index') }}" class="logout">
                         <span class="material-symbols-outlined">logout</span>
@@ -30,4 +30,79 @@
             </aside>
 {% endblock %}
 {% block conteudo %}
+<main>
+    <div class="bloco-info">
+        <div class="saldo">
+            <span class="material-symbols-outlined">attach_money</span>
+            <div class="conteudo-saldo">
+                <div class="text-saldo">
+                    <h3>Saldo do Banco</h3>
+                    <h1>R$ {{saldo}}</h1>
+                </div>
+            </div>      
+        </div>
+        <div class="saldo">
+            <span class="material-symbols-outlined">group</span>
+            <div class="conteudo-saldo">
+                <div class="text-saldo">
+                    <h3>Total de Usuários</h3>
+                    <h1>{{usuarios[0][0]}}</h1>
+                </div>
+            </div>      
+        </div>
+        <div class="saldo">
+            <span class="material-symbols-outlined">list_alt</span>
+            <div class="conteudo-saldo">
+                <div class="text-saldo">
+                    <h3>Requisições em aberto</h3>
+                    <h1>{{req[0][0]}}</h1>
+                </div>
+            </div>      
+        </div>
+    </div>
+     
+        {% block Tabela %}
+        <div class="Extrato">
+           
+            <div class="texto-extrato">
+                <h2>Requisições</h2>
+            </div>
+            <div class="custom-select">
+                <select>
+                  <option value="0">Depósitos</option>
+                  <option value="1">Abertura de Contas</option>
+                  <option value="2">Alteração de Dados</option>
+                </select>
+            </div>
+            <div class="scroll-div">
+                <div class="scroll-object">
+                    <table class="tabelaRequisicao">
+                        <!-- Inicio da Tabela -->
+                        <tr class="linhaTabela">
+                            <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)     -->
+                            {% for header in cabecalhoTabela %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                        {% for row in pesquisaSQLTabela %}
+                        <tr class="linhaTabela">
+                            <!-- Forma as linhas da tabela -->
+                            {% for cell in row %}
+                            <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                            <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                            <a href="#">
+                                <td class="celula">{{ cell }}</td>
+                            </a>
+                            {% endfor %}
+                            <!-- <td> 
+                                <input type="submit" name="delete" value="Deletar" class="btnd solid">
+                            </td> -->
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+</main>
 {% endblock %}
