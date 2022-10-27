@@ -70,7 +70,7 @@ h2{
     font-size: 1.7rem;
 }
 h3{
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 h4{
     font-size: 0.8rem;
@@ -130,7 +130,7 @@ aside .sidebar a{
     transition:all 300ms ease;
 }
 aside .sidebar a span{
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     transition: all 200ms ease;
 }
 aside  .sidebar a:last-child{
@@ -189,6 +189,7 @@ main .bloco-info > div .conteudo-saldo{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-top: 1rem;
 }
 
 main .bloco-info .h3{
