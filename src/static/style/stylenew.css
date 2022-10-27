@@ -306,7 +306,6 @@ tr:hover{background-color:var(--color-background)}
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4vh;
     padding: 6vh 20vw;
     background-color: var(--color-background);
     width: 90vw;
@@ -335,11 +334,11 @@ tr:hover{background-color:var(--color-background)}
     align-items: center;
     width: 20vw;
     height: auto;
-    gap: 4vh;
-    padding: 2vh 4vw 2vh 4vw;
+    gap: 2vw;
+    padding: 3vh 4vw 4vh 4vw;
     background: var(--color-white);
     box-shadow: var(--box-shadow);
-    border-radius: 10px;
+    border-radius: 10px;    
 }
 
 .inputElemento{
@@ -347,9 +346,7 @@ tr:hover{background-color:var(--color-background)}
     flex-direction: column;
     justify-items: center;
     align-items: left;
-    padding: 2vh 1vw 2vh 1vw;
-    gap: 2vh;
-    height: 100%;
+    height: auto;
     text-align: left;
 }
 
@@ -366,18 +363,18 @@ tr:hover{background-color:var(--color-background)}
     justify-items: center;
     align-items: left;
     margin-top: 2vh;
-    padding: 2vh 1vw 3vh 1vw;
     gap: 1vh;
     height: auto;
     text-align: left;
-    border-bottom: 0.01vh solid #D3E1F5;
+    border-bottom: 0.01vh solid black;
 }
 
 .botaoElemento{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-content: center;
-    gap: 3vw;
+    text-align: center;
 }
 
 #botaoSubmit{
@@ -386,7 +383,7 @@ tr:hover{background-color:var(--color-background)}
     background: var(--color-primary);
     border-radius: 8px;
     color: var(--color-white);
-    font-size: 2vh;
+    font-size: 1.5rem;
     font-weight: 300;
 }
 
@@ -396,7 +393,7 @@ tr:hover{background-color:var(--color-background)}
     background: var(--color-white);
     border-radius: 8px;
     color: var(--color-primary);
-    font-size: 2.5vh;
+    font-size: 1.5rem;
     font-weight: 400;
     cursor: pointer;
 }
@@ -405,15 +402,12 @@ tr:hover{background-color:var(--color-background)}
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: left;
+    align-items: center;
     width: 20vw;
     height: 8vh;
-    padding: 1vh 2vw 1vh 2vw;
-    margin-bottom: 2vh;
+    padding: 1vh 1vw 1vh 1vw;
     background: var(--color-white);
     color: var(--color-white);
-    border-radius: 10px;
-    box-shadow: var(--box-shadow);
 }
 
 #tituloSaldo{
