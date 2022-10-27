@@ -30,12 +30,22 @@ mysql = MySQL(app)
 
 #Pagina inicial
 @app.route("/")
+@app.route("/login")
 def index():
     session['login'] = False
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
     return render_template('login.html')
+#------------------------------
+#Pagina inicial Gerentes
+@app.route("/loginG")
+def loginG():
+    session['login'] = False
+    session['nome']  = None
+    session['conta'] = None
+    session['tipo']  = None
+    return render_template('loginG.html')
 #------------------------------
 
 #Pagina Home
@@ -91,15 +101,16 @@ def home():
                         pesquisaSQL[VarContador][3] = "Aguardando"
                 VarContador+=1
                 
-            return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
+            caminhoLogin = '/'
+            return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
-            print(session['tipo'])
+            caminhoLogin = 'loginG'
             if session['tipo'] == 2:
                 saldo = f"{session['saldo']:.2f}".replace(".",",")
-                return render_template('homeG.html',saldo=saldo)
+                return render_template('homeG.html',saldo=saldo,caminhoLogin=caminhoLogin)
             else:
                 saldo = f"{session['saldo']:.2f}".replace(".",",")
-                return render_template('homeGG.html',saldo=saldo)
+                return render_template('homeGG.html',saldo=saldo,caminhoLogin=caminhoLogin)
 #------------------------------
 
 #Aplicar filtro no extrato
@@ -307,9 +318,10 @@ def cadastro():
     return render_template('cadastro.html')
 #------------------------------
 
-#Pagina de Login
+#Paginas de Login
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
+    session['tipoLog'] = 0
     if request.method == "POST":
         #login do usuário comum
         numeroconta = request.form['numeroconta']
@@ -319,7 +331,6 @@ def login():
                                         ON tb_contabancaria.id_usuario = tb_usuario.id_usuario ''',
                                     CampoBd=['tb_contabancaria.numeroconta','tb_usuario.senha','tb_contabancaria.status_contabancaria'],
                                     CampoFm=[numeroconta,senha,'1'])
-
         if resultado:
             for row in resultado:
                 session['nome']     = row[1]
@@ -330,32 +341,43 @@ def login():
             session['tipo']  = 1
             return home()
         else:
-            #Login de gerente geral e gerente de agência
-            resultado   = funcs.SlcMySQL('''tb_usuario
-                                            INNER JOIN tb_funcionario
-                                            ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
+            abort(401)
+    else:
+        abort(401)
+
+@app.route("/AutenticarGerente", methods = ['POST', 'GET'])
+def AutenticarGerente():
+    session['tipoLog'] = 1
+    if request.method == "POST":
+        #login do usuário comum
+        numeroconta = request.form['numeroconta']
+        senha       = request.form['senha']
+        #Login de gerente geral e gerente de agência
+        resultado   = funcs.SlcMySQL('''tb_usuario
+                                        INNER JOIN tb_funcionario
+                                        ON tb_funcionario.id_usuario = tb_usuario.id_usuario ''',
                                         CampoBd=['login','senha'],
                                         CampoFm=[numeroconta,senha])
             
-            resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
-            if resultado:
-                for row in resultado:
-                    session['nome'] = row[1]
-                    papel = row[11]
-                session['login']    = True
-                session['conta']    = numeroconta
-                for row2 in resultadocap:
-                    session['saldo']  = row2[1]
+        resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
+        if resultado:
+            for row in resultado:
+                session['nome'] = row[1]
+                papel = row[11]
+            session['login']    = True
+            session['conta']    = numeroconta
+            for row2 in resultadocap:
+                session['saldo']  = row2[1]
                     
-                print(papel)
-                if papel == 'GERENTE DE AGÊNCIA':
-                    session['tipo']  = 2
-                else:
-                    session['tipo']  = 3
-                    
-                return home()
+            print(papel)
+            if papel == 'GERENTE DE AGÊNCIA':
+                session['tipo']  = 2
             else:
-                abort(401)
+                session['tipo']  = 3
+                    
+            return home()
+        else:
+            abort(401)
     else:
         abort(401)
 
@@ -853,17 +875,19 @@ def criaAgencia():
 # def criaGA():
 #     if request.method == 'POST':
 
-        
-
 #Tratamento de Erros
 @app.errorhandler(Exception)
 def excecao(e):
-     cod_excecao = str(e)
-     cod_excecao = cod_excecao[:3]
-     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
+    cod_excecao = str(e)
+    cod_excecao = cod_excecao[:3]
+    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+    if session['tipoLog'] == 0:
+        caminhoLogin = '/'
+    else:
+        caminhoLogin = 'loginG'
+    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 #------------------------------
 
 #Bloco para subir o site.
 if __name__ == "__main__":
-     app.run(debug=True)
+    app.run(debug=True)
