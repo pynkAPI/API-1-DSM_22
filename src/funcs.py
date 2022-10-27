@@ -444,7 +444,8 @@ erro = {'400': 'O servidor não entendeu a requisição pois está com uma sinta
 '504': 'Gateway timeout',
 '601' : 'Você ainda possui saldo em conta, realize o saque e depois prossiga com o cancelamento',
 '602' : 'Você ainda possui pendências  com o banco, regularize sua situação antes de prosseguir com o cancelamento',
-'603' : 'Você cancelou a sua conta com sucesso.'}
+'603' : 'Você cancelou a sua conta com sucesso.',
+'604' : 'Esta agência já existe.'}
 
 def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     #Calcula o juros composto por dia
@@ -466,6 +467,12 @@ def truncar(numero, casaDecimal):
 def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
     return valor
+
+def criaAgencia(localidade, numeroAgencia):
+    InsMySQL(TabelaBd='tb_agencia',
+            CampoBd=['localidade', 'numero_agencia'],
+            CampoFm=[str(localidade), str(numeroAgencia)])
+
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',

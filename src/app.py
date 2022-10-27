@@ -1,3 +1,4 @@
+from logging import exception
 import os
 import email
 from email.message import EmailMessage
@@ -6,6 +7,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import date, datetime
+from select import select
 from tokenize import Double
 from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
 from flask_mysqldb import MySQL
@@ -797,13 +799,40 @@ def ListGA():
     return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,LocAgencias=LocAgencias,IdFunc=IdFunc)
 #------------------------------
 
+#1 [Criar Agencia]
+@app.route("/agencias", methods = ['POST', 'GET'])
+def criaAgencia():
+    if request.method == 'POST':
+        localidade = request.form['localidade']
+        numeroAgencia = request.form['numeroAgencia']
+
+        existe = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                           CampoEs=['numero_agencia'],
+                                           CampoBd=['numero_agencia'],
+                                           CampoFm=[numeroAgencia])
+
+        if existe == ():
+            funcs.criaAgencia(localidade, numeroAgencia)
+        else:
+            raise Exception('604')
+
+    return render_template('testeagencia.html')
+#------------------------------
+
+#2 [Cria Gerente de Agencia]
+# @app.route("/criaGA", methods = ['POST', 'GET'])
+# def criaGA():
+#     if request.method == 'POST':
+
+        
+
 #Tratamento de Erros
-# @app.errorhandler(Exception)
-# def excecao(e):
-#     cod_excecao = str(e)
-#     cod_excecao = cod_excecao[:3]
-#     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-#     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
+@app.errorhandler(Exception)
+def excecao(e):
+     cod_excecao = str(e)
+     cod_excecao = cod_excecao[:3]
+     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao])
 #------------------------------
 
 #Bloco para subir o site.
