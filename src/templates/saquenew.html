@@ -2,12 +2,12 @@
 {% block conteudo %}
     <div class="conteudo">
         <div class="elemento">
-            <div class="saldo-dep">
-                <span id="tituloSaldo">Seu saldo</span>
-                <span id="saldo">R$ {{saldo}}</span>
-            </div>
             <span id="tituloElemento">Saque</span>
             <div class="blocoElemento">
+                <div class="saldo-dep">
+                    <span id="tituloSaldo">Seu saldo</span>
+                    <span id="saldo">R$ {{saldo}}</span>
+                </div>
                 <div class="inputElemento">
                     <form action="{{ url_for('SaqueConta') }}" method="POST">
                         <div class="inputValor">
@@ -19,7 +19,7 @@
                             <input type="submit" id="botaoSubmit" value="Saque">
                     </form>
                     <a href="home">
-                        <label id="botaoVoltar">Voltar</label>
+                        <input type="button" id="botaoVoltar" value="Voltar">
                     </a>
                 </div>
             </div>

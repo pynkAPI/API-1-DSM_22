@@ -4,6 +4,10 @@
         <div class="elemento">
             <span id="tituloElemento">Transferência</span>
             <div class="blocoElemento">
+                <div class="saldo-dep">
+                    <span id="tituloSaldo">Seu saldo</span>
+                    <span id="saldo">R$ {{saldo}}</span>
+                </div>
                 <div class="inputElemento">
                     <form action="{{ url_for('TransacaoConta') }}" method="POST">
                         <div class="inputPadrao">
@@ -21,14 +25,10 @@
                             <input type="submit" id="botaoSubmit" value="Transfira">
                     </form>
                     <a href="home">
-                        <label id="botaoVoltar">Voltar</label>
+                        <input type="button" id="botaoVoltar" value="Voltar">
                     </a>
                 </div>
             </div>
-                 <div class="saldo-dep">
-                <span id="tituloSaldo">Seu saldo</span>
-                <span id="saldo">R$ {{saldo}}</span>
-            </div> 
         </div>
     </div>
 {% endblock %}
