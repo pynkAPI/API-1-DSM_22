@@ -104,13 +104,24 @@ def home():
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
+
+            req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
+            ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
+
+            cursor = mysql.connection.cursor()
+        
+            textoSQL = f"SELECT count(*) FROM pynk.tb_contabancaria;"
+            
+            cursor.execute(textoSQL)
+            tusuarios = cursor.fetchall()
+            mysql.connection.commit() 
+
+            saldo = f"{session['saldo']:.2f}".replace(".",",")
             caminhoLogin = 'loginG'
             if session['tipo'] == 2:
-                saldo = f"{session['saldo']:.2f}".replace(".",",")
-                return render_template('homeG.html',saldo=saldo,caminhoLogin=caminhoLogin)
+                return render_template('homenewg.html',saldo=saldo,req=req,usuarios=ausuarios, caminhoLogin=caminhoLogin)
             else:
-                saldo = f"{session['saldo']:.2f}".replace(".",",")
-                return render_template('homeGG.html',saldo=saldo,caminhoLogin=caminhoLogin)
+                return render_template('homeGG.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
 #------------------------------
 
 #Aplicar filtro no extrato
@@ -694,6 +705,16 @@ def Config():
 @app.route("/SuaConta")
 def SuaConta():
     return render_template("suaConta.html")
+
+# Página Sua Conta Gerente Agencia
+@app.route("/SuaContaG")
+def SuaContaG():
+    return render_template("suaContaG.html")
+
+# Página Sua Conta Gerente Geral
+@app.route("/SuaConta")
+def SuaContaGG():
+    return render_template("suaContaGG.html")
 # ------------------------------
 
 #Bloco de requisição de Abertura de Conta
