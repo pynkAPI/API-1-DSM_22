@@ -8,6 +8,7 @@
     <title>Py.nk</title>
     <link rel="stylesheet" href="../static/style/stylenew.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico"
     {% endblock %}
 </head>
 {% block body %}
@@ -25,25 +26,25 @@
                     </div>
                 </div>
                 <div class="sidebar" >
+                    <a href="home">
+                        <span class="material-symbols-outlined">home</span>
+                        <h3>Home</h3>
+                    </a>
                     <a href="SuaConta">
                         <span class="material-symbols-outlined">person</span>
                         <h3>Sua Conta</h3>
                     </a>
-                    <a href="{{ url_for('deposito') }}" class="req_btn">
+                    <a href="deposito" class="req_btn">
                         <span class="material-symbols-outlined">account_balance_wallet</span>
                         <h3>Depósito</h3>
                     </a>
-                    <a href="{{ url_for('saque') }}" class="req_btn">
+                    <a href="saque" class="req_btn">
                         <span class="material-symbols-outlined">payments</span>
                         <h3>Saque</h3>
                     </a>
-                    <a href="{{ url_for('Transacao') }}" class="req_btn">
+                    <a href="Transacao" class="req_btn">
                         <span class="material-symbols-outlined">currency_exchange</span>
-                        <h3>Transação</h3>
-                    </a>
-                    <a href="Config" class="req_btn">
-                        <span class="material-symbols-outlined">settings</span>
-                        <h3>Configurações</h3>
+                        <h3>Transferência</h3>
                     </a>
                     <a href="{{ url_for('index') }}" class="logout">
                         <span class="material-symbols-outlined">logout</span>

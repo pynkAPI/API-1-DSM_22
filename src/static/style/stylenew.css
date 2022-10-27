@@ -67,7 +67,7 @@ h1{
     font-size: 1.8rem;
 }
 h2{
-    font-size: 1.4rem;
+    font-size: 1.7rem;
 }
 h3{
     font-size: 0.9rem;
@@ -77,12 +77,6 @@ h4{
 }
 h5{
     font-size:0.77rem;
-}
-small{
-    font-size: 0.75rem;
-}
-.text-muted{
-    color: var(--color-info-dark);
 }
 p{
     color:var(--color-dark-variant);
@@ -107,10 +101,10 @@ aside .topo{
     align-items: center;
     justify-content: space-between;
     margin-top: 1.8rem;
-    margin-left: 2vw;
+    margin-left: 1.25vw;
 }
 aside .logo img{
-    width: 66%;
+    width: 70%;
 }
 aside .fechar{
     display: none;
@@ -120,14 +114,14 @@ aside .sidebar{
     flex-direction: column;
     height: 86vh;
     position: relative;
-    top: 3rem;
+    top: 1rem;
 }
 aside h3{
-    font-weight: 600;
+    font-weight: 70vh;
 }
 aside .sidebar a{
     display: flex;
-    color: var(--color-info-dark);
+    color: var(--color-dark);
     margin-left: 2rem;
     gap: 1rem;
     align-items: center;
@@ -168,17 +162,6 @@ aside .sidebar a:hover span{
 main{
     margin-top: 1.4rem;
 }
-main .data{
-    display: inline-block;
-    background: var(--color-light);
-    border-radius: var(--border-radius-1);
-    margin-top: 1rem;
-    padding: 0.5rem 1.6rem;
-}
-main .data input[type="date"]{
-    background: transparent;
-    color: var(--color-dark);
-}
 main .bloco-info{
     display: grid;
     grid-template-columns: repeat(3,1fr);
@@ -212,98 +195,22 @@ main .bloco-info .h3{
     margin: 1 rem 0 0.6rem;
     font-size: 1rem;
 }
-.extrato{
-    align-items: center;
-    background: #EBEBEB;
-    width: 70vh;
-    padding:3vh;
-    border-radius: 2vh;
-}
-
-.scroll-div{
-    width: 65vh;
-    background:var(--color-background);
-    height: 70vh;
-}
-.links_name:hover{
-    color: #b71258;
-    background:#EBEBEB ;
-    transition: 0.3s all linear;
-}
-.scroll-div{
-    width: 65vh;
-    background:var(--color-background);
-    height: 70vh;
-    overflow: hidden;
-    overflow-y: scroll;
-}
-.scroll-object{
-    
-    font-size: 1.9vh;
-    padding: 2vh;
-}
-.scroll-div::-webkit-scrollbar{
-    width: 1em;
-   
-}
-.scroll-div::-webkit-scrollbar-track{
-    background-color:var(--color-background);
-}
-.scroll-div::-webkit-scrollbar-thumb{
-    background-color:var(--color-background);
-}
-
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-th, td {
-    text-align: center;
-    padding: 0.8vh;
-    border-bottom: 1px solid #ddd;
-}
-
-tr:nth-child(even){background-color: var(--color-background)}
-
-tr:hover{background-color:var(--color-background)}
-
-th {
-    background-color: #CC5587;
-    color: white;
-}
-.DivExtrato{
-    display: flex;
-    flex-direction: column;
-    
-}
-/* .form-date{
-    font-size: 1.5vh;
-    line-height: 2.4vh;
-    padding-bottom: 0.8vh;
-    padding: 0.5vh;
-    margin-bottom: 10vh;
-}
-.input-date{
-    padding: 0.5vh;
-    appearance: none;
-    color: #b71258;
-    font-size: 1vh;
-    border: 1px solid #b71258;
-    border-radius: 1vh;
-    background: #e7e7e7;
+main .data{
     display: inline-block;
-    visibility: visible;
+    padding: 0.5vh;
+    background: transparent;
+   
+    margin-top: 1rem;
+    margin-left: 2rem;
 }
-.input-date:focus{
-    outline: #DDA0DD;
-    border-color: #CC5587;
-    box-shadow: 0 0 0 0.05rem #DDA0DD;
-} */
-/* .btnd{
+main .data input[type="date"]{
+    background: var(--color-light);
+    color: var(--color-dark);
+    border-radius: var(--border-radius-1);
+    padding: 0.5vh;
+} 
+.btnd{
     font-size: 1.1vh;
-    margin-left: 25vh;
     padding: 0.5vh;
     color: #EBEBEB;
     background-color: #b71258;
@@ -314,8 +221,85 @@ th {
     background-color: #CC5587;
     border-color: #CC5587;
     box-shadow: 0 0 0 0.05rem #DDA0DD;
+}
+/* .form-date{
+    font-size: 1.5vh;
+    line-height: 2.4vh;
+    padding: 0.5vh;
+    margin-top: 1rem;
+    margin-left: 2rem;
 } */
+/* .input-date{
+    padding: 0.5vh;
+    appearance: none;
+    color: #b71258;
+    font-size: 1vh;
+    border: 1px solid #b71258;
+    border-radius: 1vh;
+    background: #e7e7e7;
+    display: inline-block;
+    visibility: visible;
+} */
+main .Extrato{
+    margin-top:0.8rem ;
+    height: 60vh;
+}
+main .Extrato .texto-extrato{
+    margin-left: 2rem;
+    margin-bottom: 0.8rem;
+}
+main .Extrato .tabelaRequisicao{
+    background-color: var(--color-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow) ;
+    transition: all 300ms ease;
+}
+main .Extrato .tabelaRequisicao:hover{
+    box-shadow: none;
+}
+main .tabelaRequisicao .linhaTabela td{
+    height: 3rem;
+    font-weight: 550;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark);
+}
+main .tabelaRequisicao .linhaTabela th{
+    height: 3rem;
+    font-weight: 750;
+    color: black;
+}
+main .tabelaRequisicao .linhaTabela tr:last-child td{
+    border: none;
+}
+tr:hover{background-color:var(--color-background)} 
 
+.scroll-div{
+    width: 65vw;
+    height: 80vh;
+}
+.scroll-div{
+    width: 100%;
+    background:var(--color-background);
+    height: 100vh;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+.scroll-object{
+    font-size: 1rem;
+    padding: 2vh;
+}
+.scroll-div::-webkit-scrollbar{
+    width: 1em;
+}
+.scroll-div::-webkit-scrollbar-track{
+    background-color:var(--color-background);
+}
+.scroll-div::-webkit-scrollbar-thumb{
+    background-color:var(--color-background);
+}
 /* Deposito */
 .conteudo{
     display: flex;
@@ -386,10 +370,7 @@ th {
     gap: 1vh;
     height: auto;
     text-align: left;
-    /* border: 0.01vh solid #D3E1F5; */
-    border-radius: 10px;
     border-bottom: 0.01vh solid #D3E1F5;
-    
 }
 
 .botaoElemento{
@@ -417,6 +398,7 @@ th {
     color: var(--color-primary);
     font-size: 2.5vh;
     font-weight: 400;
+    cursor: pointer;
 }
 
 .saldo-dep{
@@ -429,7 +411,7 @@ th {
     padding: 1vh 2vw 1vh 2vw;
     margin-bottom: 2vh;
     background: var(--color-white);
-    color: white;
+    color: var(--color-white);
     border-radius: 10px;
     box-shadow: var(--box-shadow);
 }
@@ -473,7 +455,7 @@ input[type=number] {
   -moz-appearance: textfield;
   background-color: rgba(211, 225, 245, 0.15);
   outline: none;
-  color: white;
+  color: black;
   height: 5vh;
   font-size: 2vh;
   font-weight: 600;

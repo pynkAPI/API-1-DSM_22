@@ -2,10 +2,6 @@
 {% block conteudo %}
     <div class="conteudo">
         <div class="elemento">
-            <div class="saldo-dep">
-                <span id="tituloSaldo">Seu saldo</span>
-                <span id="saldo">R$ {{saldo}}</span>
-            </div>
             <span id="tituloElemento">Transferência</span>
             <div class="blocoElemento">
                 <div class="inputElemento">
@@ -24,9 +20,15 @@
                         <div class="botaoElemento">
                             <input type="submit" id="botaoSubmit" value="Transfira">
                     </form>
-                    <input type="button" id="botaoVoltar" value="Voltar">
+                    <a href="home">
+                        <label id="botaoVoltar">Voltar</label>
+                    </a>
                 </div>
             </div>
+                 <div class="saldo-dep">
+                <span id="tituloSaldo">Seu saldo</span>
+                <span id="saldo">R$ {{saldo}}</span>
+            </div> 
         </div>
     </div>
 {% endblock %}

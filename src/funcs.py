@@ -86,7 +86,7 @@ def SlcEspecificoComORMySQL(TabelaBd,CampoBd,CampoFm, CampoEs,CampoWrAO):
             if x==0:
                 textoSQL+= f' WHERE {CampoBd[x]} = "{CampoFm[x]}" '
             else:
-                textoSQL+= f' or {CampoBd[x]} = "{CampoFm[x]}")'
+                textoSQL+= f' or {CampoBd[x]} = "{CampoFm[x]}"'
         x+=1
     cursor.execute(textoSQL)
     resultado = cursor.fetchall()
