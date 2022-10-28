@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+}
+
+body {
+    background: #E7E7E7;
+}
+
+img {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+.container {
+    width: 100%;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.logo {
+    width: 3vw;
+}
+
+.navbar {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.nav-link {
+    font-size: 1rem;
+    padding: 1rem;
+    border-radius: 0.2rem;
+    color: #B71258;
+    margin-right:10vh;
+}
+
+.nav-link:hover {
+    color: #B71258;
+    background: #D2D2D2;
+    transition: 0.3s all linear;
+}
+
+.cadastro {
+    background-color: whitesmoke;
+    width: 20vw;
+    height: 10%;
+    padding: 40px;
+    margin-top: 13%;
+    margin-left: 7%;
+    border-radius: 15px;
+    box-shadow:0 2rem 3rem #dce1eb;
+    align-items: center;
+}
+
+form{
+    width: 100%;
+    max-width: 350px;
+}
+
+.input{
+    width: 15vw;
+    border: 0;
+    border-bottom: 2px solid #D2D2D2;
+    outline: 0;
+    font-size: 16px;
+    background-color: whitesmoke;
+}
+
+.input:focus,
+.input:valid{
+    border-bottom: 2px solid #B71258;
+
+}
+
+.input:focus ~ label,
+.input:valid ~ label{
+    transform: translateY(-24px);
+    font-size: 12px;
+    color: #B71258;
+}
+
+.input-field{
+    margin-bottom: 30px;
+    width: 100%;
+    position: relative;
+    /* margin: 30px 0; */
+    
+}
+
+.input-field .h1{
+    font-size: 1.96rem;
+    color: rgb(92, 92, 92);
+    margin-bottom: 5%;
+
+}
+
+.input-field label {
+    position: absolute;
+    font-size: 16px;
+    left: 0;
+    bottom:1px;
+    color: rgb(0, 0, 0);
+    cursor: text;
+    transition: 0.5s ease-in-out;
+}
+
+.btn_cadastro {
+    width: 10vw;
+    height: 4vh;
+    border: none;
+    outline: none;
+    border-radius: 49px;
+    cursor: pointer;
+    background-color: #B71258;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: white;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 10px 0;
+    padding: 0.5vw 0.6vw;
+    justify-content: center;
+}
+
+.btn_cadastro:hover {
+    background-color: #CC5587;
+}
+
+.img_cadastro {
+    width: 25vw;
+    height: 10%;
+    margin-left: 60%;
+    margin-top: -20%;
+}
+
+.tela {
+    width: 100%;
+    height: 100%;
+    /* display: grid; */
+}
+
+.cadastro2{
+    background-color: whitesmoke;
+    width: 30%;
+    height: 43vmax;
+    padding: 40px;
+    margin-top: 7%;
+    margin-left: 33%;
+    border-radius: 15px;
+}
+
+.btn_navigation{
+    display: inline-block ;
+}
+
+
+.btn_seta{
+    border: none;
+    outline: none;
+    border-radius: 49px;
+    cursor: pointer;
+    background-color: #B71258;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: white;
+    text-transform: uppercase;
+    margin: 60px 38px;
+    justify-content: center;
+    padding: 8px 25px;
+}
+
+
+.input_data{
+    border: none;
+    border-bottom: 1px solid rgb(0, 0, 0) ;
+    color: rgb(0, 0, 0);
+}
+
+.input_data:hover{
+    border: none;
+    border-bottom: 1px solid rgb(0, 0, 0) ;
+    color: rgb(0, 0, 0);
+}
+
+input[type="date"]{
+    text-align: right;
+    
+}
+
+input[type="date"]:before{
+  content: attr(placeholder) !important;
+    color: rgb(0, 0, 0);
+    margin-right: 0.5em;
+    padding: 11px;
+    border: none;
+}
+
+input[type="date"]:focus:before{
+    color: #B71258;
+    border: none
+  }
