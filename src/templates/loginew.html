@@ -1,0 +1,31 @@
+{% extends "cadastronew.html" %}
+{% block navbar %}
+    <header>
+        <div class="nav container">
+            <a href="#" class="logo"><img src="../static/img/prosa.png" alt="logo"></a>
+            <ul class="navbar">
+                <li><a href="#" class="nav-link">A Pynk</a></li>
+                <li><a href="cadastronew.html" class="nav-link">Cadastre-se</a></li>
+            </ul>
+        </div>
+    </header>
+    {% endblock %}
+{% block conteudo %}
+<div id="idtela" class="tela">
+    <div class="login">
+            <div class="input-field">
+                <h1 class="h1">FAÇA SEU LOGIN</h1><br>
+                <input type="text" name="numeroconta" class="input">
+                <label for="CPF">Digite o número da sua conta</label>
+                <br>
+                <input required type="password" name="senha" id="CPF" class="input">
+                <label for="CPF">Digite sua senha</label>
+            </div>       
+        <br>
+        <a onclick="teste1()" class="btn_cadastro">Cadastrar</a>
+    </div>
+    <div class="img_cadastro">
+        <img src="../static/img/login.svg" alt="imagem banco">
+    </div>
+</div>
+{% endblock %}

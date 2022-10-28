@@ -79,7 +79,17 @@ header {
     box-shadow:0 2rem 3rem #dce1eb;
     align-items: center;
 }
-
+.login{
+    background-color: whitesmoke;
+    width: 20vw;
+    height: 10%;
+    padding: 40px;
+    margin-top: 13%;
+    margin-left: 7%;
+    border-radius: 15px;
+    box-shadow:0 2rem 3rem #dce1eb;
+    align-items: center;
+}
 form{
     width: 100%;
     max-width: 350px;

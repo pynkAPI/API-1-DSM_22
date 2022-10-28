@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% block head %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,17 +9,21 @@
     <link rel="stylesheet" href="../static/style/stylelogin.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
-
+{% endblock%}
+{% block body %}
 <body>
+    {% block navbar %}
     <header>
         <div class="nav container">
             <a href="#" class="logo"><img src="../static/img/prosa.png" alt="logo"></a>
             <ul class="navbar">
-                <li><a href="portfolio.html" class="nav-link">A Pynk</a></li>
-                <li><a href="sobremim.html" class="nav-link">Login</a></li>
+                <li><a href="#" class="nav-link">A Pynk</a></li>
+                <li><a href="loginew.html" class="nav-link">Login</a></li>
             </ul>
         </div>
     </header>
+    {% endblock %}
+    {% block conteudo %}
     <div id="idtela" class="tela">
         <div class="cadastro">
                 <div class="input-field">
@@ -33,7 +38,9 @@
             <img src="../static/img/loginusuario.svg" alt="imagem banco">
         </div>
     </div>
+    {% endblock %}
 </body>
+{% endblock%}
 </html>    
     <!-- <div id="idtela2" class="tela">
         <div class="cadastro2">
