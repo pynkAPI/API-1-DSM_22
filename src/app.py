@@ -891,6 +891,21 @@ def criaAgencia():
     return render_template('testeagencia.html')
 #------------------------------
 
+
+#Requisição de alteração de dados
+@app.route("/reqaltusuario", methods = ['POST', 'GET'])
+def reqaltusuario():
+    if request.method == 'GET':
+        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                 CampoBd=[session['conta']],
+                                 CampoFm=['numeroconta'],
+                                 CampoEs=['nome','email','cpf','genero','endereco','senha'])
+        listaAlteracao = ('Nome','E-mail','Cpf','Gênero','Endereco','Senha', 'Confirmar Senha')      
+        
+        return render_template('reqaltusuario.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)    
+
+#------------------------------
+
 #2 [Cria Gerente de Agencia]
 # @app.route("/criaGA", methods = ['POST', 'GET'])
 # def criaGA():
