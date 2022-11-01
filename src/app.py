@@ -923,6 +923,7 @@ def criaAgencia():
     if request.method == 'POST':
         localidade = request.form['localidade']
         numeroAgencia = request.form['numeroAgencia']
+        idgerenteAgencia = request.form['funcionario']
 
         existe = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
                                            CampoEs=['numero_agencia'],
@@ -930,12 +931,35 @@ def criaAgencia():
                                            CampoFm=[numeroAgencia])
 
         if existe == ():
-            funcs.criaAgencia(localidade, numeroAgencia)
+            funcs.criaAgencia(localidade=localidade, numeroAgencia=numeroAgencia, idGerenteAgencia=idgerenteAgencia)
             return agencias()
         else:
             raise Exception('604')
+    
+    cursor = mysql.connection.cursor()
+    
+    textoSQL = f"""SELECT tb_usuario.nome,
+                   tb_funcionario.id_funcionario
+                   FROM tb_funcionario 
+                   LEFT JOIN tb_agencia
+                   ON tb_agencia.id_funcionario = tb_funcionario.id_funcionario
+                   INNER JOIN tb_usuario
+                   ON tb_funcionario.id_usuario = tb_usuario.id_usuario
+                   WHERE tb_agencia.id_funcionario IS NULL 
+                   AND tb_funcionario.papel != 'GERENTE GERAL';"""
+            
+    cursor.execute(textoSQL)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit()     
+    cursor.close()
+    dicionarioPesquisa = []
+    for row in pesquisaSQL:    
+        dicionarioPesquisa.append({
+        "nome" : row[0],
+        "id" : row[1]
+        })
 
-    return render_template('criaAgencia.html')
+    return render_template('criaAgencia.html', listaGerente=dicionarioPesquisa)
 #------------------------------
 #Requisição de alteração de dados
 @app.route("/reqaltusuario", methods = ['POST', 'GET'])

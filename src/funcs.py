@@ -468,10 +468,10 @@ def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
     return valor
 
-def criaAgencia(localidade, numeroAgencia):
+def criaAgencia(localidade, numeroAgencia, idGerenteAgencia):
     InsMySQL(TabelaBd='tb_agencia',
-            CampoBd=['localidade', 'numero_agencia', 'status_agencia'],
-            CampoFm=[str(localidade), str(numeroAgencia), '0'])
+            CampoBd=['localidade', 'numero_agencia', 'status_agencia', 'id_funcionario'],
+            CampoFm=[str(localidade), str(numeroAgencia), '1', idGerenteAgencia])
 
 def criaGA():
     
