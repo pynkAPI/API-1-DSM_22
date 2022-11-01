@@ -905,7 +905,7 @@ def agencias():
     cabecalho   = ('Localidade','Número agência','Funcionario','Status','Alterar Dados')
     cursor = mysql.connection.cursor()
             
-    textoSQL = f"""SELECT localidade,numero_agencia,nome,IF(status_agencia='1', "ativo", "desativado") as status 
+    textoSQL = f"""SELECT localidade,numero_agencia,nome,IF(status_agencia='1', "Ativo", "Desativado") as status 
     FROM tb_agencia as TA left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
     left join tb_usuario as TU on TF.id_usuario=TU.id_usuario order by localidade"""
             
@@ -977,8 +977,29 @@ def reqaltusuario():
 #Funcao gerentes do Gerente Geral
 @app.route("/gerentes", methods = ['POST', 'GET'])
 def gerentes():
-    return render_template('gerentes.html')
+    cursor = mysql.connection.cursor()
+        
+    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
+    
+    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
+    mysql.connection.commit() 
+    
+    return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
+
+# Página Sua Conta
+@app.route("/suaConta")
+def suaConta():
+    if request.method == 'GET':
+        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                 CampoBd=[session['conta']],
+                                 CampoFm=['numeroconta'],
+                                 CampoEs=['nome','email','cpf','genero','endereco','senha'])
+        listaAlteracao = ('Nome','E-mail','Cpf','Gênero','Endereço','Senha', 'Confirmar Senha')
+    return render_template('suaConta.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)
 
 #2 [Cria Gerente de Agencia]
 @app.route("/criaGA", methods = ['POST', 'GET'])
@@ -1002,7 +1023,10 @@ def criaGA():
         return render_template ('gerentes.html')
     return render_template ('criaGA.html')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 65c9f2e33900c9d27404b538b440dc5152265684
 #Tratamento de Erros
 #@app.errorhandler(Exception)
 #def excecao(e):
