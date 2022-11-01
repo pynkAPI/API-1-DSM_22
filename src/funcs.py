@@ -470,8 +470,8 @@ def ValEmReal(valor):
 
 def criaAgencia(localidade, numeroAgencia):
     InsMySQL(TabelaBd='tb_agencia',
-            CampoBd=['localidade', 'numero_agencia'],
-            CampoFm=[str(localidade), str(numeroAgencia)])
+            CampoBd=['localidade', 'numero_agencia', 'status_agencia'],
+            CampoFm=[str(localidade), str(numeroAgencia), '0'])
 
 
 # def DelAG(id_agencia):
