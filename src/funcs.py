@@ -473,10 +473,69 @@ def criaAgencia(localidade, numeroAgencia, idGerenteAgencia):
             CampoBd=['localidade', 'numero_agencia', 'status_agencia', 'id_funcionario'],
             CampoFm=[str(localidade), str(numeroAgencia), '1', idGerenteAgencia])
 
-def criaGA():
-    
+def criaGA(dados):
+    cpf = dados['cpf']
+    cpf = cpf.replace(".","")
+    cpf = cpf.replace("-","")
+
+    existe = SlcEspecificoMySQL(TabelaBd='tb_usuario',
+                                      CampoEs=['cpf'],
+                                      CampoBd=['cpf'],
+                                      CampoFm=[cpf])
+    if existe == ():
+        matricula = geraValor(8,'n')
+
+        InsMySQL(TabelaBd='tb_usuario',
+                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha', 'ativo'],
+                CampoFm=[dados['nome'], dados['email'], cpf, dados['genero'], dados['endereco'], dados['dataNasc'], geraValor(8,'l&n'), '1'])
+        
+        idGerente = SlcEspecificoMySQL(TabelaBd='tb_usuario',
+                                       CampoEs=['id_usuario'],
+                                       CampoBd=['cpf'],
+                                       CampoFm=[cpf])
+
+        existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                      CampoEs=['num_matricola'],
+                                      CampoBd=['num_matricola'],
+                                      CampoFm=[matricula])
+        
+        #impede de gerar um valor repetido de matricula
+        while existe != ():
+            matricula = geraValor(8,'n')
+            existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                      CampoEs=['num_matricola'],
+                                      CampoBd=['num_matricola'],
+                                      CampoFm=[matricula])
+        
+        InsMySQL(TabelaBd='tb_funcionario',
+                CampoBd=['id_usuario','papel','num_matricola','login'],
+                CampoFm=[str(idGerente[0][0]),'GERENTE DE AGÊNCIA', matricula, matricula])
+    else:
+        print('ja existe')
     return
 
+#Pode gerar letras, numeros ou letras e numeros aleatorios 
+#tipo pode receber:
+#   -l (somente letras)
+#   -n (somente numeros)
+#   -l&n (letras e numeros)
+def geraValor(qtdCaracteres, tipo):
+    senha = ""
+
+    if tipo == 'l&n':
+        caracteres = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
+        for caractere in range(int(qtdCaracteres)):
+            senha += caracteres[random.randint(0,35)]
+    elif tipo == 'l':
+        caracteres = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+        for caractere in range(int(qtdCaracteres)):
+            senha += caracteres[random.randint(0,25)]
+    elif tipo == 'n':
+        caracteres = ['0','1','2','3','4','5','6','7','8','9']
+        for caractere in range(qtdCaracteres):
+            senha += caracteres[random.randint(0,9)]
+
+    return senha
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',

@@ -984,11 +984,25 @@ def gerentes():
 @app.route("/criaGA", methods = ['POST', 'GET'])
 def criaGA():
     if request.method == 'POST':
-        existe = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
-                                           CampoEs=['cpf'],
-                                           CampoBd=['cpf'],
-                                           CampoFm=[])
+        dados = {
+            'nome':'',
+            'email':'',
+            'endereco':'',
+            'cpf':'',
+            'genero':'',
+            'dataNasc':''
+        }
+        dados['nome'] = request.form['nome']
+        dados['email'] = request.form['email']
+        dados['endereco'] = request.form['endereco']
+        dados['cpf'] = request.form['cpf']
+        dados['genero'] = request.form['genero']
+        dados['dataNasc'] = request.form['datanasc']
+        funcs.criaGA(dados)
+        return render_template ('gerentes.html')
     return render_template ('criaGA.html')
+
+
 #Tratamento de Erros
 #@app.errorhandler(Exception)
 #def excecao(e):
