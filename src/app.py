@@ -950,23 +950,32 @@ def reqaltusuario():
         return render_template('reqaltusuario.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)    
 
 #------------------------------
+#Funcao gerentes do Gerente Geral
+@app.route("/gerentes", methods = ['POST', 'GET'])
+def gerentes():
+    return render_template('gerentes.html')
+#------------------------------
 
 #2 [Cria Gerente de Agencia]
-# @app.route("/criaGA", methods = ['POST', 'GET'])
-# def criaGA():
-#     if request.method == 'POST':
-
+@app.route("/criaGA", methods = ['POST', 'GET'])
+def criaGA():
+    if request.method == 'POST':
+        existe = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
+                                           CampoEs=['cpf'],
+                                           CampoBd=['cpf'],
+                                           CampoFm=[])
+    return render_template ('criaGA.html')
 #Tratamento de Erros
-# @app.errorhandler(Exception)
-# def excecao(e):
-#     cod_excecao = str(e)
-#     cod_excecao = cod_excecao[:3]
-#     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-#     if session['tipoLog'] == 0:
-#         caminhoLogin = '/'
-#     else:
-#         caminhoLogin = 'loginG'
-#     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
+#@app.errorhandler(Exception)
+#def excecao(e):
+#    cod_excecao = str(e)
+#    cod_excecao = cod_excecao[:3]
+#    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+#    if session['tipoLog'] == 0:
+#        caminhoLogin = '/'
+#    else:
+#        caminhoLogin = 'loginG'
+#    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 #------------------------------
 
 #Bloco para subir o site.
