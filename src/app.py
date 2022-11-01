@@ -36,6 +36,7 @@ def index():
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
+    session['idContabk'] = None
     return render_template('login.html')
 #------------------------------
 #Pagina inicial Gerentes
@@ -45,6 +46,7 @@ def loginG():
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
+    session['idContaBK'] = None
     return render_template('loginG.html')
 #------------------------------
 
@@ -71,7 +73,28 @@ def home():
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
-            
+            pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                             CampoBd=['id_conta', 'ativo'],
+                                                             CampoFm=[session['idContaBK'], '1'],
+                                                             CampoEs=['valor_devido', 'data_atualizacao'])
+            if pesquisaChequeEspecial:
+                valorDevido = pesquisaChequeEspecial[0][0]
+                dataAtualizacao = pesquisaChequeEspecial[0][1]
+                dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
+                if dataPeriodo > 0:
+                    pesquisaRegraOperacao = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                 CampoBd=['id_regra_operacoes'],
+                                                                 CampoFm=[1],
+                                                                 CampoEs=['porcentagem'])
+                    porcentagem = pesquisaRegraOperacao[0][0]
+                    valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                  CampoBd=['valor_devido'],
+                                  CampoFm=[valorDevido],
+                                  CampoWr=['id_conta', 'ativo'],
+                                  CampoPs=[session['idContaBK'], '1'])
+            else:
+                valorDevido = 0
             pesquisaSQL = [list(row) for row in pesquisaSQL]
             for row in pesquisaContas:
                 
@@ -102,7 +125,7 @@ def home():
                 VarContador+=1
                 
             caminhoLogin = '/'
-            return render_template('homenew.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
+            return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
 
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
@@ -482,18 +505,18 @@ def ConferenciaDeposito():
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoBd=['valor_devido', 'data_final'],
                                   CampoFm=[ 0, date.today()])
-                pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
-                                                        CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
-                                                        CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
-                                                        CampoFm=[IdTransacao, IdContaOrigem])
-                saldoContaOrigem = pesquisaSQLConta[0][1]
+                # pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                #                                         CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
+                #                                         CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
+                #                                         CampoFm=[IdTransacao, IdContaOrigem])
+                # saldoContaOrigem = pesquisaSQLConta[0][1]
             
-                if valorDevido < saldoContaOrigem:
-                    funcs.upMySQL('tb_contabancaria',
-                                  CampoBd=['saldo'],
-                                  CampoFm=[valorDevido],
-                                  CampoWr=['id_conta'],
-                                  CampoPs=[IdContaOrigem])
+                # if valorDevido < saldoContaOrigem:
+                #     funcs.upMySQL('tb_contabancaria',
+                #                   CampoBd=['saldo'],
+                #                   CampoFm=[valorDevido],
+                #                   CampoWr=['id_conta'],
+                #                   CampoPs=[IdContaOrigem])
 
                 #Atualiza o valor total do Banco
                 funcs.upMySQL(TabelaBd='tb_capitaltotal',
@@ -635,7 +658,7 @@ def TransacaoConta():
 
                 if valorDevido < 0:
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                      CampoBd=['valor_devido', 'data_inicio'],
+                                      CampoBd=['valor_devido', 'data_atualizacao'],
                                       CampoFm=[valorDevido, date.today()],
                                       CampoPs=[IdContaDestino],
                                       CampoWr=['id_conta'])
@@ -645,12 +668,27 @@ def TransacaoConta():
                                   CampoFm=[valorContaOrigem],
                                   CampoPs=[IdContaOrigem],
                                   CampoWr=['id_conta'])
+                if valorContaOrigem < 0:
+                    pesquisaContaOrigemCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                                         CampoBd=['id_conta', 'ativo'],
+                                                                         CampoFm=[IdContaOrigem, '1'],
+                                                                         CampoEs=['valor_devido', 'data_atualizacao'])
+                    if pesquisaContaOrigemCheque:
+                        valorDevidoContaOrigem = pesquisaContaOrigemCheque[0][0] + valorContaOrigem
+                        dataAtualizacao = pesquisaContaOrigemCheque[0][1]
+                        dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
+                        if dataPeriodo > 0:
+                            valorDevidoContaOrigem = funcs.calculaChequeEspecial(valorDevido=valorDevidoContaOrigem, porecentagem=porcentagem, tempo=dataPeriodo)
+                        funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                      CampoBd=['valor_devido', 'data_atualizacao'],
+                                      CampoFm=[valorDevidoContaOrigem, date.today()],
+                                      CampoPs=[IdContaOrigem, '1'],
+                                      CampoWr=['id_conta', 'ativo'])
+                    else:
+                        funcs.InsMySQL(TabelaBd='tb_cheque_especial',
+                                       CampoBd=['id_conta', 'data_inicio', 'data_atualizacao', 'valor_devido', 'ativo'],
+                                       CampoFm=[IdContaOrigem, date.today(), date.today(), valorContaOrigem, '1'])
 
-                funcs.upMySQL(TabelaBd='tb_contabancaria',
-                                  CampoBd=['saldo'],
-                                  CampoFm=[valorDevido],
-                                  CampoPs=[IdContaDestino],
-                                  CampoWr=['id_conta'])
                 funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
                 funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
                 return Transacao()
@@ -931,16 +969,16 @@ def reqaltusuario():
 #     if request.method == 'POST':
 
 #Tratamento de Erros
-@app.errorhandler(Exception)
-def excecao(e):
-    cod_excecao = str(e)
-    cod_excecao = cod_excecao[:3]
-    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-    if session['tipoLog'] == 0:
-        caminhoLogin = '/'
-    else:
-        caminhoLogin = 'loginG'
-    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
+# @app.errorhandler(Exception)
+# def excecao(e):
+#     cod_excecao = str(e)
+#     cod_excecao = cod_excecao[:3]
+#     print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+#     if session['tipoLog'] == 0:
+#         caminhoLogin = '/'
+#     else:
+#         caminhoLogin = 'loginG'
+#     return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 #------------------------------
 
 #Bloco para subir o site.
