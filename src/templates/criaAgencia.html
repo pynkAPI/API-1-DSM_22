@@ -11,6 +11,12 @@
                         <input required type="text" name="localidade">
                         <span id="textoInputElemento">Digite o número da agência:</span>
                         <input required type="text" name="numeroAgencia">
+                        <span id="textoInputElemento">Gerente de Agência:</span>
+                        <select id="input_tipoconta" class="input-selects" name="funcionario" required>
+                            {% for funcionario in listaGerente %}
+                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>  
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                     <div class="botaoElemento">
