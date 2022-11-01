@@ -10,22 +10,15 @@
         </div>
     </header>
     {% endblock %}
-{% block conteudo %}
-<div id="idtela" class="tela">
-    <div class="login">
-            <div class="input-field">
-                <h1 class="h1">FAÇA SEU LOGIN</h1><br>
-                <input type="text" name="numeroconta" class="input">
-                <label for="CPF">Digite o número da sua conta</label>
-                <br>
-                <input required type="password" name="senha" id="CPF" class="input">
-                <label for="CPF">Digite sua senha</label>
-            </div>       
-        <br>
-        <a onclick="teste1()" class="btn_cadastro">Cadastrar</a>
-    </div>
-    <div class="img_cadastro">
-        <img src="../static/img/login.svg" alt="imagem banco">
-    </div>
-</div>
-{% endblock %}
+        {% block conteudo %}
+        <form>
+            <div class="login-input">
+                <input type="text" class="input" id="conta" required>  
+                <label for="conta">Número de conta:</label>
+            </div>
+            <div class="login-input">
+                <input type="password" class="input" id="senha" required>
+                <label for="senha">Digite sua senha:</label>
+            </div>
+        </form>
+        {% endblock %}
