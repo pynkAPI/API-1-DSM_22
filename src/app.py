@@ -887,9 +887,11 @@ def ListGA():
 def ListAG():
     cursor = mysql.connection.cursor()
        
-    cabecalho = ('Localidade','numero_agencia','Alterar Dados')
+    cabecalho = ('Localidade','Número agência','Funcionario','Status','Alterar Dados')
        
-    SelectGA = f"""SELECT localidade,numero_agencia FROM tb_agencia order by localidade"""
+    SelectGA = f"""SELECT localidade,numero_agencia,nome,IF(status_agencia='1', "ativo", "desativado") as status 
+    FROM tb_agencia as TA left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
+    left join tb_usuario as TU on TF.id_usuario=TU.id_usuario order by localidade"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
    
@@ -901,32 +903,34 @@ def ListAG():
 @app.route("/agencias", methods = ['POST', 'GET'])
 def agencias():
     if request.method == 'GET':
-        cabecalho   = ('ID da Agência', 'Localidade','Numero da Agência')
+        cabecalho   = ('Localidade','Número agência','Funcionario','Status','Alterar Dados')
         VarContador = 0
 
         cursor = mysql.connection.cursor()
             
-        textoSQL = f"""SELECT id_agencia, localidade, numero_agencia FROM tb_agencia"""
+        textoSQL = f"""SELECT localidade,numero_agencia,nome,IF(status_agencia='1', "ativo", "desativado") as status 
+        FROM tb_agencia as TA left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
+        left join tb_usuario as TU on TF.id_usuario=TU.id_usuario order by localidade"""
             
         cursor.execute(textoSQL)
         pesquisaSQL = cursor.fetchall()
         mysql.connection.commit()     
-        pesquisaContas = cursor.fetchall()
-        mysql.connection.commit()  
+        # pesquisaContas = cursor.fetchall()
+        # mysql.connection.commit()  
         cursor.close()   
                 
-        pesquisaSQL = [list(row) for row in pesquisaSQL]
-        for row in pesquisaContas:
-            nomes1 = funcs.SlcEspecificoMySQL('tb_agencia',
-                                                CampoBd=['id_agencia', 'localidade', 'numero_agencia'],
-                                                CampoFm=[],
-                                                CampoEs=[])  
+        # pesquisaSQL = [list(row) for row in pesquisaSQL]
+        # for row in pesquisaContas:
+        #     nomes1 = funcs.SlcEspecificoMySQL('tb_agencia',
+        #                                         CampoBd=['id_agencia', 'localidade', 'numero_agencia'],
+        #                                         CampoFm=[],
+        #                                         CampoEs=[])  
 
-            nomes1 = [list(row) for row in nomes1]   
+        #     nomes1 = [list(row) for row in nomes1]   
                     
-            pesquisaSQL[VarContador].append(nomes1[0][0])
-            pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
-            VarContador+=1        
+        #     pesquisaSQL[VarContador].append(nomes1[0][0])
+        #     pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
+        #     VarContador+=1        
         return render_template('agencias.html',cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
 
 #-----------------------------------------
