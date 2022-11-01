@@ -301,6 +301,76 @@ tr:hover{background-color:var(--color-background)}
 .scroll-div::-webkit-scrollbar-thumb{
     background-color:var(--color-background);
 }
+/* Tabela Agencias */
+.conteudo-a{
+    margin-top:2rem ;
+    height: 50vh;
+
+}
+.elemento-a{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3vh;
+    padding: 2vh 4vw;
+  
+}
+/* .conteudo-a .elemento-a{
+    background-color: var(--color-white);
+    width: 30vw;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow) ;
+    transition: all 300ms ease;
+} */
+.conteudo-a .elemento-a:hover{
+    box-shadow: none;
+}
+.elemento-a .linhaTabela td{
+    height: 5rem;
+    font-weight: 550;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark);
+    padding: 2rem;
+}
+.elemento-a .linhaTabela th{
+    height: 3rem;
+    font-weight: 750;
+    color: black;
+    padding: 1rem;
+}
+.elemento-a .linhaTabela tr:last-child td{
+    border: none;
+}
+tr:hover{background-color:var(--color-background)} 
+
+.scroll-div-tabela{
+    align-items: center;
+    width: 30vw;
+    height: 85vh;
+    box-shadow: var(--box-shadow) ;
+    transition: all 300ms ease;
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+    overflow-y: scroll;
+    background:var(--color-white);
+}
+.scroll-object-tabela{
+    font-size: 1rem;
+    padding-top: 2vh;
+    padding-left: 2.5vh;
+}
+.scroll-div-tabela::-webkit-scrollbar{
+    width: 0.5em;
+}
+.scroll-div-tabela::-webkit-scrollbar-track{
+    background-color:var(--color-white);
+}
+.scroll-div-tabela::-webkit-scrollbar-thumb{
+    background-color:var(--color-white);
+}
 /* Deposito */
 .conteudo{
     display: flex;
@@ -321,7 +391,28 @@ tr:hover{background-color:var(--color-background)}
     gap: 2vh;
     padding: 2vh 4vw;
 }
-
+.btn_elemento{
+    color: var(--color-white);
+    cursor: pointer;
+    font-weight: 700;
+    background-color: var(--color-primary);
+    padding: 1vh 2vw;
+    border-radius: var(--border-radius-2);
+}
+.btn_elemento:hover{
+    background-color: #CC5587;
+}
+.btn_alterar{
+    color: var(--color-white);
+    cursor: pointer;
+    font-weight: 700;
+    background-color: var(--color-primary);
+    padding: 0.5vh 0.5vw;
+    border-radius: var(--border-radius-2);
+}
+.btn_alterar:hover{
+    background-color: #CC5587;
+}
 #tituloElemento{
     color: var(--color-dark);
     font-weight: 800;
