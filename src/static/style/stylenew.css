@@ -241,6 +241,7 @@ main .data input[type="date"]{
     display: inline-block;
     visibility: visible;
 } */
+
 main .Extrato{
     margin-top:0.8rem ;
     height: 60vh;
@@ -334,6 +335,20 @@ tr:hover{background-color:var(--color-background)}
     justify-content: space-between;
     align-items: center;
     width: 20vw;
+    height: auto;
+    gap: 2vw;
+    padding: 3vh 4vw 4vh 4vw;
+    background: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;    
+}
+
+.blocoElementoAltera{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 40vw;
     height: auto;
     gap: 2vw;
     padding: 3vh 4vw 4vh 4vw;

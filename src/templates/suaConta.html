@@ -1,22 +1,20 @@
 {% extends "layout.html" %}
 {% block conteudo %}
-<center><h1>Solicitar alterção de dados</h1></center>
 
-{% for campo in listaAlteracao %}
-        {% if listaAlteracao[3] == campo %}
-        <p>{{ campo }}:</p>
-        <div class="input-field">
-                <select name="GENERO" id="GENERO" class="input">
-                <option value="M">Masculino</option>
-                <option value="F">Feminino</option>
-                <option value="O">Outros</option>
-                </select>          
+<div class="conteudo">
+        <div class="elemento">
+                <span id="tituloElemento">Solicitar alterção de dados</span>
+                <div class="blocoElementoAltera">
+                        <div class="inputElemento">
+                                {% for campo in listaAlteracao %}
+                                <p> {{ campo }}: {{dadosUsuario}}</p>
+                                <a href="reqaltUsuario">
+                                        <span class="material-symbols-outlined">edit_square</span>
+                                </a>
+                                {% endfor %}
+                        </div>
+                </div>
         </div>
-        {% else %}
-        <p> {{ campo }}: </p>
-        <input class="input-field-cad" type="text" placeholder="{{ campo }}" name="{{ campo }}">
-        {% endif %}
+</div>
 
-{% endfor %}
 {% endblock %}
-

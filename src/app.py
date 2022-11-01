@@ -977,8 +977,29 @@ def reqaltusuario():
 #Funcao gerentes do Gerente Geral
 @app.route("/gerentes", methods = ['POST', 'GET'])
 def gerentes():
-    return render_template('gerentes.html')
+    cursor = mysql.connection.cursor()
+        
+    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
+    
+    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
+    mysql.connection.commit() 
+    
+    return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
+
+# Página Sua Conta
+@app.route("/suaConta")
+def suaConta():
+    if request.method == 'GET':
+        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                 CampoBd=[session['conta']],
+                                 CampoFm=['numeroconta'],
+                                 CampoEs=['nome','email','cpf','genero','endereco','senha'])
+        listaAlteracao = ('Nome','E-mail','Cpf','Gênero','Endereço','Senha', 'Confirmar Senha')
+    return render_template('suaConta.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)
 
 #2 [Cria Gerente de Agencia]
 @app.route("/criaGA", methods = ['POST', 'GET'])
@@ -989,6 +1010,7 @@ def criaGA():
                                            CampoBd=['cpf'],
                                            CampoFm=[])
     return render_template ('criaGA.html')
+
 #Tratamento de Erros
 #@app.errorhandler(Exception)
 #def excecao(e):
