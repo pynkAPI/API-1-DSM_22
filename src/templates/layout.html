@@ -13,8 +13,7 @@
 </head>
 {% block body %}
 <body>
-    {% block container %}
-        <div class="container">
+    <div class="container">
         {% block sidebar %}
             <aside>
                 <div class="topo">
@@ -30,7 +29,7 @@
                         <span class="material-symbols-outlined">home</span>
                         <h3>Home</h3>
                     </a>
-                    <a href="reqaltusuario">
+                    <a href="suaConta">
                         <span class="material-symbols-outlined">person</span>
                         <h3>Sua Conta</h3>
                     </a>
@@ -55,7 +54,6 @@
         {% endblock %}
         {% block conteudo %}
         {% endblock %}
-    {% endblock %}
     </div>
 </body>
 {% endblock %}

@@ -728,11 +728,6 @@ def Config():
 
 #------------------------------
 
-# Página Sua Conta
-@app.route("/SuaConta")
-def SuaConta():
-    return render_template("suaConta.html")
-
 # Página Sua Conta Gerente Agencia
 @app.route("/SuaContaG")
 def SuaContaG():
@@ -961,9 +956,23 @@ def criaAgencia():
 
     return render_template('criaAgencia.html', listaGerente=dicionarioPesquisa)
 #------------------------------
+
+# Página Sua Conta
+@app.route("/suaConta")
+def suaConta():
+    if request.method == 'GET':
+        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                 CampoBd=[session['conta']],
+                                 CampoFm=['numeroconta'],
+                                 CampoEs=['nome','email','cpf','genero','endereco','senha'])
+        listaAlteracao = ('Nome','E-mail','Cpf','Gênero','Endereço','Senha')
+    return render_template('suaConta.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)
+
+#------------------------------
+
 #Requisição de alteração de dados
-@app.route("/reqaltusuario", methods = ['POST', 'GET'])
-def reqaltusuario():
+@app.route("/reqaltUsuario", methods = ['POST', 'GET'])
+def reqaltUsuario():
     if request.method == 'GET':
         dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
                                  CampoBd=[session['conta']],

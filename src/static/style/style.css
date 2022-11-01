@@ -308,3 +308,17 @@ body, input {
     line-height: 48px;
     color: #000000;
 }
+
+.blocoElementoAltera{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 40vw;
+    height: auto;
+    gap: 2vw;
+    padding: 3vh 4vw 4vh 4vw;
+    background: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;
+}
