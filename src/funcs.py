@@ -473,6 +473,10 @@ def criaAgencia(localidade, numeroAgencia, idGerenteAgencia):
             CampoBd=['localidade', 'numero_agencia', 'status_agencia', 'id_funcionario'],
             CampoFm=[str(localidade), str(numeroAgencia), '1', idGerenteAgencia])
 
+def criaGA():
+    
+    return
+
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
