@@ -121,7 +121,7 @@ def home():
             if session['tipo'] == 2:
                 return render_template('homenewg.html',saldo=saldo,req=req,usuarios=ausuarios, caminhoLogin=caminhoLogin)
             else:
-                return render_template('homeGG.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
+                return render_template('homenewgg.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
 #------------------------------
 
 #Aplicar filtro no extrato
@@ -175,7 +175,6 @@ def FiltroExtrato():
         return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
     return render_template('home.html')
 #------------------------------
-
 #Pagina Deposito
 @app.route("/deposito")
 def deposito():
@@ -184,14 +183,13 @@ def deposito():
     return render_template('depositonew.html',saldo=saldo)
 
 #------------------------------
-
 #Pagina Saque
 @app.route("/saque")
 def saque():
     saldo = f"{session['saldo']:.2f}".replace(".",",")
     return render_template('saquenew.html',saldo=saldo)
 #------------------------------
-
+#Saque Conta
 @app.route("/SaqueConta",  methods = ['POST', 'GET'])
 def SaqueConta():
     if request.method == "POST":
@@ -297,7 +295,7 @@ def depositoConta():
                 session['saldo'] = row[0]
             return deposito()
         return deposito()
-
+#-------------------------------------------
 #Pagina de Cadastro
 @app.route("/cadastro.html", methods = ['POST', 'GET'])
 def cadastro():
@@ -328,7 +326,6 @@ def cadastro():
 
     return render_template('cadastro.html')
 #------------------------------
-
 #Paginas de Login
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
@@ -393,7 +390,6 @@ def AutenticarGerente():
         abort(401)
 
 #Bloco de conferência de depósito pendentes
-
 @app.route("/ConferenciaDepositoTabela")
 def ConferenciaDepositoTabela():
     if session['login'] == True:
@@ -409,7 +405,6 @@ def ConferenciaDepositoTabela():
         abort(401)
 
 #Bloco de conferência de depósito pendentes
-
 @app.route("/ConferenciaDeposito", methods = ['POST', 'GET'])
 def ConferenciaDeposito():
     if request.method == "POST":
@@ -557,9 +552,7 @@ def ConferenciaDeposito():
             return ConferenciaDepositoTabela()
  
 #------------------------------
-
 #Bloco de requisição padrão
-
 @app.route("/AceiteConta", methods = ['POST', 'GET'])
 def AceiteConta():
     if request.method == "POST":
@@ -585,9 +578,7 @@ def AceiteConta():
             return AceiteContaTabela()
        
 #------------------------------
-
 #Bloco de renderização da tela de Transação
-
 @app.route("/Transacao")
 def Transacao():
     if session['saldo'] != None:
@@ -595,9 +586,7 @@ def Transacao():
     return render_template('transferencianew.html',saldo=saldo)
 
 #------------------------------
-
 #Bloco de transação entre contas
-
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
@@ -870,9 +859,41 @@ def ListAG():
    
     return render_template('ListAG.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
-
-#1 [Criar Agencia]
+# Tabela e home de agências
 @app.route("/agencias", methods = ['POST', 'GET'])
+def agencias():
+    if request.method == 'GET':
+        cabecalho   = ('ID da Agência', 'Localidade','Numero da Agência')
+        VarContador = 0
+
+        cursor = mysql.connection.cursor()
+            
+        textoSQL = f"""SELECT id_agencia, localidade, numero_agencia FROM tb_agencia"""
+            
+        cursor.execute(textoSQL)
+        pesquisaSQL = cursor.fetchall()
+        mysql.connection.commit()     
+        pesquisaContas = cursor.fetchall()
+        mysql.connection.commit()  
+        cursor.close()   
+                
+        pesquisaSQL = [list(row) for row in pesquisaSQL]
+        for row in pesquisaContas:
+            nomes1 = funcs.SlcEspecificoMySQL('tb_agencia',
+                                                CampoBd=['id_agencia', 'localidade', 'numero_agencia'],
+                                                CampoFm=[],
+                                                CampoEs=[])  
+
+            nomes1 = [list(row) for row in nomes1]   
+                    
+            pesquisaSQL[VarContador].append(nomes1[0][0])
+            pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
+            VarContador+=1        
+        return render_template('agencias.html',cabecalhoTabela=cabecalho, pesquisaSQLTabela=pesquisaSQL)
+
+#-----------------------------------------
+#1 [Criar Agencia]
+@app.route("/criaAgencia", methods = ['POST', 'GET'])
 def criaAgencia():
     if request.method == 'POST':
         localidade = request.form['localidade']
@@ -888,10 +909,8 @@ def criaAgencia():
         else:
             raise Exception('604')
 
-    return render_template('testeagencia.html')
+    return render_template('agencias.html')
 #------------------------------
-
-
 #Requisição de alteração de dados
 @app.route("/reqaltusuario", methods = ['POST', 'GET'])
 def reqaltusuario():

@@ -1,0 +1,37 @@
+{% extends "homenewgg.html" %}
+{% block conteudo %}
+    <div class="conteudo">
+        <div class="elemento">
+            <div>
+                <table class="tabelaAgencias">
+                    <!-- Inicio da Tabela -->
+                    <tr class="linhaTabela">
+                        <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->    
+                        {% for header in cabecalhoTabela %}
+                            <th >{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for row in pesquisaSQLTabela %}
+                    <form action="{{ url_for('agencias') }}" method="POST">
+                    <tr class="linhaTabela">
+                        <!-- Forma as linhas da tabela -->
+                        {% for cell in row %}
+                            <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                            <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                            {% if row[0] == cell %}
+                            <input type="hidden" value="{{ cell }}" name="IdUsuario">
+                            {% else %}
+                            <td class="celula">{{ cell }}</td>
+                            {% endif %}
+                        {% endfor %}
+                        <td> 
+                            <input type="submit" name="delete" value="Alterar" class="btnd solid">
+                        </td>
+                    </tr>
+                    </form>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
