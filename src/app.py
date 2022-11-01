@@ -945,7 +945,8 @@ def criaAgencia():
                    ON tb_agencia.id_funcionario = tb_funcionario.id_funcionario
                    INNER JOIN tb_usuario
                    ON tb_funcionario.id_usuario = tb_usuario.id_usuario
-                   WHERE tb_agencia.id_funcionario IS NULL"""
+                   WHERE tb_agencia.id_funcionario IS NULL 
+                   AND tb_funcionario.papel != 'GERENTE GERAL';"""
             
     cursor.execute(textoSQL)
     pesquisaSQL = cursor.fetchall()
