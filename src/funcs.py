@@ -482,6 +482,7 @@ def criaGA(dados):
                                       CampoEs=['cpf'],
                                       CampoBd=['cpf'],
                                       CampoFm=[cpf])
+    
     if existe == ():
         matricula = geraValor(8,'n')
 
@@ -511,8 +512,38 @@ def criaGA(dados):
                 CampoBd=['id_usuario','papel','num_matricola','login'],
                 CampoFm=[str(idGerente[0][0]),'GERENTE DE AGÊNCIA', matricula, matricula])
     else:
-        print('ja existe')
-    return
+        matricula = geraValor(8,'n')
+
+        upMySQL(TabelaBd='tb_usuario',
+                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha', 'ativo'],
+                CampoFm=[dados['nome'], dados['email'], cpf, dados['genero'], dados['endereco'], dados['dataNasc'], geraValor(8,'l&n'), '1'],
+                CampoWr=['cpf'],
+                CampoPs=[cpf])
+        
+        existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                      CampoEs=['num_matricola'],
+                                      CampoBd=['num_matricola'],
+                                      CampoFm=[matricula])
+        
+        #impede de gerar um valor repetido de matricula
+        while existe != ():
+            matricula = geraValor(8,'n')
+            existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                      CampoEs=['num_matricola'],
+                                      CampoBd=['num_matricola'],
+                                      CampoFm=[matricula])
+
+    senha = SlcEspecificoMySQL(TabelaBd='tb_usuario',
+                                       CampoEs=['senha'],
+                                       CampoBd=['cpf'],
+                                       CampoFm=[cpf])  
+
+    acesso = {
+        'matricula': matricula,
+        'senha': senha[0][0]
+    }  
+
+    return acesso
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
 #tipo pode receber:

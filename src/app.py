@@ -1019,14 +1019,11 @@ def criaGA():
         dados['cpf'] = request.form['cpf']
         dados['genero'] = request.form['genero']
         dados['dataNasc'] = request.form['datanasc']
-        funcs.criaGA(dados)
-        return render_template ('gerentes.html')
+        acesso = funcs.criaGA(dados)
+         
+        return render_template ('dadosGA.html',login=acesso['matricula'],senha=acesso['senha'])
     return render_template ('criaGA.html')
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 65c9f2e33900c9d27404b538b440dc5152265684
 #Tratamento de Erros
 #@app.errorhandler(Exception)
 #def excecao(e):
