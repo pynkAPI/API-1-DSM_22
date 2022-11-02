@@ -545,6 +545,32 @@ def criaGA(dados):
 
     return acesso
 
+def dadosGA(IdFuncionario):
+    cursor = mysql.connection.cursor()
+    
+    Select = f'''SELECT nome, email, cpf, genero, endereco, datanascimento, senha, login 
+    FROM tb_usuario INNER JOIN tb_funcionario 
+    ON tb_usuario.id_usuario = tb_funcionario.id_usuario 
+    WHERE id_funcionario = {IdFuncionario};'''
+
+    cursor.execute(Select)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit() 
+    cursor.close()
+
+    dados = {
+        'nome': pesquisaSQL[0][0],
+        'email': pesquisaSQL[0][1],
+        'cpf': pesquisaSQL[0][2],
+        'genero': pesquisaSQL[0][3],
+        'endereco': pesquisaSQL[0][4],
+        'dataNasc': pesquisaSQL[0][5],
+        'senha': pesquisaSQL[0][6],
+        'login': pesquisaSQL[0][7]
+    }
+
+    return dados
+
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
 #tipo pode receber:
 #   -l (somente letras)

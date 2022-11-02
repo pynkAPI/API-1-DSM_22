@@ -1,4 +1,3 @@
-from logging import exception
 import os
 import email
 from email.message import EmailMessage
@@ -979,17 +978,50 @@ def reqaltusuario():
 def gerentes():
     cursor = mysql.connection.cursor()
         
-    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
+    cabecalho = ('Nome', 'Papel','Matricula')
     
-    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    SelectGA = f"""SELECT id_funcionario, nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
-    
     mysql.connection.commit() 
     
     return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
-#------------------------------
 
+@app.route("/alterarDesligar", methods = ['POST', 'GET'])
+def alterarDesligar():
+    if request.method == 'POST': 
+        botao = request.form.to_dict()
+        IdFuncionario = request.form['IdFuncionario']
+        if botao['botao'] == 'Alterar':
+            dados = funcs.dadosGA(IdFuncionario)
+            return render_template('alteraGA.html',
+                            nome=dados['nome'],
+                            email=dados['email'],
+                            cpf=dados['cpf'],
+                            genero=dados['genero'],
+                            endereco=dados['endereco'],
+                            dataNasc=dados['dataNasc'],
+                            senha=dados['senha'],
+                            login=dados['login'])
+
+        else:
+            #colcoa a função de desligar
+            return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+#------------------------------
+# Alteração Gerente de Agência
+# @app.route("/alteraGA", methods = ['POST', 'GET'])
+# def alteraGA(dados):
+#     return render_template('alteraGA.html',
+#                             nome=dados['nome'],
+#                             email=dados['email'],
+#                             cpf=dados['cpf'],
+#                             genero=dados['genero'],
+#                             endereco=dados['endereco'],
+#                             dataNasc=dados['dataNasc'],
+#                             senha=dados['senha'],
+#                             login=dados['login'])
+
+ #------------------------------   
 # Página Sua Conta
 @app.route("/suaConta")
 def suaConta():
