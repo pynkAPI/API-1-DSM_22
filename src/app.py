@@ -835,50 +835,21 @@ def AltSaldo():
     return render_template('AltSaldo.html',saldo=saldo,saldoV=saldoV)    
 #------------------------------
 
-#Bloco de Listagem de gerentes de agencia
-@app.route("/ListGA",  methods = ['POST', 'GET'])
-def ListGA():
+#Bloco de Listagem de usuarios
+@app.route("/ListUsa",  methods = ['POST', 'GET'])
+def ListUsa():
     cursor = mysql.connection.cursor()
-    # if request.method == 'POST': 
-    #     IdFuncTRA = request.form['IdFuncTRA']
-    #     SelectTRA = request.form['SelectTRA']
-    #     LocalAnt  = request.form['LocalAnt']
         
-    #     textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE localidade = '{SelectTRA}'"
-    #     cursor.execute(textoSQL)
-    #     VerFuncionario = cursor.fetchall()
-        
-    #     if VerFuncionario:
-    #         textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (localidade = '{LocalAnt}');"
-    #     else:
-    #         textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (localidade = '{LocalAnt}');"
-        
-    #     cursor.execute(textoSQLUp)
-    #     funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
-        
-    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
-        
-    # textoSQL = f"SELECT localidade FROM tb_agencia"
-    # cursor.execute(textoSQL)
-    # LocAgencias = cursor.fetchall()
+    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
     
-    # textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
-    # cursor.execute(textoSQL)
-    # IdFunc = cursor.fetchall()
-    
-    # SelectGA = f"""SELECT nome, localidade FROM tb_agencia as TAG inner join tb_funcionario as TF ON 
-    # TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario WHERE papel = 'GERENTE DE AGÊNCIA'
-    # order by TF.id_funcionario"""
-    # cursor.execute(SelectGA)
-    # pesquisaSQL = cursor.fetchall()
-    
-    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    SelectGA = f"""SELECT TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
     mysql.connection.commit() 
     
-    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
 
 #Bloco de Listagem das agencias
