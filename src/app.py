@@ -848,6 +848,23 @@ def ListUsa():
     return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
 
+#Bloco de Listagem de Requesições
+@app.route("/ListReq",  methods = ['POST', 'GET'])
+def ListReq():
+    cursor = mysql.connection.cursor()
+        
+    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
+    
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
+    mysql.connection.commit() 
+    
+    return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+#------------------------------
+
 #Bloco de Listagem de usuarios por agencia
 @app.route("/ListUsaGA",  methods = ['POST', 'GET'])
 def ListUsaGA():
