@@ -18,7 +18,7 @@
                     {% for cell in row %}
                         <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
                         <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                        {% if row[0] == cell %}
+                        {% if row[0][0] == cell %}
                         <input type="hidden" value="{{ cell }}" name="IdUsuario">
                         {% else %}
                         <td class="celula">{{ cell }}</td>

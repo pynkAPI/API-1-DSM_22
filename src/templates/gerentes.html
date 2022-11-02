@@ -13,13 +13,20 @@
                     </tr>
                     {% set p = namespace(value=0) %}
                     {% for row in pesquisaSQL %}
-                    <form action="ListGA" method="POST" name="ConferenciaDeposito">
+                    <form action="{{ url_for('alterarDesligar') }}" method="POST">
                         <tr class="linhaTabela">
                             {% for cell in row %}
-                            <td class="celula">{{ cell }}</td>
+                            {% if cell == row[0] %}
+                             <input type="hidden" value="{{ cell }}" name="IdFuncionario">
+                            {% else %}
+                                <td class="celula">{{ cell }}</td>
+                            {% endif %}
                             {% endfor %}
                             <td class="celula">
                                 <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
+                            </td>
+                            <td class="celula">
+                                <input type="submit" name="botao" value="Desligar" class="btnd solid" id="btnConfirmar">
                             </td>
                         </tr>
                     </form>

@@ -313,34 +313,23 @@ tr:hover{background-color:var(--color-background)}
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 3vh;
-    padding: 2vh 4vw;
-  
+    padding: 1vh 3vw;
 }
-/* .conteudo-a .elemento-a{
-    background-color: var(--color-white);
-    width: 30vw;
-    border-radius: var(--card-border-radius);
-    padding: var(--card-padding);
-    text-align: center;
-    box-shadow: var(--box-shadow) ;
-    transition: all 300ms ease;
-} */
 .conteudo-a .elemento-a:hover{
     box-shadow: none;
 }
 .elemento-a .linhaTabela td{
-    height: 5rem;
+    height: 3vh;
     font-weight: 550;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark);
-    padding: 2rem;
+    padding: 1vw;
 }
 .elemento-a .linhaTabela th{
-    height: 3rem;
+    height: 8vh;
     font-weight: 750;
     color: black;
-    padding: 1rem;
+    padding: 1vw;
 }
 .elemento-a .linhaTabela tr:last-child td{
     border: none;
@@ -349,7 +338,7 @@ tr:hover{background-color:var(--color-background)}
 
 .scroll-div-tabela{
     align-items: center;
-    width: 30vw;
+    width: 32vw;
     height: 85vh;
     box-shadow: var(--box-shadow) ;
     transition: all 300ms ease;
@@ -361,7 +350,7 @@ tr:hover{background-color:var(--color-background)}
 .scroll-object-tabela{
     font-size: 1rem;
     padding-top: 2vh;
-    padding-left: 2.5vh;
+    padding-left: 1vw;
 }
 .scroll-div-tabela::-webkit-scrollbar{
     width: 0.5em;

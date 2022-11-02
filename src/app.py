@@ -1,4 +1,3 @@
-from logging import exception
 import os
 import email
 from email.message import EmailMessage
@@ -831,50 +830,21 @@ def AltSaldo():
     return render_template('AltSaldo.html',saldo=saldo,saldoV=saldoV)    
 #------------------------------
 
-#Bloco de Listagem de gerentes de agencia
-@app.route("/ListGA",  methods = ['POST', 'GET'])
-def ListGA():
+#Bloco de Listagem de usuarios
+@app.route("/ListUsa",  methods = ['POST', 'GET'])
+def ListUsa():
     cursor = mysql.connection.cursor()
-    # if request.method == 'POST': 
-    #     IdFuncTRA = request.form['IdFuncTRA']
-    #     SelectTRA = request.form['SelectTRA']
-    #     LocalAnt  = request.form['LocalAnt']
         
-    #     textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE localidade = '{SelectTRA}'"
-    #     cursor.execute(textoSQL)
-    #     VerFuncionario = cursor.fetchall()
-        
-    #     if VerFuncionario:
-    #         textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (localidade = '{LocalAnt}');"
-    #     else:
-    #         textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (localidade = '{LocalAnt}');"
-        
-    #     cursor.execute(textoSQLUp)
-    #     funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario'],CampoFm=[IdFuncTRA],CampoWr=['localidade'],CampoPs=[SelectTRA])
-        
-    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
-        
-    # textoSQL = f"SELECT localidade FROM tb_agencia"
-    # cursor.execute(textoSQL)
-    # LocAgencias = cursor.fetchall()
+    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
     
-    # textoSQL = f"SELECT id_funcionario FROM tb_funcionario WHERE papel='GERENTE DE AGÊNCIA'"
-    # cursor.execute(textoSQL)
-    # IdFunc = cursor.fetchall()
-    
-    # SelectGA = f"""SELECT nome, localidade FROM tb_agencia as TAG inner join tb_funcionario as TF ON 
-    # TAG.id_funcionario=TF.id_funcionario INNER JOIN tb_usuario as TU ON TU.id_usuario=TF.id_usuario WHERE papel = 'GERENTE DE AGÊNCIA'
-    # order by TF.id_funcionario"""
-    # cursor.execute(SelectGA)
-    # pesquisaSQL = cursor.fetchall()
-    
-    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    SelectGA = f"""SELECT TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
     mysql.connection.commit() 
     
-    return render_template('ListGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
 
 #Bloco de Listagem das agencias
@@ -988,24 +958,73 @@ def reqaltUsuario():
 def gerentes():
     cursor = mysql.connection.cursor()
         
-    cabecalho = ('Nome', 'papel','num_matricola','Alterar dados')
+    cabecalho = ('Nome', 'Papel','Matricula')
     
-    SelectGA = f"""SELECT nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    SelectGA = f"""SELECT id_funcionario, nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
-    
     mysql.connection.commit() 
     
     return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
+
+@app.route("/alterarDesligar", methods = ['POST', 'GET'])
+def alterarDesligar():
+    if request.method == 'POST': 
+        botao = request.form.to_dict()
+        IdFuncionario = request.form['IdFuncionario']
+        if botao['botao'] == 'Alterar':
+            dados = funcs.dadosGA(IdFuncionario)
+            return render_template('alteraGA.html',
+                            nome=dados['nome'],
+                            email=dados['email'],
+                            cpf=dados['cpf'],
+                            genero=dados['genero'],
+                            endereco=dados['endereco'],
+                            dataNasc=dados['dataNasc'],
+                            senha=dados['senha'],
+                            login=dados['login'])
+
+        else:
+            #colcoa a função de desligar
+            return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+#------------------------------
+# Alteração Gerente de Agência
+# @app.route("/alteraGA", methods = ['POST', 'GET'])
+# def alteraGA(dados):
+#     return render_template('alteraGA.html',
+#                             nome=dados['nome'],
+#                             email=dados['email'],
+#                             cpf=dados['cpf'],
+#                             genero=dados['genero'],
+#                             endereco=dados['endereco'],
+#                             dataNasc=dados['dataNasc'],
+#                             senha=dados['senha'],
+#                             login=dados['login'])
+
+ #------------------------------   
+
 #2 [Cria Gerente de Agencia]
 @app.route("/criaGA", methods = ['POST', 'GET'])
 def criaGA():
     if request.method == 'POST':
-        existe = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario',
-                                           CampoEs=['cpf'],
-                                           CampoBd=['cpf'],
-                                           CampoFm=[])
+        dados = {
+            'nome':'',
+            'email':'',
+            'endereco':'',
+            'cpf':'',
+            'genero':'',
+            'dataNasc':''
+        }
+        dados['nome'] = request.form['nome']
+        dados['email'] = request.form['email']
+        dados['endereco'] = request.form['endereco']
+        dados['cpf'] = request.form['cpf']
+        dados['genero'] = request.form['genero']
+        dados['dataNasc'] = request.form['datanasc']
+        acesso = funcs.criaGA(dados)
+         
+        return render_template ('dadosGA.html',login=acesso['matricula'],senha=acesso['senha'])
     return render_template ('criaGA.html')
 
 #Tratamento de Erros

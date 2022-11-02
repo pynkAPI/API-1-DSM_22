@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block conteudo %}
+<div class="conteudo">
+    <div class="elemento">
+        <span id="tituloElemento">Alteração de capital</span>
+        <div class="blocoElementoAltera">
+            <div class="inputElemento">
+                <div class="func">
+                    <table class="tabelaRequisicao">
+                        <tr class="linhaTabela">
+                            {% for header in cabecalhoTabela %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                        {% set p = namespace(value=0) %}
+                        {% for row in pesquisaSQL %}
+                        <form action="ListGA" method="POST" name="ConferenciaDeposito">
+                            <tr class="linhaTabela">
+                                {% for cell in row %}
+                                <td class="celula">{{ cell }}</td>
+                                {% endfor %}
+                                <td class="celula">
+                                    <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
+                                </td>
+                            </tr>
+                        </form>
+                        {% set p.value = p.value + 1 %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
