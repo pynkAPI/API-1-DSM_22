@@ -392,12 +392,13 @@ def AutenticarGerente():
         resultadocap = funcs.SlcMySQL('tb_capitaltotal',CampoBd=['id_capitaltotal'],CampoFm=['1'])
         if resultado:
             for row in resultado:
-                session['nome'] = row[1]
-                papel = row[11]
-            session['login']    = True
-            session['conta']    = numeroconta
+                session['idFunc']   = row[0]
+                session['nome']     = row[1]
+                papel               = row[11]
+            session['login']        = True
+            session['conta']        = numeroconta
             for row2 in resultadocap:
-                session['saldo']  = row2[1]
+                session['saldo']    = row2[1]
                     
             print(papel)
             if papel == 'GERENTE DE AGÊNCIA':
@@ -845,6 +846,28 @@ def ListUsa():
     mysql.connection.commit() 
     
     return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+#------------------------------
+
+#Bloco de Listagem de usuarios por agencia
+@app.route("/ListUsaGA",  methods = ['POST', 'GET'])
+def ListUsaGA():
+    cursor = mysql.connection.cursor()
+    
+    SelectAgencia = f"""SELECT id_agencia FROM tb_agencia where id_funcionario='{session['idFunc']}';"""
+    cursor.execute(SelectAgencia)
+    pesquisaAgen = cursor.fetchall()
+        
+    print(pesquisaAgen[0][0])
+    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
+    
+    SelectGA = f"""SELECT TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_agencia={pesquisaAgen[0][0]}"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
+    mysql.connection.commit() 
+    
+    return render_template('ListUsaGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
 
 #Bloco de Listagem das agencias
