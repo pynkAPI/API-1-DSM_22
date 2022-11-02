@@ -88,8 +88,8 @@ def home():
                     porcentagem = pesquisaRegraOperacao[0][0]
                     valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                  CampoBd=['valor_devido'],
-                                  CampoFm=[valorDevido],
+                                  CampoBd=['valor_devido', 'data_atualizacao'],
+                                  CampoFm=[valorDevido, date.today()],
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoPs=[session['idContaBK'], '1'])
             else:
