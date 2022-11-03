@@ -152,8 +152,7 @@ def RequisicaoGerenteAgencia():
         #region
         if requisicao == '0':
             botao = request.form.to_dict()
-
-            IdTransacao =   request.form['IdTransacao']
+            IdTransacao =   request.form['Id']
             if botao['botao'] == 'Confirmar':
 
                 pesquisaSQLTransacao =  funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
@@ -280,8 +279,40 @@ def RequisicaoGerenteAgencia():
                           CampoWr=['id_transacao'])
                 return homeG(requisicao=requisicao)
         #endregion 
+
+        # Aceite de Abertura de Conta
+        #region
         elif requisicao == '1':
-            return
+            botao = request.form.to_dict()
+            IdConta = request.form['Id']
+            pesquisaAgenciaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                                          CampoEs=['id_agencia'],
+                                                          CampoBd=['id_funcionario'],
+                                                          CampoFm=[session['idFunc']])
+            idAgencia = pesquisaAgenciaSQL[0][0]
+            email = ''
+            email = funcs.SlcEspecificoMySQL('tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                         CampoBd=['tb_contabancaria.id_conta'],
+                                         CampoFm=[IdConta],
+                                         CampoEs=['tb_usuario.email'])
+
+            if botao['botao'] == 'Confirmar':
+                funcs.upMySQL('tb_contabancaria',
+                               CampoBd=['status_contabancaria', 'id_agencia'],
+                               CampoFm=[1, idAgencia],
+                               CampoWr=['id_conta'],
+                               CampoPs=[IdConta])
+                funcs.emailCadastro(IdConta, email, True)  
+                return homeG(requisicao=requisicao)
+            else:    
+                funcs.upMySQL('tb_contabancaria',
+                              CampoBd=['status_contabancaria'],
+                              CampoFm=[2],
+                              CampoWr=['id_conta'],
+                              CampoPs=[IdConta])
+                funcs.emailCadastro(IdConta, email, False)  
+                return homeG(requisicao=requisicao)
+        #endregion 
         else:
             return 
      
@@ -296,6 +327,8 @@ def homeG(requisicao=None):
     if request.method == "POST":
         if requisicao == None:
             requisicao = request.form.get('requisicao1')
+        #Tabela de Conferencia de Deposito
+        #region
         if requisicao == '0':
             cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
@@ -318,9 +351,22 @@ def homeG(requisicao=None):
                                    cabecalhoTabela=cabecalho,
                                    pesquisaSQLTabela=pesquisaSQL,
                                    requisicao=requisicao)
+        #endregion
         elif requisicao == '1':
+            cabecalho = ('Nome', 'CPF', 'Número Conta', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta', '', '')
 
-            return
+            pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                           CampoEs=['tb_contabancaria.id_conta','tb_usuario.nome', 'tb_usuario.cpf', 'tb_contabancaria.numeroconta','tb_usuario.datanascimento','tb_usuario.endereco','tb_usuario.genero', 'tb_contabancaria.tipo'],
+                                           CampoBd=['tb_contabancaria.status_contabancaria'],
+                                           CampoFm=[0])    
+            return render_template('homenewg.html',
+                                   saldo=saldo,
+                                   req=req,
+                                   usuarios=ausuarios, 
+                                   caminhoLogin=caminhoLogin, 
+                                   cabecalhoTabela=cabecalho,
+                                   pesquisaSQLTabela=pesquisaSQL,
+                                   requisicao=requisicao)
         elif requisicao == '2':
             return
         else:
@@ -766,8 +812,11 @@ def AceiteConta():
                                      CampoEs=['tb_usuario.email'])
 
         if botao['botao'] == 'Confirmar':
-            funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[1],
-                                        CampoWr=['id_conta'],CampoPs=[IdConta])
+            funcs.upMySQL('tb_contabancaria',
+                           CampoBd=['status_contabancaria'],
+                           CampoFm=[1],
+                           CampoWr=['id_conta'],
+                           CampoPs=[IdConta])
             funcs.emailCadastro(IdConta, email, True)  
             return AceiteContaTabela()
         else:    
