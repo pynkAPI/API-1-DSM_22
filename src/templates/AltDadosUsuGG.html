@@ -26,6 +26,7 @@
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Sexo:</span>
+                    <input id="teste" type="hidden" value="{{row[12]}}">
                     <select class="input-selects" id="genero" name="genero" required>
                         <option value="F">FEMININO</option>
                         <option value="M">MASCULINO</option>
@@ -51,4 +52,9 @@
 
 <script src="../static/scripts/confirmarsenha.js"></script>
 <script src="../static/scripts/validarCPF.js"></script>
+<script>
+    genero = document.getElementById('teste').value
+    document.getElementById('genero').value = genero;
+</script>
+
 {% endblock %}
