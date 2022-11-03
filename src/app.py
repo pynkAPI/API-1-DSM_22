@@ -1073,7 +1073,7 @@ def AltSaldo():
 def ListUsa():
     cursor = mysql.connection.cursor()
         
-    cabecalho = ("nome", "email", "cpf", "genero", "endereco", "datanascimento","Status","Alterar dados")
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
     
     SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,IF(TC.status_contabancaria='1', "ativo", "desativado")
     FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
@@ -1082,7 +1082,7 @@ def ListUsa():
     
     mysql.connection.commit() 
     
-    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,pagina=0)
 #------------------------------
 
 #Bloco de Listagem de Requesições
@@ -1112,16 +1112,16 @@ def ListUsaGA():
     pesquisaAgen = cursor.fetchall()
         
     print(pesquisaAgen[0][0])
-    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
     
-    SelectGA = f"""SELECT TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
     FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_agencia={pesquisaAgen[0][0]}"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
     mysql.connection.commit() 
     
-    return render_template('ListUsaGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,pagina=1)
 #------------------------------
 
 #Bloco de Listagem das agencias
@@ -1236,6 +1236,7 @@ def reqaltUsuario():
 def AltDadosUsuGG():  
     cursor = mysql.connection.cursor()
     IdContaBanc = request.form['IdContaBanc']
+    pagina = request.form['pagina']
         
     print(IdContaBanc)
     SelectGA = f"""SELECT * FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_conta={IdContaBanc};"""
@@ -1247,11 +1248,12 @@ def AltDadosUsuGG():
     teste = dados[0][11]
     dados[0][11] = '{}.{}.{}-{}'.format(teste[:3], teste[3:6], teste[6:9], teste[9:])
 
-    return render_template('AltDadosUsuGG.html',dados=dados)    
+    return render_template('AltDadosUsuGG.html',dados=dados,pagina=pagina)    
 
 @app.route("/updateUsuGG", methods = ['POST', 'GET'])
 def updateUsuGG():
     if request.method == 'POST':
+        pagina      = request.form['pagina']
         IdUsu       = request.form['IdUsu']
         nome        = request.form['nome']
         email       = request.form['email']
@@ -1262,7 +1264,10 @@ def updateUsuGG():
             
         funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento"],CampoFm=[nome, email, cpf, genero, endereco, dataNasc],CampoWr=['id_usuario'],CampoPs=[IdUsu])
         
-    return ListUsa()
+    if pagina == 0:    
+        return ListUsa()
+    else:
+        return ListUsaGA()
 #------------------------------
 
 #Funcao gerentes do Gerente Geral

@@ -1,4 +1,8 @@
+{% if pagina == 0 %}
 {% extends "homenewgg.html" %}
+{% else %}
+{% extends "homenewg.html" %}
+{% endif %}
 {% block conteudo %}
 <div class="conteudo">
     <div class="elemento">
@@ -23,6 +27,7 @@
                                 <td class="celula">{{ cell }}</td>
                                 {% endif %}
                                 {% endfor %}
+                                <input type="hidden" value="{{ pagina }}" name="pagina">
                                 <td class="celula">
                                     <input type="submit" name="botao" value="Alterar" class="btnd solid"
                                         id="btnConfirmar">
@@ -38,3 +43,5 @@
     </div>
 </div>
 {% endblock %}
+
+
