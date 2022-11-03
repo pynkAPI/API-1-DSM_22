@@ -128,8 +128,6 @@ def home():
         else:
 
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
-            ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
-
             cursor = mysql.connection.cursor()
         
             textoSQL = f"SELECT count(*) FROM pynk.tb_contabancaria;"
@@ -141,10 +139,68 @@ def home():
             saldo = f"{session['saldo']:.2f}".replace(".",",")
             caminhoLogin = 'loginG'
             if session['tipo'] == 2:
-                return render_template('homenewg.html',saldo=saldo,req=req,usuarios=ausuarios, caminhoLogin=caminhoLogin)
+                return homeG()
             else:
                 return render_template('homenewgg.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
 #------------------------------
+
+@app.route("/RequisicaoGerenteAgencia")
+def RequisicaoGerenteAgencia(requisicao, methods = ['POST', 'GET']):
+    if request.method == "POST":
+        if requisicao == 0:
+            return
+        elif requisicao == 1:
+            return
+        else:
+            return 
+     
+
+@app.route("/homeG", methods = ['POST', 'GET'])
+def homeG():
+    
+    req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
+    ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
+    saldo = f"{session['saldo']:.2f}".replace(".",",")
+    caminhoLogin = 'loginG'
+    if request.method == "POST":
+        requisicao = request.form.get('requisicao1')
+        if requisicao == '0' :
+            cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
+
+            pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+                                                               INNER JOIN tb_contabancaria 
+                                                               ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem 
+                                                               AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino 
+                                                               INNER JOIN tb_agencia 
+                                                               ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                                                               INNER JOIN tb_usuario 
+                                                               ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
+                                                               CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
+                                                               CampoBd=['status_transacao', 'tb_agencia.id_funcionario'],
+                                                               CampoFm=[0, session['idFunc']])
+            return render_template('homenewg.html',
+                                   saldo=saldo,
+                                   req=req,
+                                   usuarios=ausuarios, 
+                                   caminhoLogin=caminhoLogin, 
+                                   cabecalhoTabela=cabecalho,
+                                   pesquisaSQLTabela=pesquisaSQL,
+                                   requisicao=requisicao)
+        elif requisicao == '1':
+
+            return
+        elif requisicao == '2':
+            return
+        else:
+            return render_template('homenewg.html',
+                                saldo=saldo,
+                                req=req,
+                                usuarios=ausuarios, 
+                                caminhoLogin=caminhoLogin)
+
+
+
+
 
 #Aplicar filtro no extrato
 @app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
