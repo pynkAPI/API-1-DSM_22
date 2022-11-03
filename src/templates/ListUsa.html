@@ -4,44 +4,40 @@
 {% extends "homenewg.html" %}
 {% endif %}
 {% block conteudo %}
-<div class="conteudo">
-    <div class="elemento">
+<div class="conteudo-u">
+    <div class="texto-elemento-u">
         <span id="tituloElemento">Usuários</span>
-        <div class="blocoElementoAltera">
-            <div class="inputElemento">
-                <div class="func">
-                    <table class="tabelaRequisicao">
-                        <tr class="linhaTabela">
-                            {% for header in cabecalhoTabela %}
-                            <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                        {% set p = namespace(value=0) %}
-                        {% for row in pesquisaSQL %}
-                        <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
-                            <tr class="linhaTabela">
-                                {% for cell in row %}
-                                {% if cell == row[0] %}
-                                <input type="hidden" value="{{ cell }}" name="IdContaBanc">
-                                {% else %}
-                                <td class="celula">{{ cell }}</td>
-                                {% endif %}
-                                {% endfor %}
-                                <input type="hidden" value="{{ pagina }}" name="pagina">
-                                <td class="celula">
-                                    <input type="submit" name="botao" value="Alterar" class="btnd solid"
-                                        id="btnConfirmar">
-                                </td>
-                            </tr>
-                        </form>
-                        {% set p.value = p.value + 1 %}
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
+        <hr>
+    </div>
+    <div class="elemento-u">
+        <div class="scroll-div-tabela">
+        <div class="scroll-object-tabela">
+            <table class="tabelaRequisicao">
+                <tr class="linhaTabela">
+                    {% for header in cabecalhoTabela %}
+                    <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+                    {% set p = namespace(value=0) %}
+                    {% for row in pesquisaSQL %}
+                <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
+                <tr class="linhaTabela">
+                    {% for cell in row %}
+                    {% if cell == row[0] %}
+                    <input type="hidden" value="{{ cell }}" name="IdContaBanc">
+                    {% else %}
+                    <td class="celula">{{ cell }}</td>
+                    {% endif %}
+                    {% endfor %}
+                        <input type="hidden" value="{{ pagina }}" name="pagina">
+                        <td class="celula">
+                        <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
+                    </td>
+                </tr>
+                </form>
+                {% set p.value = p.value + 1 %}
+                {% endfor %}
+        </table>
     </div>
 </div>
 {% endblock %}
-
-

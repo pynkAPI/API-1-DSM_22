@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap');
 /* variaveis */
 :root{
     /* paleta de cores */
@@ -41,7 +41,7 @@ html{
 body{
     max-width: 100vw;
     min-height: 100vh;
-    font-family: poppins, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     font-size: 0.88rem;
     background: var(--color-background);
     user-select: none;
@@ -95,6 +95,7 @@ b{
 }
 aside{
     height: 100vh;
+    background-color: var(--color-white);
 }
 aside .topo{
     display: flex;
@@ -315,6 +316,13 @@ tr:hover{background-color:var(--color-background)}
     align-items: center;
     padding: 1vh 3vw;
 }
+.texto-elemento-a{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1vh 3vw;
+}
 .conteudo-a .elemento-a:hover{
     box-shadow: none;
 }
@@ -332,16 +340,91 @@ tr:hover{background-color:var(--color-background)}
 .elemento-a .linhaTabela:last-child td{
     border: none;
 }
+/* Tabela Gerentes */
+.conteudo-g{
+    margin-top:2rem ;
+    height: 50vh;
 
+}
+.elemento-g{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1vh 3vw;
+}
+.texto-elemento-g{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1vh 3vw;
+    font-weight: 800;
+}
+.conteudo-g .elemento-g:hover{
+    box-shadow: none;
+}
+.elemento-g .linhaTabela td{
+    height: 3vh;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark);
+    padding:1vw;
+}
+.elemento-g .linhaTabela th{
+    height: 8vh;
+    color: black;
+    padding: 0.8vw;
+}
+.elemento-g .linhaTabela:last-child td{
+    border: none;
+}
+/* Tabela Usuarios GG */
+.conteudo-u{
+    margin-top:2rem ;
+    height: 50vh;
+
+}
+.elemento-u{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1vh 3vw;
+}
+.texto-elemento-u{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1vh 3vw;
+    font-weight:bolder;
+}
+.conteudo-u .elemento-u:hover{
+    box-shadow: none;
+}
+.elemento-u .linhaTabela td{
+    height: 3vh;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark);
+    padding:1vw;
+}
+.elemento-u .linhaTabela th{
+    height: 8vh;
+    color: black;
+    padding: 0.8vw;
+}
+.elemento-u .linhaTabela:last-child td{
+    border: none;
+}
 tr:hover{background-color:var(--color-background)} 
 
 .scroll-div-tabela{
     align-items: center;
-    width: 44vw;
-    height: 85vh;
+    width: 80vw;
+    height: 75vh;
     box-shadow: var(--box-shadow) ;
     transition: all 300ms ease;
-    border-radius: var(--card-border-radius);
+    border-radius: var(--border-radius-2);
     overflow: hidden;
     overflow-y: scroll;
     background:var(--color-white);
@@ -408,7 +491,6 @@ tr:hover{background-color:var(--color-background)}
 
 #tituloElemento{
     color: var(--color-dark);
-    font-weight: 800;
     font-size: 3vh;
 }
 
@@ -510,12 +592,18 @@ tr:hover{background-color:var(--color-background)}
 }
 
 #tituloSaldo{
-    font-weight: 400;
     font-size: 1.5vh;
     color: var(--color-dark);
     text-align: left;
 }
-
+hr {
+    width: 80vw;
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-style: inset;
+    border-width: 1px;
+  }
 #saldo{
     font-weight: 600;
     font-size: 2.25vh;

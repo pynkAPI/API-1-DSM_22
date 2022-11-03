@@ -219,7 +219,7 @@ def RequisicaoGerenteAgencia():
                                       CampoWr=['id_conta'],
                                       CampoPs=[IdContaOrigem])
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                      CampoPs=[IdContaOrigem, '0'],
+                                      CampoPs=[IdContaOrigem, '1'],
                                       CampoWr=['id_conta', 'ativo'],
                                       CampoBd=['valor_devido', 'data_final'],
                                       CampoFm=[ 0, date.today()])
@@ -387,10 +387,6 @@ def homeG(requisicao=None):
                                 req=req,
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
-
-
-
-
 
 #Aplicar filtro no extrato
 @app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
@@ -1359,7 +1355,43 @@ def alterarDesligar():
                                 selO='selected')
         elif botao['botao'] == 'Desligar':
 
-            return gerentes()
+
+            temAgencia = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                   CampoBd=['id_funcionario'],
+                                   CampoFm=[IdFuncionario],
+                                   CampoEs=['id_funcionario'])
+
+            if temAgencia == ():
+                funcs.desligaGA(IdFuncionario, "Null")
+                return gerentes()
+
+            else:
+                cursor = mysql.connection.cursor()
+        
+                textoSQL = f"""SELECT tb_usuario.nome,
+                            tb_funcionario.id_funcionario
+                            FROM tb_funcionario 
+                            LEFT JOIN tb_agencia
+                            ON tb_agencia.id_funcionario = tb_funcionario.id_funcionario
+                            INNER JOIN tb_usuario
+                            ON tb_funcionario.id_usuario = tb_usuario.id_usuario
+                            WHERE tb_agencia.id_funcionario IS NULL 
+                            AND tb_funcionario.papel != 'GERENTE GERAL' 
+                            AND tb_funcionario.id_funcionario != {IdFuncionario};"""
+                        
+                cursor.execute(textoSQL)
+                pesquisaSQL = cursor.fetchall()
+                mysql.connection.commit()     
+                cursor.close()
+                dicionarioPesquisa = []
+                for row in pesquisaSQL:    
+                    dicionarioPesquisa.append({
+                    "nome" : row[0],
+                    "id" : row[1]
+                    })
+
+                return render_template('desligaGA.html', listaGerente=dicionarioPesquisa, idfuncionario=IdFuncionario)
+        return gerentes()
 
 @app.route("/alteraGA", methods = ['POST', 'GET'])
 def alteraGA():
@@ -1380,6 +1412,13 @@ def alteraGA():
         funcs.alteraGA(dados)
     return gerentes()
 
+@app.route("/desligaGA", methods = ['POST', 'GET'])
+def desligaGA():
+    if request.method == "POST":
+        novoResp = request.form['funcionario']
+        IdFuncionario = request.form['IdFuncionario']      
+        funcs.desligaGA(IdFuncionario, novoResp)
+    return gerentes()
 #------------------------------
 # Alteração Gerente de Agência
 # @app.route("/alteraGA", methods = ['POST', 'GET'])
@@ -1431,6 +1470,15 @@ def criaGA():
 #        caminhoLogin = 'loginG'
 #    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 #------------------------------
+
+@app.route("/alterarAG", methods = ['POST', 'GET'])
+def alterarAG():
+    id_agencia = request.form['Id_agencia']
+    pesquisa = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                  CampoBd= ['id_agencia'],
+                                  CampoFm= [id_agencia],
+                                  CampoEs= ['*'])
+    return render_template('alterarAG.html', pesquisa = pesquisa)
 
 #Bloco para subir o site.
 if __name__ == "__main__":
