@@ -7,23 +7,15 @@
 
                 <div class="blocoElemento">
                         <div class="blocoElementoAltera">
-                                {% for campo in listaAlteracao %}
-                                        <p> {{ campo[0]}}: 
-                                                {{dadosUsuario[0]}}</p>
-                                        <p> {{ campo[1]}}: 
-                                                {{dadosUsuario[1]}}</p>
-                                        <p> {{ campo[2]}}: 
-                                                {{dadosUsuario[2]}}</p>
-                                        <p> {{ campo[3]}}: 
-                                                {{dadosUsuario[3]}}</p>
-                                        <p> {{ campo[5]}}: 
-                                                {{dadosUsuario[4]}}</p>
-                                {% endfor %}
+                                <p>Nome:</p><span> {{nome}} </span>
+                                <p>Email::</p><span> {{email}} </span>
+                                <p>Cpf:</p><span> {{cpf}} </span>
+                                <p>Gênero:</p><span> {{genero}} </span>
+                                <p>Endereço:</p><span> {{endereco}} </span>
+                                <p>Senha:</p><span> {{senha}} </span>
                                 <a href="reqaltUsuario">
                                         <span class="material-symbols-outlined">edit_square</span>
-                                </a>
-                                
-
+                                </a>                                
                         </div>
                 </div>
         </div>
