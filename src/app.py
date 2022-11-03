@@ -1320,9 +1320,7 @@ def alteraGA():
 def desligaGA():
     if request.method == "POST":
         novoResp = request.form['funcionario']
-        IdFuncionario = request.form['IdFuncionario']
-        if novoResp == IdFuncionario:
-            raise Exception(604)       
+        IdFuncionario = request.form['IdFuncionario']      
         funcs.desligaGA(IdFuncionario, novoResp)
     return gerentes()
 #------------------------------
