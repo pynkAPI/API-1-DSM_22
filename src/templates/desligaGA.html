@@ -1,0 +1,29 @@
+{% extends "homenewgg.html" %}
+{% block conteudo %}
+<div class="conteudo">
+    <div class="elemento">
+        <span id="tituloElemento">Desligamento de Gerente</span>
+        <div class="blocoElemento">
+            <div class="inputElemento">    
+                <div class="inputValor">
+                    <form action="{{ url_for('desligaGA') }}" method="POST">
+                        <input type="hidden" value="{{idfuncionario}}" name="IdFuncionario">
+                        <span id="textoInputElemento">Novo responsável da agência:<br></span>
+                        <select id="input_listagerente" class="input-selects" name="funcionario" required>
+                            {% for funcionario in listaGerente %}
+                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>  
+                            {% endfor %}
+                        </select>
+                </div>
+                        <div class="botaoElemento">
+                            <input type="submit" id="botaoSubmit" value="Desligar">
+                            <a href="gerentes">
+                                <input type="button" id="botaoVoltar" value="Voltar">
+                            </a>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>/
+</div>
+{% endblock %}

@@ -1270,8 +1270,32 @@ def alterarDesligar():
                                 selF='',
                                 selO='selected')
         elif botao['botao'] == 'Desligar':
-            
-            return gerentes()
+            cursor = mysql.connection.cursor()
+    
+            textoSQL = f"""SELECT tb_usuario.nome,
+                        tb_funcionario.id_funcionario
+                        FROM tb_funcionario 
+                        LEFT JOIN tb_agencia
+                        ON tb_agencia.id_funcionario = tb_funcionario.id_funcionario
+                        INNER JOIN tb_usuario
+                        ON tb_funcionario.id_usuario = tb_usuario.id_usuario
+                        WHERE tb_agencia.id_funcionario IS NULL 
+                        AND tb_funcionario.papel != 'GERENTE GERAL' 
+                        AND tb_funcionario.id_funcionario != {IdFuncionario};"""
+                    
+            cursor.execute(textoSQL)
+            pesquisaSQL = cursor.fetchall()
+            mysql.connection.commit()     
+            cursor.close()
+            dicionarioPesquisa = []
+            for row in pesquisaSQL:    
+                dicionarioPesquisa.append({
+                "nome" : row[0],
+                "id" : row[1]
+                })
+
+            return render_template('desligaGA.html', listaGerente=dicionarioPesquisa, idfuncionario=IdFuncionario)
+        return gerentes()
 
 @app.route("/alteraGA", methods = ['POST', 'GET'])
 def alteraGA():
@@ -1292,6 +1316,15 @@ def alteraGA():
         funcs.alteraGA(dados)
     return gerentes()
 
+@app.route("/desligaGA", methods = ['POST', 'GET'])
+def desligaGA():
+    if request.method == "POST":
+        novoResp = request.form['funcionario']
+        IdFuncionario = request.form['IdFuncionario']
+        if novoResp == IdFuncionario:
+            raise Exception(604)       
+        funcs.desligaGA(IdFuncionario, novoResp)
+    return gerentes()
 #------------------------------
 # Alteração Gerente de Agência
 # @app.route("/alteraGA", methods = ['POST', 'GET'])

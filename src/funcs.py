@@ -533,6 +533,10 @@ def criaGA(dados):
                                       CampoBd=['num_matricula'],
                                       CampoFm=[matricula])
 
+        InsMySQL(TabelaBd='tb_funcionario',
+                CampoBd=['id_usuario','papel','num_matricula','login'],
+                CampoFm=[str(idGerente[0][0]),'GERENTE DE AGÊNCIA', matricula, matricula])
+
     senha = SlcEspecificoMySQL(TabelaBd='tb_usuario',
                                        CampoEs=['senha'],
                                        CampoBd=['cpf'],
@@ -573,7 +577,6 @@ def dadosGA(IdFuncionario):
     return dados
 
 def alteraGA(dados):
-    print(dados['idfuncionario'])
     idUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
                                    CampoBd=['id_funcionario'],
                                    CampoFm=[dados['idfuncionario']],
@@ -590,6 +593,39 @@ def alteraGA(dados):
             CampoFm=[dados['login']],
             CampoWr=['id_funcionario'],
             CampoPs=[dados['idfuncionario']])
+    return 
+
+def desligaGA(IdFuncionario, novoResp):
+    if IdFuncionario != novoResp:
+        upMySQL(TabelaBd='tb_agencia',
+                CampoBd=['id_funcionario'],
+                CampoFm=[novoResp],
+                CampoWr=['id_funcionario'],
+                CampoPs=[IdFuncionario])
+        
+        IdUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                        CampoBd=['id_funcionario'],
+                                        CampoFm=[IdFuncionario],
+                                        CampoEs=['id_usuario'])
+        
+        existe = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                        CampoBd=['id_usuario'],
+                                        CampoFm=[IdUsuario[0][0]],
+                                        CampoEs=['id_usuario'])
+
+        if existe == ():
+            DelMySQL(TabelaBd='tb_funcionario',
+                    CampoBd=['id_funcionario'],
+                    CampoFm=[IdFuncionario])
+            DelMySQL(TabelaBd='tb_usuario',
+                    CampoBd=['id_usuario'],
+                    CampoFm=[IdUsuario[0][0]])
+        else:
+            DelMySQL(TabelaBd='tb_funcionario',
+                    CampoBd=['id_funcionario'],
+                    CampoFm=[IdFuncionario])
+    else:
+        raise Exception()
     return 
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
