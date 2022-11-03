@@ -1236,6 +1236,7 @@ def reqaltUsuario():
 def AltDadosUsuGG():  
     cursor = mysql.connection.cursor()
     IdContaBanc = request.form['IdContaBanc']
+    pagina = request.form['pagina']
         
     print(IdContaBanc)
     SelectGA = f"""SELECT * FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_conta={IdContaBanc};"""
@@ -1247,11 +1248,12 @@ def AltDadosUsuGG():
     teste = dados[0][11]
     dados[0][11] = '{}.{}.{}-{}'.format(teste[:3], teste[3:6], teste[6:9], teste[9:])
 
-    return render_template('AltDadosUsuGG.html',dados=dados)    
+    return render_template('AltDadosUsuGG.html',dados=dados,pagina=pagina)    
 
 @app.route("/updateUsuGG", methods = ['POST', 'GET'])
 def updateUsuGG():
     if request.method == 'POST':
+        pagina      = request.form['pagina']
         IdUsu       = request.form['IdUsu']
         nome        = request.form['nome']
         email       = request.form['email']
@@ -1262,7 +1264,10 @@ def updateUsuGG():
             
         funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento"],CampoFm=[nome, email, cpf, genero, endereco, dataNasc],CampoWr=['id_usuario'],CampoPs=[IdUsu])
         
-    return ListUsa()
+    if pagina == 0:    
+        return ListUsa()
+    else:
+        return ListUsaGA()
 #------------------------------
 
 #Funcao gerentes do Gerente Geral
