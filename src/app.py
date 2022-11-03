@@ -219,7 +219,7 @@ def RequisicaoGerenteAgencia():
                                       CampoWr=['id_conta'],
                                       CampoPs=[IdContaOrigem])
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                      CampoPs=[IdContaOrigem, '0'],
+                                      CampoPs=[IdContaOrigem, '1'],
                                       CampoWr=['id_conta', 'ativo'],
                                       CampoBd=['valor_devido', 'data_final'],
                                       CampoFm=[ 0, date.today()])
