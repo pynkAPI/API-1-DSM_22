@@ -388,10 +388,6 @@ def homeG(requisicao=None):
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
 
-
-
-
-
 #Aplicar filtro no extrato
 @app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
 def FiltroExtrato():
@@ -1461,6 +1457,15 @@ def criaGA():
 #        caminhoLogin = 'loginG'
 #    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 #------------------------------
+
+@app.route("/alterarAG", methods = ['POST', 'GET'])
+def alterarAG():
+    id_agencia = request.form['Id_agencia']
+    pesquisa = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                  CampoBd= ['id_agencia'],
+                                  CampoFm= [id_agencia],
+                                  CampoEs= ['*'])
+    return render_template('alterarAG.html', pesquisa = pesquisa)
 
 #Bloco para subir o site.
 if __name__ == "__main__":

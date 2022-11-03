@@ -1,37 +1,41 @@
 {% extends "homenewgg.html" %}
 {% block conteudo %}
-    <div class="conteudo-a">
-        <div class="elemento-a">
-            <div class="scroll-div-tabela">
-                <div class="scroll-object-tabela">
+<div class="conteudo-a">
+    <div class="elemento-a">
+        <div class="scroll-div-tabela">
+            <div class="scroll-object-tabela">
                 <table class="tabelaAgencias">
                     <!-- Inicio da Tabela -->
                     <tr class="linhaTabela">
-                        <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->    
+                        <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->
                         {% for header in cabecalhoTabela %}
-                            <th >{{ header }}</th>
+                        <th>{{ header }}</th>
                         {% endfor %}
                     </tr>
                     {% for row in pesquisaSQLTabela %}
-                    <form action="{{ url_for('agencias') }}" method="POST">
-                    <tr class="linhaTabela">
-                        {% for cell in row %}
+                    <form action="alterarAG" method="POST">
+                        <tr class="linhaTabela">
+                            {% for cell in row %}
+                            {% if row[0] == cell %}
+                            <input type="hidden" value="{{ cell }}" name="Id_agencia">
+                            {% else %}
                             <td class="celula">{{ cell }}</td>
-                        {% endfor %}
-                        <td> 
-                            <input type="submit" name="alt" value="Alterar" class="btn_alterar">
-                        </td>
-                    </tr>
+                            {% endif %}
+                            {% endfor %}
+                            <td>
+                                <input type="submit" name="alt" value="Alterar" class="btn_alterar">
+                            </td>
+                        </tr>
                     </form>
                     {% endfor %}
                 </table>
-                </div>
             </div>
         </div>
-        <div class="elemento-a">
-            <a href="criaAgencia">
-                <input type="button" value="Criar Agência" class="btn_elemento">
-            </a>
-        </div>
     </div>
+    <div class="elemento-a">
+        <a href="criaAgencia">
+            <input type="button" value="Criar Agência" class="btn_elemento">
+        </a>
+    </div>
+</div>
 {% endblock %}

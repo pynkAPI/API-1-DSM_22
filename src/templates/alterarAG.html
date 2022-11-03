@@ -1,0 +1,34 @@
+{% extends "homenewgg.html" %}
+{% block conteudo %}
+<div class="conteudo">
+    <div class="elemento">
+        <span id="tituloElemento">Dados Atuais</span>
+        <div class="blocoElemento">
+            <div class="inputElemento">
+                    <div class="inputValor">
+                        <span id="textoInputElemento">Localidade: <br>{{pesquisa[0][1]}}</span>
+                    </div>
+                    <div class="inputValor">
+                        <span id="textoInputElemento">Funcionário: <br>{{pesquisa[0][2]}}</span>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <span id="tituloElemento">Alterar Dados</span>
+        <div class="blocoElemento">
+            <div class="inputElemento">
+                <form action="{{ url_for('alterarAG') }}" method="POST">
+                    <input type="hidden" value="{{pesquisa[0][0]}}" name="Id_agencia">
+                    <div class="inputValor">
+                        <span id="textoInputElemento">Localidade:</span>
+                        <input required type="text" name="nome" value="{{pesquisa[0][1]}}">
+                    </div>
+                    <div class="inputValor">
+                        <span id="textoInputElemento">Funcionário:</span>
+                        <input required type="text" name="email" value="{{pesquisa[0][2]}}">
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+{% endblock %}

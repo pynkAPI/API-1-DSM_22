@@ -665,6 +665,15 @@ def geraValor(qtdCaracteres, tipo):
 
     return senha
 
+def altAG(id_agencia):
+    upMySQL(TabelaBd='tb_agencia',
+            CampoBd=['localidade','id_funcionario'],
+            CampoFm=[localidade, id_funcionario],
+            CampoWr=['id_agencia'],
+            CampoPs=[id_agencia])
+    
+    return 0
+
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
 #                                 CampoBd= ['id_agencia'],
