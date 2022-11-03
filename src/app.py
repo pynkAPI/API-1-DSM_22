@@ -1073,7 +1073,7 @@ def AltSaldo():
 def ListUsa():
     cursor = mysql.connection.cursor()
         
-    cabecalho = ("nome", "email", "cpf", "genero", "endereco", "datanascimento","Status","Alterar dados")
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
     
     SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,IF(TC.status_contabancaria='1', "ativo", "desativado")
     FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
@@ -1082,7 +1082,7 @@ def ListUsa():
     
     mysql.connection.commit() 
     
-    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,pagina=0)
 #------------------------------
 
 #Bloco de Listagem de Requesições
@@ -1112,16 +1112,16 @@ def ListUsaGA():
     pesquisaAgen = cursor.fetchall()
         
     print(pesquisaAgen[0][0])
-    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
     
-    SelectGA = f"""SELECT TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
     FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_agencia={pesquisaAgen[0][0]}"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
     mysql.connection.commit() 
     
-    return render_template('ListUsaGA.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+    return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,pagina=1)
 #------------------------------
 
 #Bloco de Listagem das agencias

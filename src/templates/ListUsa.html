@@ -1,4 +1,8 @@
+{% if pagina == 0 %}
 {% extends "homenewgg.html" %}
+{% else %}
+{% extends "homenewg.html" %}
+{% endif %}
 {% block conteudo %}
 <div class="conteudo">
     <div class="elemento">
@@ -38,3 +42,5 @@
     </div>
 </div>
 {% endblock %}
+
+
