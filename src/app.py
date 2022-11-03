@@ -144,27 +144,159 @@ def home():
                 return render_template('homenewgg.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
 #------------------------------
 
-@app.route("/RequisicaoGerenteAgencia")
-def RequisicaoGerenteAgencia(requisicao, methods = ['POST', 'GET']):
+@app.route("/RequisicaoGerenteAgencia", methods = ['POST', 'GET'])
+def RequisicaoGerenteAgencia():
     if request.method == "POST":
-        if requisicao == 0:
-            return
-        elif requisicao == 1:
+        requisicao = request.form['requisicao']
+        #Conferencia Deposito
+        #region
+        if requisicao == '0':
+            botao = request.form.to_dict()
+
+            IdTransacao =   request.form['IdTransacao']
+            if botao['botao'] == 'Confirmar':
+
+                pesquisaSQLTransacao =  funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                                            CampoEs=['valor', 'id_conta_origem'],
+                                                            CampoBd=['id_transacao'],
+                                                            CampoFm=[IdTransacao])
+
+                IdContaOrigem = pesquisaSQLTransacao[0][1]
+                valorTransacao = float(pesquisaSQLTransacao[0][0])
+
+                pesquisaSQLCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                             CampoBd=['id_conta'],
+                                                             CampoFm=[IdContaOrigem],
+                                                             CampoEs=['valor_devido', 'data_atualizacao'])
+                #verifica se quem está depositando está devendo ao banco, caso sim será realizado uma processo especial.       
+                if pesquisaSQLCheque:
+                    valorDevido = pesquisaSQLCheque[0][0]
+                    dataAtualizacao = pesquisaSQLCheque[0][1]
+                    #pega a quantidade de dias passados desde o dia em que ele entrou em cheque especial
+                    dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
+
+                    #verifica se a qtd de dias é > 0
+                    if dataPeriodo > 0:
+                        pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                              CampoBd=['id_regra_operacoes'],
+                                                                              CampoFm=[1],
+                                                                              CampoEs=['porcentagem', 'valor_fixo'])
+                        porcentagem = pesquisaSQLRegraCheque[0][0]
+                        valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
+                    valorDevido = valorDevido + valorTransacao
+
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                  CampoPs=[IdContaOrigem, '1'],
+                                  CampoWr=['id_conta', 'ativo'],
+                                  CampoBd=['valor_devido','data_atualizacao'],
+                                  CampoFm=[ valorDevido, datetime.today()])
+
+                    pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                                CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
+                                                                CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
+                                                                CampoFm=[IdTransacao, IdContaOrigem])
+
+
+                    pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                                  CampoEs=['capitalinicial'],
+                                                                  CampoBd=['id_capitaltotal'],
+                                                                  CampoFm=[1])
+                    valorTotalBanco = float(pesquisaTotalBanco[0][0])
+                    valorTotalBanco = valorTransacao + valorTotalBanco
+
+                    funcs.upMySQL(TabelaBd='tb_transacao',
+                              CampoBd=['status_transacao', 'Datatime'],
+                              CampoFm=[1, datetime.today()],
+                              CampoPs=[IdTransacao],
+                              CampoWr=['id_transacao'])
+
+                    funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
+
+                    #Verifica se ele conseguiu sair da dívida
+                    if valorDevido > 0:
+                        funcs.upMySQL('tb_contabancaria',
+                                      CampoBd=['saldo'],
+                                      CampoFm=[valorDevido],
+                                      CampoWr=['id_conta'],
+                                      CampoPs=[IdContaOrigem])
+                        funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                      CampoPs=[IdContaOrigem, '0'],
+                                      CampoWr=['id_conta', 'ativo'],
+                                      CampoBd=['valor_devido', 'data_final'],
+                                      CampoFm=[ 0, date.today()])
+                    #Atualiza o valor total do Banco
+                    funcs.upMySQL(TabelaBd='tb_capitaltotal',
+                                  CampoBd=['capitalinicial'],
+                                  CampoFm=[valorTotalBanco],
+                                  CampoWr=['id_capitaltotal'],
+                                  CampoPs=[1])
+                    session['saldo'] = valorTotalBanco
+
+                    return homeG(requisicao=requisicao)           
+
+                pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                            CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
+                                                            CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
+                                                            CampoFm=[IdTransacao, IdContaOrigem])
+
+                pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                            CampoEs=['capitalinicial'],
+                                                            CampoBd=['id_capitaltotal'],
+                                                            CampoFm=[1])
+
+                valorTotalBanco = float(pesquisaTotalBanco[0][0])
+                saldoConta = float(pesquisaSQLConta[0][1])
+                valor = valorTransacao + saldoConta
+
+                valorTotalBanco = valor + valorTotalBanco
+
+                funcs.upMySQL(TabelaBd='tb_transacao',
+                          CampoBd=['status_transacao', 'Datatime'],
+                          CampoFm=[1, datetime.today()],
+                          CampoPs=[IdTransacao],
+                          CampoWr=['id_transacao'])
+
+                funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
+
+                funcs.upMySQL('tb_contabancaria',
+                              CampoBd=['saldo'],
+                              CampoFm=[valor],
+                              CampoWr=['id_conta'],
+                              CampoPs=[IdContaOrigem])
+
+                funcs.upMySQL(TabelaBd='tb_capitaltotal',
+                              CampoBd=['capitalinicial'],
+                              CampoFm=[valorTotalBanco],
+                              CampoWr=['id_capitaltotal'],
+                              CampoPs=[1])
+                session['saldo'] = valorTotalBanco
+
+                return homeG(requisicao=requisicao)
+            else:
+                funcs.upMySQL(TabelaBd='tb_transacao', 
+                          CampoBd=['status_transacao'],
+                          CampoFm=[2],
+                          CampoPs=[IdTransacao],
+                          CampoWr=['id_transacao'])
+                return homeG(requisicao=requisicao)
+        #endregion 
+        elif requisicao == '1':
             return
         else:
             return 
      
 
 @app.route("/homeG", methods = ['POST', 'GET'])
-def homeG():
-    
+def homeG(requisicao=None):
+
     req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
     ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
     saldo = f"{session['saldo']:.2f}".replace(".",",")
     caminhoLogin = 'loginG'
     if request.method == "POST":
-        requisicao = request.form.get('requisicao1')
-        if requisicao == '0' :
+        if requisicao == None:
+            requisicao = request.form.get('requisicao1')
+        if requisicao == '0':
             cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
@@ -561,19 +693,7 @@ def ConferenciaDeposito():
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoBd=['valor_devido', 'data_final'],
                                   CampoFm=[ 0, date.today()])
-                # pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
-                #                                         CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
-                #                                         CampoBd=['id_transacao', 'tb_contabancaria.id_conta'],
-                #                                         CampoFm=[IdTransacao, IdContaOrigem])
-                # saldoContaOrigem = pesquisaSQLConta[0][1]
-            
-                # if valorDevido < saldoContaOrigem:
-                #     funcs.upMySQL('tb_contabancaria',
-                #                   CampoBd=['saldo'],
-                #                   CampoFm=[valorDevido],
-                #                   CampoWr=['id_conta'],
-                #                   CampoPs=[IdContaOrigem])
-
+        
                 #Atualiza o valor total do Banco
                 funcs.upMySQL(TabelaBd='tb_capitaltotal',
                               CampoBd=['capitalinicial'],
