@@ -596,17 +596,17 @@ def alteraGA(dados):
     return 
 
 def desligaGA(IdFuncionario, novoResp):
-    if IdFuncionario != novoResp:
+    IdUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                        CampoBd=['id_funcionario'],
+                                        CampoFm=[IdFuncionario],
+                                        CampoEs=['id_usuario'])
+
+    if novoResp != 'Null':
         upMySQL(TabelaBd='tb_agencia',
                 CampoBd=['id_funcionario'],
                 CampoFm=[novoResp],
                 CampoWr=['id_funcionario'],
                 CampoPs=[IdFuncionario])
-        
-        IdUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                        CampoBd=['id_funcionario'],
-                                        CampoFm=[IdFuncionario],
-                                        CampoEs=['id_usuario'])
         
         existe = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                         CampoBd=['id_usuario'],
@@ -625,7 +625,21 @@ def desligaGA(IdFuncionario, novoResp):
                     CampoBd=['id_funcionario'],
                     CampoFm=[IdFuncionario])
     else:
-        raise Exception()
+        existe = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                        CampoBd=['id_usuario'],
+                                        CampoFm=[IdUsuario[0][0]],
+                                        CampoEs=['id_usuario'])
+        if existe == ():
+            DelMySQL(TabelaBd='tb_funcionario',
+                    CampoBd=['id_funcionario'],
+                    CampoFm=[IdFuncionario])
+            DelMySQL(TabelaBd='tb_usuario',
+                    CampoBd=['id_usuario'],
+                    CampoFm=[IdUsuario[0][0]])
+        else:
+            DelMySQL(TabelaBd='tb_funcionario',
+                    CampoBd=['id_funcionario'],
+                    CampoFm=[IdFuncionario])
     return 
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 

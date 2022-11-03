@@ -1336,31 +1336,41 @@ def alterarDesligar():
                                 selF='',
                                 selO='selected')
         elif botao['botao'] == 'Desligar':
-            cursor = mysql.connection.cursor()
-    
-            textoSQL = f"""SELECT tb_usuario.nome,
-                        tb_funcionario.id_funcionario
-                        FROM tb_funcionario 
-                        LEFT JOIN tb_agencia
-                        ON tb_agencia.id_funcionario = tb_funcionario.id_funcionario
-                        INNER JOIN tb_usuario
-                        ON tb_funcionario.id_usuario = tb_usuario.id_usuario
-                        WHERE tb_agencia.id_funcionario IS NULL 
-                        AND tb_funcionario.papel != 'GERENTE GERAL' 
-                        AND tb_funcionario.id_funcionario != {IdFuncionario};"""
-                    
-            cursor.execute(textoSQL)
-            pesquisaSQL = cursor.fetchall()
-            mysql.connection.commit()     
-            cursor.close()
-            dicionarioPesquisa = []
-            for row in pesquisaSQL:    
-                dicionarioPesquisa.append({
-                "nome" : row[0],
-                "id" : row[1]
-                })
+            temAgencia = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                   CampoBd=['id_funcionario'],
+                                   CampoFm=[IdFuncionario],
+                                   CampoEs=['id_funcionario'])
 
-            return render_template('desligaGA.html', listaGerente=dicionarioPesquisa, idfuncionario=IdFuncionario)
+            if temAgencia == ():
+                funcs.desligaGA(IdFuncionario, "Null")
+                return gerentes()
+
+            else:
+                cursor = mysql.connection.cursor()
+        
+                textoSQL = f"""SELECT tb_usuario.nome,
+                            tb_funcionario.id_funcionario
+                            FROM tb_funcionario 
+                            LEFT JOIN tb_agencia
+                            ON tb_agencia.id_funcionario = tb_funcionario.id_funcionario
+                            INNER JOIN tb_usuario
+                            ON tb_funcionario.id_usuario = tb_usuario.id_usuario
+                            WHERE tb_agencia.id_funcionario IS NULL 
+                            AND tb_funcionario.papel != 'GERENTE GERAL' 
+                            AND tb_funcionario.id_funcionario != {IdFuncionario};"""
+                        
+                cursor.execute(textoSQL)
+                pesquisaSQL = cursor.fetchall()
+                mysql.connection.commit()     
+                cursor.close()
+                dicionarioPesquisa = []
+                for row in pesquisaSQL:    
+                    dicionarioPesquisa.append({
+                    "nome" : row[0],
+                    "id" : row[1]
+                    })
+
+                return render_template('desligaGA.html', listaGerente=dicionarioPesquisa, idfuncionario=IdFuncionario)
         return gerentes()
 
 @app.route("/alteraGA", methods = ['POST', 'GET'])
