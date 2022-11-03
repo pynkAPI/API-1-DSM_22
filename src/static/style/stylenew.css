@@ -273,7 +273,7 @@ main .tabelaRequisicao .linhaTabela th{
     font-weight: 750;
     color: black;
 }
-main .tabelaRequisicao .linhaTabela tr:last-child td{
+main .tabelaRequisicao .linhaTabela:last-child td{
     border: none;
 }
 tr:hover{background-color:var(--color-background)} 
@@ -320,25 +320,24 @@ tr:hover{background-color:var(--color-background)}
 }
 .elemento-a .linhaTabela td{
     height: 3vh;
-    font-weight: 550;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark);
-    padding: 1vw;
+    padding:1vw;
 }
 .elemento-a .linhaTabela th{
     height: 8vh;
-    font-weight: 750;
     color: black;
-    padding: 1vw;
+    padding: 0.8vw;
 }
-.elemento-a .linhaTabela tr:last-child td{
+.elemento-a .linhaTabela:last-child td{
     border: none;
 }
+
 tr:hover{background-color:var(--color-background)} 
 
 .scroll-div-tabela{
     align-items: center;
-    width: 32vw;
+    width: 44vw;
     height: 85vh;
     box-shadow: var(--box-shadow) ;
     transition: all 300ms ease;
@@ -348,18 +347,31 @@ tr:hover{background-color:var(--color-background)}
     background:var(--color-white);
 }
 .scroll-object-tabela{
-    font-size: 1rem;
-    padding-top: 2vh;
-    padding-left: 1vw;
+    font-size: 0.9vw;
+    padding-top: 1vh;
+    padding-left: 2.3vw;
 }
 .scroll-div-tabela::-webkit-scrollbar{
-    width: 0.5em;
+    width: 3vw;
 }
 .scroll-div-tabela::-webkit-scrollbar-track{
     background-color:var(--color-white);
+    border-radius: var(--border-radius-3);
 }
 .scroll-div-tabela::-webkit-scrollbar-thumb{
     background-color:var(--color-white);
+}
+.btn_alterar{
+    color: var(--color-white);
+    cursor: pointer;
+    font-size:0.9vw;
+    background-color: var(--color-primary);
+    width: 5vw;
+    height: 2.5vh;
+    border-radius: var(--border-radius-2);
+}
+.btn_alterar:hover{
+    background-color: #CC5587;
 }
 /* Deposito */
 .conteudo{
@@ -372,6 +384,7 @@ tr:hover{background-color:var(--color-background)}
     width: 90vw;
     min-height: 100vh;
 }
+
 
 .elemento{
     display: flex;
@@ -392,17 +405,7 @@ tr:hover{background-color:var(--color-background)}
 .btn_elemento:hover{
     background-color: #CC5587;
 }
-.btn_alterar{
-    color: var(--color-white);
-    cursor: pointer;
-    font-weight: 700;
-    background-color: var(--color-primary);
-    padding: 0.5vh 0.5vw;
-    border-radius: var(--border-radius-2);
-}
-.btn_alterar:hover{
-    background-color: #CC5587;
-}
+
 #tituloElemento{
     color: var(--color-dark);
     font-weight: 800;
