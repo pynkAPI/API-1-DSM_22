@@ -1,43 +1,51 @@
 {% extends "homenewgg.html" %}
 {% block conteudo %}
-<div class="conteudo">
-    <div class="elemento">
+<div class="conteudo-a">
+    <div class="elemento-a">
         <span id="tituloElemento">Gerentes de Agência</span>
-        <div class="blocoElementoAltera">
-            <div class="inputElemento">
-                <table class="tabelaRequisicao">
-                    <tr class="linhaTabela">
-                        {% for header in cabecalhoTabela %}
-                        <th>{{ header }}</th>
-                        {% endfor %}
-                    </tr>
-                    {% set p = namespace(value=0) %}
-                    {% for row in pesquisaSQL %}
-                    <form action="{{ url_for('alterarDesligar') }}" method="POST">
-                        <tr class="linhaTabela">
-                            {% for cell in row %}
-                            {% if cell == row[0] %}
-                             <input type="hidden" value="{{ cell }}" name="IdFuncionario">
-                            {% else %}
-                                <td class="celula">{{ cell }}</td>
-                            {% endif %}
-                            {% endfor %}
-                            <td class="celula">
-                                <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
-                            </td>
-                            <td class="celula">
-                                <input type="submit" name="botao" value="Desligar" class="btnd solid" id="btnConfirmar">
-                            </td>
-                        </tr>
-                    </form>
-                    {% set p.value = p.value + 1 %}
-                    {% endfor %}
-                </table>
-                <a href="criaGA">
-                    <input type="button" value="Criar Gerente">
-                </a>
-            </div>
-        </div>
     </div>
+    
+    <div class="elemento-a">
+        <div class="scroll-div-tabela">
+            <div class="scroll-object-tabela">
+            
+                <!-- <div class="blocoElementoAltera">
+                    <div class="inputElemento"> -->
+                        <table class="tabelaAgencias">
+                            <tr class="linhaTabela">
+                                {% for header in cabecalhoTabela %}
+                                <th>{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                            {% set p = namespace(value=0) %}
+                            {% for row in pesquisaSQL %}
+                            <form action="{{ url_for('alterarDesligar') }}" method="POST">
+                                <tr class="linhaTabela">
+                                    {% for cell in row %}
+                                    {% if cell == row[0] %}
+                                    <input type="hidden" value="{{ cell }}" name="IdFuncionario">
+                                    {% else %}
+                                        <td class="celula">{{ cell }}</td>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <td class="celula">
+                                        <input type="submit" name="botao" value="Alterar" class="btn_alterar" id="btnConfirmar">
+                                    </td>
+                                    <td class="celula">
+                                        <input type="submit" name="botao" value="Desligar" class="btn_alterar" id="btnConfirmar">
+                                    </td>
+                                </tr>
+                            </form>
+                            {% set p.value = p.value + 1 %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+                <div class="elemento-a">
+                    <a href="criaGA">
+                        <input type="button" value="Criar Gerente" class="btn_elemento">
+                    </a>
+                </div>
 </div>
 {% endblock %}
