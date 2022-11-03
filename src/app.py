@@ -1143,7 +1143,7 @@ def agencias():
     cabecalho   = ('Localidade','Número agência','Funcionario','Status','Alterar Dados')
     cursor = mysql.connection.cursor()
             
-    textoSQL = f"""SELECT localidade,numero_agencia,nome,IF(status_agencia='1', "Ativo", "Desativado") as status 
+    textoSQL = f"""SELECT id_agencia,localidade,numero_agencia,nome,IF(status_agencia='1', "Ativo", "Desativado") as status 
     FROM tb_agencia as TA left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
     left join tb_usuario as TU on TF.id_usuario=TU.id_usuario order by localidade"""
             

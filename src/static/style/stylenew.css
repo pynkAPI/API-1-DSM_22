@@ -273,6 +273,7 @@ main .tabelaRequisicao .linhaTabela th{
     height: 3rem;
     font-weight: 750;
     color: black;
+    background-color: #CC5587;
 }
 main .tabelaRequisicao .linhaTabela:last-child td{
     border: none;
@@ -307,7 +308,6 @@ tr:hover{background-color:var(--color-background)}
 .conteudo-a{
     margin-top:2rem ;
     height: 50vh;
-
 }
 .elemento-a{
     display: flex;
@@ -317,9 +317,9 @@ tr:hover{background-color:var(--color-background)}
     padding: 1vh 3vw;
 }
 .texto-elemento-a{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+    /* flex-direction: column; */
+    /* justify-content: center; */
     align-items: flex-start;
     padding: 1vh 3vw;
 }
@@ -330,12 +330,12 @@ tr:hover{background-color:var(--color-background)}
     height: 3vh;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark);
-    padding:1vw;
+    padding: 1vw;
 }
 .elemento-a .linhaTabela th{
     height: 8vh;
     color: black;
-    padding: 0.8vw;
+    padding:1.5vw ;
 }
 .elemento-a .linhaTabela:last-child td{
     border: none;
@@ -344,19 +344,20 @@ tr:hover{background-color:var(--color-background)}
 .conteudo-g{
     margin-top:2rem ;
     height: 50vh;
-
 }
 .elemento-g{
-    display: flex;
+    display:flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     padding: 1vh 3vw;
+}
+.btn_criar{
+    margin-top: 1.2vh;
 }
 .texto-elemento-g{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 1vh 3vw;
     font-weight: 800;
@@ -478,11 +479,14 @@ tr:hover{background-color:var(--color-background)}
     padding: 2vh 4vw;
 }
 .btn_elemento{
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
     color: var(--color-white);
     cursor: pointer;
     font-weight: 700;
     background-color: var(--color-primary);
-    padding: 1vh 2vw;
+    padding: 0.5vh 1vw;
     border-radius: var(--border-radius-2);
 }
 .btn_elemento:hover{
@@ -491,7 +495,7 @@ tr:hover{background-color:var(--color-background)}
 
 #tituloElemento{
     color: var(--color-dark);
-    font-size: 3vh;
+    font-size: 2vw;
 }
 
 .blocoElemento{
@@ -599,8 +603,9 @@ tr:hover{background-color:var(--color-background)}
 hr {
     width: 80vw;
     display: block;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: 0.5vh;
+    margin-left: 3vw;
+    margin-bottom: 2vh;
     border-style: inset;
     border-width: 1px;
   }
