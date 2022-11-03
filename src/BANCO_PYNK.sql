@@ -65,10 +65,16 @@ FOREIGN KEY(id_funcionario) REFERENCES tb_funcionario (id_funcionario)
 
 CREATE TABLE tb_requisicoes(
 id_requisicao int AUTO_INCREMENT PRIMARY KEY,
-status_alteracao varchar(1) NOT NULL,
 id_usuario INT NOT NULL,
+nome varchar(255) NOT NULL,
+email varchar(255) NOT NULL,
+cpf varchar(25) NOT NULL UNIQUE,
+genero varchar(25) NOT NULL,
+endereco varchar(50) NOT NULL,
+datanascimento date NOT NULL,
+senha varchar(100) NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario),
-descricao VARCHAR(255)
+
 );
 
 CREATE TABLE tb_cheque_especial(

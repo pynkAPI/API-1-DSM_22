@@ -1207,7 +1207,7 @@ def suaConta():
         dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario inner join tb_contabancaria on tb_usuario.id_usuario=tb_contabancaria.id_usuario',
                                  CampoBd=['numeroconta'],
                                  CampoFm=[session['conta']],
-                                 CampoEs=['nome','email','cpf','genero','endereco','senha'])
+                                 CampoEs=['nome','email','cpf','genero','endereco', 'datanascimento','senha'])
         
     return render_template('suaConta.html',
                                 nome=dadosUsuario[0][0],
@@ -1215,7 +1215,8 @@ def suaConta():
                                 cpf=dadosUsuario[0][2],
                                 genero=dadosUsuario[0][3],
                                 endereco=dadosUsuario[0][4],
-                                Senha=dadosUsuario[0][5]
+                                datanascimento= dadosUsuario[0][5],
+                                Senha=dadosUsuario[0][6]
                                 )
 
 #------------------------------
@@ -1224,17 +1225,27 @@ def suaConta():
 @app.route("/reqaltUsuario", methods = ['POST', 'GET'])
 def reqaltUsuario():
     if request.method == 'POST':
-        nome       = request.form['nome']
-        email        = request.form['email']
-        cpf       = request.form((request.form['cpf']).replace('.','')).replace('-','')
-        genero    = request.form['genero']
-        endereco        = (request.form['endereco'])
-        datanascimento = request.form['datanasciemnto']
-        senha      = request.form['senha']
+        IdUsu = session['idContabk']
+        nome= request.form['nome']
+        email= request.form['email']
+        cpf= request.form['cpf']
+        genero= request.form['genero']
+        endereco= request.form['endereco']
+        datanascimento= request.form['datanascimento']
+        senha= request.form['senha']
         
-        funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento","senha"],CampoFm=[nome, email, cpf, genero, endereco, datanascimento, senha]) 
         
-        return render_template()    
+        formsaltUsuario = funcs.InsMySQL('tb_requisicoes',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento","senha","id_usuario"],
+                                CampoFm=[nome, email, cpf, genero, endereco, datanascimento, senha,IdUsu]) 
+        
+        return render_template('reqaltUsuario',altnome= formsaltUsuario[0][0],
+                                               altemail= formsaltUsuario[0][1],
+                                               altcpf= formsaltUsuario[0][2],
+                                               altgenero= formsaltUsuario[0][3],
+                                               altendereco= formsaltUsuario[0][4],
+                                               altdatanascimento= formsaltUsuario[0][5],
+                                               altsenha= formsaltUsuario [0][6])                                                  
+    #falta colocar a confirmação de senha
 
 #------------------------------
 
@@ -1343,6 +1354,8 @@ def alterarDesligar():
                                 selF='',
                                 selO='selected')
         elif botao['botao'] == 'Desligar':
+
+
             temAgencia = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
                                    CampoBd=['id_funcionario'],
                                    CampoFm=[IdFuncionario],

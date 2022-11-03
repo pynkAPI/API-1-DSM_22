@@ -4,23 +4,28 @@
 <div class="conteudo">
         <div class="elemento">
                 <span id="tituloElemento">Solicitar alterção de dados</span>
-
                 <div class="blocoElemento">
                         <div class="blocoElementoAltera">
-                                <p>Nome:</p><span> {{nome}} </span>
-                                <p>Email::</p><span> {{email}} </span>
-                                <p>Cpf:</p><span> {{cpf}} </span>
-                                <p>Gênero:</p><span> {{genero}} </span>
-                                <p>Endereço:</p><span> {{endereco}} </span>
-                                <p>Senha:</p><span> {{senha}} </span>
-                                <a href="reqaltUsuario">
-                                        <span class="material-symbols-outlined">edit_square</span>
-                                </a>                                
+                                <form action="reqaltUsuario" method="POST">
+                                        <p>Nome:</p><span> {{nome}} </span>
+                                        <input type="hidden" value="{{nome}}" name="nome">
+                                        <p>Email::</p><span> {{email}} </span>
+                                        <input type="hidden" value="{{email}}" name="email">
+                                        <p>Cpf:</p><span> {{cpf}} </span>
+                                        <input type="hidden" value="{{cpf}}" name="cpf">
+                                        <p>Gênero:</p><span> {{genero}} </span>
+                                        <input type="hidden" value="{{genero}}" name="genero">
+                                        <p>Endereço:</p><span> {{endereco}} </span>
+                                        <input type="hidden" value="{{endereco}}" name="endereco">
+                                        <p>Data de nascimento:</p><span> {{datanascimento}} </span>
+                                        <input type="hidden" value="{{datanascimento}}" name="datanascimento">
+                                        <p>Senha:</p><span> {{Senha}} </span>
+                                        <input type="hidden" value="{{Senha}}" name="senha">
+                                        <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
+                                </form>
                         </div>
                 </div>
         </div>
 </div>
 
 {% endblock %}
-
-
