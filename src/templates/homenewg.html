@@ -67,13 +67,16 @@
             <div class="texto-extrato">
                 <h2>Requisições</h2>
             </div>
+            <form action="{{ url_for('homeG') }}" method="POST">
             <div class="custom-select">
-                <select>
+                <select name="requisicao1" required>
                   <option value="0">Depósitos</option>
                   <option value="1">Abertura de Contas</option>
                   <option value="2">Alteração de Dados</option>
                 </select>
+                <input type="submit" class="btnFiltro" value="Pesquisar">
             </div>
+            </form>
             <div class="scroll-div">
                 <div class="scroll-object">
                     <table class="tabelaRequisicao">
@@ -85,19 +88,31 @@
                             {% endfor %}
                         </tr>
                         {% for row in pesquisaSQLTabela %}
+                        <form action="{{ url_for('RequisicaoGerenteAgencia', requisicao=requisicao) }}" method="POST">
                         <tr class="linhaTabela">
                             <!-- Forma as linhas da tabela -->
                             {% for cell in row %}
                             <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
                             <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                            <a href="#">
-                                <td class="celula">{{ cell }}</td>
-                            </a>
+                            {% if row[0] == cell %}
+                            <input type="hidden" value="{{ cell }}" name="IdTransacao">
+                            {% else %}
+                            <td class="celula">{{ cell }}</td>
+                            {% endif %}
+
                             {% endfor %}
-                            <!-- <td> 
-                                <input type="submit" name="delete" value="Deletar" class="btnd solid">
-                            </td> -->
+                            {% if requisicao == '0' %}
+                            <td> 
+                                <input type="submit" name="botao" value="Confirmar" class="btnd solid" id="btnConfirmar">
+                                <input type="submit" name="botao" value="Recusar" class="btnd solid" id="btnRecusar">
+                            </td> 
+                            {% elif requisicao == '1 '%}
+                            
+                            {% else %}
+
+                            {% endif %}
                         </tr>
+                        </form>
                         {% endfor %}
                     </table>
                 </div>
