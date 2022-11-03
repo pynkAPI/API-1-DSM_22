@@ -368,7 +368,19 @@ def homeG(requisicao=None):
                                    pesquisaSQLTabela=pesquisaSQL,
                                    requisicao=requisicao)
         elif requisicao == '2':
-            return
+            cabecalho = ('Nome', 'CPF', 'descricao')
+            pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
+                                                   CampoEs=['tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
+                                                   CampoBd=['tb_agencia.id_funcinario'],
+                                                   CampoFm=[session['idFunc']])
+            return render_template('homenewg.html',
+                                   saldo=saldo,
+                                   req=req,
+                                   usuarios=ausuarios, 
+                                   caminhoLogin=caminhoLogin, 
+                                   cabecalhoTabela=cabecalho,
+                                   pesquisaSQLTabela=pesquisaSQL,
+                                   requisicao=requisicao)
         else:
             return render_template('homenewg.html',
                                 saldo=saldo,
