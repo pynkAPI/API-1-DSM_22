@@ -894,7 +894,7 @@ def ListUsa():
         
     cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
     
-    SelectGA = f"""SELECT TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
     FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
@@ -902,6 +902,23 @@ def ListUsa():
     mysql.connection.commit() 
     
     return render_template('ListUsa.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+#------------------------------
+
+#Bloco de Listagem de Requesições
+@app.route("/ListReq",  methods = ['POST', 'GET'])
+def ListReq():
+    cursor = mysql.connection.cursor()
+        
+    cabecalho = ('Nome', 'Email','CPF','Genero','Tipo de conta','Data de abertura','Status','Alterar dados')
+    
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
+    cursor.execute(SelectGA)
+    pesquisaSQL = cursor.fetchall()
+    
+    mysql.connection.commit() 
+    
+    return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
 #------------------------------
 
 #Bloco de Listagem de usuarios por agencia
@@ -1032,6 +1049,41 @@ def reqaltUsuario():
         return render_template('reqaltusuario.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)    
 
 #------------------------------
+
+#alteração de dados usuario para gerente geral
+@app.route("/AltDadosUsuGG", methods = ['POST', 'GET'])
+def AltDadosUsuGG():  
+    cursor = mysql.connection.cursor()
+    IdContaBanc = request.form['IdContaBanc']
+        
+    print(IdContaBanc)
+    SelectGA = f"""SELECT * FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_conta={IdContaBanc};"""
+    cursor.execute(SelectGA)
+    dados = cursor.fetchall()
+    dados = [list(row) for row in dados]
+    mysql.connection.commit() 
+        
+    teste = dados[0][11]
+    dados[0][11] = '{}.{}.{}-{}'.format(teste[:3], teste[3:6], teste[6:9], teste[9:])
+
+    return render_template('AltDadosUsuGG.html',dados=dados)    
+
+@app.route("/updateUsuGG", methods = ['POST', 'GET'])
+def updateUsuGG():
+    if request.method == 'POST':
+        IdUsu       = request.form['IdUsu']
+        nome        = request.form['nome']
+        email       = request.form['email']
+        endereco    = request.form['endereco']
+        cpf         = ((request.form['cpf']).replace('.','')).replace('-','')
+        genero      = request.form['genero']
+        dataNasc    = request.form['datanasc']
+            
+        funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento"],CampoFm=[nome, email, cpf, genero, endereco, dataNasc],CampoWr=['id_usuario'],CampoPs=[IdUsu])
+        
+    return ListUsa()
+#------------------------------
+
 #Funcao gerentes do Gerente Geral
 @app.route("/gerentes", methods = ['POST', 'GET'])
 def gerentes():
