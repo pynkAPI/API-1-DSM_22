@@ -983,7 +983,7 @@ def gerentes():
         
     cabecalho = ('Nome', 'Papel','Matricula')
     
-    SelectGA = f"""SELECT id_funcionario, nome,papel,num_matricola FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    SelectGA = f"""SELECT id_funcionario, nome, papel, num_matricula FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     mysql.connection.commit() 
@@ -998,19 +998,72 @@ def alterarDesligar():
         IdFuncionario = request.form['IdFuncionario']
         if botao['botao'] == 'Alterar':
             dados = funcs.dadosGA(IdFuncionario)
-            return render_template('alteraGA.html',
-                            nome=dados['nome'],
-                            email=dados['email'],
-                            cpf=dados['cpf'],
-                            genero=dados['genero'],
-                            endereco=dados['endereco'],
-                            dataNasc=dados['dataNasc'],
-                            senha=dados['senha'],
-                            login=dados['login'])
+            cpf = dados['cpf'][0:3] + '.' + dados['cpf'][3:6] + '.' + dados['cpf'][6:9] +'-'+ dados['cpf'][9:]
+            if dados['genero'] == 'M':
+                return render_template('alteraGA.html',
+                                idfuncionario=dados['IdFuncionario'],
+                                nome=dados['nome'],
+                                email=dados['email'],
+                                cpf=cpf,
+                                genero='MASCULINO',
+                                endereco=dados['endereco'],
+                                dataNasc=dados['dataNasc'],
+                                senha=dados['senha'],
+                                login=dados['login'],
+                                selM='selected',
+                                selF='',
+                                selO='')
+            elif dados['genero'] == 'F':
+                return render_template('alteraGA.html',
+                                idfuncionario=dados['IdFuncionario'],
+                                nome=dados['nome'],
+                                email=dados['email'],
+                                cpf=cpf,
+                                genero='FEMININO',
+                                endereco=dados['endereco'],
+                                dataNasc=dados['dataNasc'],
+                                senha=dados['senha'],
+                                login=dados['login'],
+                                selM='',
+                                selF='selected',
+                                selO='')    
+            else:
+                return render_template('alteraGA.html',
+                                idfuncionario=dados['IdFuncionario'],
+                                nome=dados['nome'],
+                                email=dados['email'],
+                                cpf=cpf,
+                                genero='OUTROS',
+                                endereco=dados['endereco'],
+                                dataNasc=dados['dataNasc'],
+                                senha=dados['senha'],
+                                login=dados['login'],
+                                selM='',
+                                selF='',
+                                selO='selected')
+        elif botao['botao'] == 'Desligar':
+            
+            return gerentes()
 
-        else:
-            #colcoa a função de desligar
-            return render_template('gerentes.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+@app.route("/alteraGA", methods = ['POST', 'GET'])
+def alteraGA():
+    if request.method == 'POST':
+        dados = {
+            'idfuncionario': request.form['IdFuncionario'],
+            'nome': request.form['nome'],
+            'email': request.form['email'],
+            'cpf': request.form['cpf'],
+            'genero': request.form['genero'],
+            'endereco': request.form['endereco'],
+            'dataNasc': request.form['datanasc'],
+            'senha': request.form['senha'],
+            'login': request.form['login']
+        }
+        dados['cpf'] = dados['cpf'].replace(".","")
+        dados['cpf'] = dados['cpf'].replace("-","")
+        funcs.alteraGA(dados)
+    return gerentes()
+
 #------------------------------
 # Alteração Gerente de Agência
 # @app.route("/alteraGA", methods = ['POST', 'GET'])

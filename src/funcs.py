@@ -496,20 +496,20 @@ def criaGA(dados):
                                        CampoFm=[cpf])
 
         existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                      CampoEs=['num_matricola'],
-                                      CampoBd=['num_matricola'],
+                                      CampoEs=['num_matricula'],
+                                      CampoBd=['num_matricula'],
                                       CampoFm=[matricula])
         
         #impede de gerar um valor repetido de matricula
         while existe != ():
             matricula = geraValor(8,'n')
             existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                      CampoEs=['num_matricola'],
-                                      CampoBd=['num_matricola'],
+                                      CampoEs=['num_matricula'],
+                                      CampoBd=['num_matricula'],
                                       CampoFm=[matricula])
         
         InsMySQL(TabelaBd='tb_funcionario',
-                CampoBd=['id_usuario','papel','num_matricola','login'],
+                CampoBd=['id_usuario','papel','num_matricula','login'],
                 CampoFm=[str(idGerente[0][0]),'GERENTE DE AGÊNCIA', matricula, matricula])
     else:
         matricula = geraValor(8,'n')
@@ -521,16 +521,16 @@ def criaGA(dados):
                 CampoPs=[cpf])
         
         existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                      CampoEs=['num_matricola'],
-                                      CampoBd=['num_matricola'],
+                                      CampoEs=['num_matricula'],
+                                      CampoBd=['num_matricula'],
                                       CampoFm=[matricula])
         
         #impede de gerar um valor repetido de matricula
         while existe != ():
             matricula = geraValor(8,'n')
             existe = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                      CampoEs=['num_matricola'],
-                                      CampoBd=['num_matricola'],
+                                      CampoEs=['num_matricula'],
+                                      CampoBd=['num_matricula'],
                                       CampoFm=[matricula])
 
     senha = SlcEspecificoMySQL(TabelaBd='tb_usuario',
@@ -559,6 +559,7 @@ def dadosGA(IdFuncionario):
     cursor.close()
 
     dados = {
+        'IdFuncionario': IdFuncionario,
         'nome': pesquisaSQL[0][0],
         'email': pesquisaSQL[0][1],
         'cpf': pesquisaSQL[0][2],
@@ -570,6 +571,26 @@ def dadosGA(IdFuncionario):
     }
 
     return dados
+
+def alteraGA(dados):
+    print(dados['idfuncionario'])
+    idUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                   CampoBd=['id_funcionario'],
+                                   CampoFm=[dados['idfuncionario']],
+                                   CampoEs=['id_usuario'])
+    
+    upMySQL(TabelaBd='tb_usuario',
+            CampoBd=['nome','email','cpf','genero','endereco','datanascimento','senha'],
+            CampoFm=[dados['nome'],dados['email'],dados['cpf'],dados['genero'],dados['endereco'],dados['dataNasc'],dados['senha']],
+            CampoWr=['id_usuario'],
+            CampoPs=[idUsuario[0][0]])
+
+    upMySQL(TabelaBd='tb_funcionario',
+            CampoBd=['login'],
+            CampoFm=[dados['login']],
+            CampoWr=['id_funcionario'],
+            CampoPs=[dados['idfuncionario']])
+    return 
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
 #tipo pode receber:

@@ -6,28 +6,29 @@
         <div class="blocoElemento">
             <div class="inputElemento">
                     <div class="inputValor">
-                        <span id="textoInputElemento">Nome completo: {{nome}}</span>
+                        <span id="textoInputElemento">Nome completo: <br>{{nome}}</span>
                     </div>
                     <div class="inputValor">
-                        <span id="textoInputElemento">Email: {{email}}</span>
+                        <span id="textoInputElemento">Email: <br>{{email}}</span>
                     </div>
                     <div class="inputValor">
-                        <span id="textoInputElemento">Endereço: {{endereco}}</span>
+                        <span id="textoInputElemento">Endereço: <br>{{endereco}}</span>
                     </div>
                     <div class="inputValor">
-                        <span id="textoInputElemento">CPF: {{cpf}}</span>
+                        <span id="textoInputElemento">CPF: <br>{{cpf}}</span>
                     </div>
                     <div class="inputValor">
-                        <span id="textoInputElemento">Sexo: {{genero}}</span>
+                        <span id="textoInputElemento">Sexo: <br>{{genero}}</span>
                     </div>
                     <div class ="inputValor">
-                        <span id="textoInputElemento">Data de Nascimento: {{dataNasc}}</span>
+                        <span id="textoInputElemento">Data de Nascimento: </span>
+                        <input id="textoInputElemento" type="date" name="datanasc" value={{dataNasc}} readonly required>
                     </div>
                     <div class ="inputValor">
-                        <span id="textoInputElemento">Login: {{login}}</span>
+                        <span id="textoInputElemento">Login: <br>{{login}}</span>
                     </div>
                     <div class ="inputValor">
-                        <span id="textoInputElemento">Senha: {{senha}}</span>
+                        <span id="textoInputElemento">Senha: <br>{{senha}}</span>
                     </div>
                 </div>
             </div>
@@ -35,29 +36,30 @@
         <span id="tituloElemento">Alterar Dados</span>
         <div class="blocoElemento">
             <div class="inputElemento">
-                <form action="{{ url_for('criaGA') }}" method="POST">
+                <form action="{{ url_for('alteraGA') }}" method="POST">
+                    <input type="hidden" value="{{idfuncionario}}" name="IdFuncionario">
                     <div class="inputValor">
                         <span id="textoInputElemento">Nome completo:</span>
-                        <input required type="text" name="nome" value={{nome}}>
+                        <input required type="text" name="nome" value="{{nome}}">
                     </div>
                     <div class="inputValor">
                         <span id="textoInputElemento">Email:</span>
-                        <input required type="text" name="email" value={{email}}>
+                        <input required type="text" name="email" value="{{email}}">
                     </div>
                     <div class="inputValor">
                         <span id="textoInputElemento">Endereço:</span>
-                        <input required type="text" name="endereco" value={{endereco}}>
+                        <input required type="text" name="endereco" value="{{endereco}}">
                     </div>
                     <div class="inputValor">
                         <span id="textoInputElemento">CPF:</span>
-                        <input required oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf" value={{cpf}}>
+                        <input required oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf" value="{{cpf}}">
                     </div>
                     <div class="inputValor">
                         <span id="textoInputElemento">Sexo:</span>
                         <select class="input-selects" id="genero" name="genero" required>
-                            <option value="F">FEMININO</option>
-                            <option value="M">MASCULINO</option>
-                            <option value="O">OUTROS</option>
+                            <option value="F" {{selF}}>FEMININO</option>
+                            <option value="M" {{selM}}>MASCULINO</option>
+                            <option value="O" {{selO}}>OUTROS</option>
                         </select>
                     </div>
                     <div class ="inputValor">
@@ -66,11 +68,11 @@
                     </div>
                     <div class ="inputValor">
                         <span id="textoInputElemento">Login:</span>
-                        <input required type="text" name="endereco" value={{login}}>
+                        <input required type="text" name="login" value="{{login}}">
                     </div>
                     <div class ="inputValor">
                         <span id="textoInputElemento">Senha:</span>
-                        <input required type="text" name="endereco" value={{senha}}>
+                        <input required type="text" name="senha" value="{{senha}}">
                     </div>
                 </div>
                     <div class="botaoElemento">
