@@ -1,10 +1,11 @@
-{% if pagina == 0 %}
+{% if pagina in '0' %}
 {% extends "homenewgg.html" %}
 {% else %}
 {% extends "homenewg.html" %}
 {% endif %}
 {% block conteudo %}
 <div class="conteudo">
+    <h1>{{pagina}}</h1>
     <span id="tituloElemento">Alterar Dados</span>
     <div class="blocoElementoAltera">
         <div class="inputElemento">
@@ -47,7 +48,7 @@
                 </div>
                 <input type="hidden" value="{{ pagina }}" name="pagina">
             </form>
-            {% if pagina == 0 %}
+            {% if pagina in '0' %}
             <a href="ListUsa">
             {% else %}
             <a href="ListUsaGA">

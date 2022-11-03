@@ -322,3 +322,7 @@ body, input {
     box-shadow: var(--box-shadow);
     border-radius: 10px;
 }
+
+.botaoedit{
+margin-left: 100%;
+}

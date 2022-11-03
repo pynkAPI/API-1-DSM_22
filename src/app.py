@@ -1208,26 +1208,37 @@ def criaAgencia():
 @app.route("/suaConta")
 def suaConta():
     if request.method == 'GET':
-        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                 CampoBd=[session['conta']],
-                                 CampoFm=['numeroconta'],
+        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario inner join tb_contabancaria on tb_usuario.id_usuario=tb_contabancaria.id_usuario',
+                                 CampoBd=['numeroconta'],
+                                 CampoFm=[session['conta']],
                                  CampoEs=['nome','email','cpf','genero','endereco','senha'])
-        listaAlteracao = ('Nome','E-mail','Cpf','Gênero','Endereço','Senha')
-    return render_template('suaConta.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)
+        
+    return render_template('suaConta.html',
+                                nome=dadosUsuario[0][0],
+                                email=dadosUsuario[0][1],
+                                cpf=dadosUsuario[0][2],
+                                genero=dadosUsuario[0][3],
+                                endereco=dadosUsuario[0][4],
+                                Senha=dadosUsuario[0][5]
+                                )
 
 #------------------------------
 
 #Requisição de alteração de dados
 @app.route("/reqaltUsuario", methods = ['POST', 'GET'])
 def reqaltUsuario():
-    if request.method == 'GET':
-        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario  INNER JOIN tb_contabancaria ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                 CampoBd=[session['conta']],
-                                 CampoFm=['numeroconta'],
-                                 CampoEs=['nome','email','cpf','genero','endereco','senha'])
-        listaAlteracao = ('Nome','E-mail','Cpf','Gênero','Endereco','Senha', 'Confirmar Senha')      
+    if request.method == 'POST':
+        nome       = request.form['nome']
+        email        = request.form['email']
+        cpf       = request.form((request.form['cpf']).replace('.','')).replace('-','')
+        genero    = request.form['genero']
+        endereco        = (request.form['endereco'])
+        datanascimento = request.form['datanasciemnto']
+        senha      = request.form['senha']
         
-        return render_template('reqaltusuario.html',listaAlteracao=listaAlteracao, dadosUsuario=dadosUsuario)    
+        funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento","senha"],CampoFm=[nome, email, cpf, genero, endereco, datanascimento, senha]) 
+        
+        return render_template()    
 
 #------------------------------
 
