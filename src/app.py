@@ -1141,7 +1141,7 @@ def ListAG():
 # Tabela e home de agências
 @app.route("/agencias", methods = ['POST', 'GET'])
 def agencias():
-    cabecalho   = ('Localidade','Número agência','Funcionario','Status','Alterar Dados')
+    cabecalho   = ('Localidade','Número agência','Funcionario','Status','Alterar Dados','Excluir')
     cursor = mysql.connection.cursor()
             
     textoSQL = f"""SELECT id_agencia,localidade,numero_agencia,nome,IF(status_agencia='1', "Ativo", "Desativado") as status 
@@ -1590,12 +1590,15 @@ def UpdateAG():
         
         if VerFuncionario[0][0] != Func:
             textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (id_funcionario = '{Func}');"
+        else:
+            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = null WHERE (id_funcionario = '{Func}');"
         
         cursor.execute(textoSQLUp)
         funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario','localidade','numero_agencia'],CampoFm=[Func,Localidade,NumAge],CampoWr=['id_agencia'],CampoPs=[id_agencia])
-    
+    if request.method == 'GET':
+        id_agencia = request.args['Id_agencia']
+        funcs.DelMySQL('tb_agencia',CampoBd=['id_agencia'],CampoFm=[id_agencia])
     return agencias()
-
 
 #Bloco para subir o site.
 if __name__ == "__main__":
