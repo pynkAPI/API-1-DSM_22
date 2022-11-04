@@ -2,9 +2,19 @@
 {% block conteudo %}
 <div class="conteudo-a">
     <div class="texto-elemento-a">
-        <span id="tituloElemento">Agências</span>
-        <hr>
+        <div class="tituloelemento">
+            <span id="tituloElemento">Agências</span>
+        </div>
+        <div class="btn_criar">
+            <a href="criaGA">
+                <button class="btn_elemento">
+                    <span class="material-symbols-outlined">add</span>
+                    <h3>Criar Agência</h3>
+                </button>
+            </a>
+        </div>
     </div>
+    <hr>
     <div class="elemento-a">
         <div class="scroll-div-tabela">
             <div class="scroll-object-tabela">
@@ -35,11 +45,6 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="elemento-a">
-        <a href="criaAgencia">
-            <input type="button" value="Criar Agência" class="btn_elemento">
-        </a>
     </div>
 </div>
 {% endblock %}
