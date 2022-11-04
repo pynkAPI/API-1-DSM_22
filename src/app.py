@@ -1550,11 +1550,52 @@ def criaGA():
 @app.route("/alterarAG", methods = ['POST', 'GET'])
 def alterarAG():
     id_agencia = request.form['Id_agencia']
-    pesquisa = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
-                                  CampoBd= ['id_agencia'],
-                                  CampoFm= [id_agencia],
-                                  CampoEs= ['*'])
-    return render_template('alterarAG.html', pesquisa = pesquisa)
+    
+    cursor = mysql.connection.cursor()
+            
+    textoSQL = f"""SELECT id_agencia,localidade,numero_agencia,nome,TF.id_funcionario FROM tb_agencia as TA 
+    left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
+    left join tb_usuario as TU on TF.id_usuario=TU.id_usuario 
+    where id_agencia = {id_agencia} order by localidade"""
+    
+    print(textoSQL)
+    
+    FuncionarioSQL = f"""SELECT id_funcionario,nome FROM tb_funcionario as TF 
+    inner join tb_usuario as TU ON TF.id_usuario=TU.id_usuario 
+    where papel = 'GERENTE DE AGÊNCIA';"""
+            
+    cursor.execute(textoSQL)
+    pesquisa = cursor.fetchall()
+    
+    cursor.execute(FuncionarioSQL)
+    dados = cursor.fetchall()
+    
+    mysql.connection.commit()     
+    cursor.close()   
+    
+    return render_template('alterarAG.html', pesquisa = pesquisa,dados=dados)
+
+@app.route("/UpdateAG", methods = ['POST', 'GET'])
+def UpdateAG(): 
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST': 
+        id_agencia = request.form['Id_agencia']
+        Localidade = request.form['Localidade']
+        NumAge = request.form['NumAge']
+        Func = request.form['Func']
+        
+        textoSQL = f"SELECT id_funcionario FROM tb_agencia WHERE id_agencia = '{id_agencia}'"
+        cursor.execute(textoSQL)
+        VerFuncionario = cursor.fetchall()
+        
+        if VerFuncionario[0][0] != Func:
+            textoSQLUp = f"UPDATE tb_agencia SET id_funcionario = {VerFuncionario[0][0]} WHERE (id_funcionario = '{Func}');"
+        
+        cursor.execute(textoSQLUp)
+        funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario','localidade','numero_agencia'],CampoFm=[Func,Localidade,NumAge],CampoWr=['id_agencia'],CampoPs=[id_agencia])
+    
+    return agencias()
+
 
 #Bloco para subir o site.
 if __name__ == "__main__":
