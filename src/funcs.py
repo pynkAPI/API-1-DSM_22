@@ -576,6 +576,38 @@ def dadosGA(IdFuncionario):
 
     return dados
 
+def dadosU(numeroConta):
+    cursor = mysql.connection.cursor()
+
+    idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                    CampoBd=['numeroconta'],
+                                    CampoFm=[numeroConta],
+                                    CampoEs=['id_usuario'])
+
+    Select = f'''SELECT id_conta, nome, email, cpf, genero, endereco, datanascimento, senha 
+    FROM tb_usuario INNER JOIN tb_contabancaria 
+    ON tb_usuario.id_usuario = tb_contabancaria.id_usuario  
+    WHERE numeroconta = {numeroConta};'''
+    
+    cursor.execute(Select)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit() 
+    cursor.close()
+
+    dados = {
+        'idUsuario':idUsuario[0][0],
+        'idContaBancaria':pesquisaSQL[0][0],
+        'nome':pesquisaSQL[0][1],
+        'email':pesquisaSQL[0][2],
+        'cpf':pesquisaSQL[0][3],
+        'genero':pesquisaSQL[0][4],
+        'endereco':pesquisaSQL[0][5],
+        'dataNasc':pesquisaSQL[0][6],
+        'senha':pesquisaSQL[0][7]
+    }
+    
+    return dados
+
 def alteraGA(dados):
     idUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
                                    CampoBd=['id_funcionario'],

@@ -1203,21 +1203,96 @@ def criaAgencia():
 # Página Sua Conta
 @app.route("/suaConta")
 def suaConta():
-    if request.method == 'GET':
-        dadosUsuario = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario inner join tb_contabancaria on tb_usuario.id_usuario=tb_contabancaria.id_usuario',
-                                 CampoBd=['numeroconta'],
-                                 CampoFm=[session['conta']],
-                                 CampoEs=['nome','email','cpf','genero','endereco', 'datanascimento','senha'])
-        
-    return render_template('suaConta.html',
-                                nome=dadosUsuario[0][0],
-                                email=dadosUsuario[0][1],
-                                cpf=dadosUsuario[0][2],
-                                genero=dadosUsuario[0][3],
-                                endereco=dadosUsuario[0][4],
-                                datanascimento= dadosUsuario[0][5],
-                                Senha=dadosUsuario[0][6]
-                                )
+    dadosUsuario = funcs.dadosU(session['conta'])
+
+    cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
+
+    #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
+    #REQUISIÇÃO EM ESPERA
+
+    if dadosUsuario['genero'] == 'M':
+        return render_template ("suaConta.html",
+                                idUsuario=dadosUsuario['idUsuario'],
+                                idContaBancaria=dadosUsuario['idContaBancaria'],
+                                nome=dadosUsuario['nome'],
+                                email=dadosUsuario['email'],
+                                cpf=cpf,
+                                genero='Masculino',
+                                endereco=dadosUsuario['endereco'],
+                                dataNasc=dadosUsuario['dataNasc'],
+                                senha=dadosUsuario['senha'],)
+    elif dadosUsuario['genero'] == 'F':
+        return render_template ("suaConta.html",
+                                idUsuario=dadosUsuario['idUsuario'],
+                                idContaBancaria=dadosUsuario['idContaBancaria'],
+                                nome=dadosUsuario['nome'],
+                                email=dadosUsuario['email'],
+                                cpf=cpf,
+                                genero='Feminino',
+                                endereco=dadosUsuario['endereco'],
+                                dataNasc=dadosUsuario['dataNasc'],
+                                senha=dadosUsuario['senha'],)
+    else:
+        return render_template ("suaConta.html",
+                                idUsuario=dadosUsuario['idUsuario'],
+                                idContaBancaria=dadosUsuario['idContaBancaria'],
+                                nome=dadosUsuario['nome'],
+                                email=dadosUsuario['email'],
+                                cpf=cpf,
+                                genero='Outro',
+                                endereco=dadosUsuario['endereco'],
+                                dataNasc=dadosUsuario['dataNasc'],
+                                senha=dadosUsuario['senha'],)
+
+
+@app.route("/alteraU", methods = ['POST', 'GET'])
+def alteraU():
+    dadosUsuario = funcs.dadosU(session['conta'])
+    cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
+    if request.method == 'POST':
+        print('teste')
+        return
+    elif request.method == 'GET':
+        if dadosUsuario['genero'] == 'M':
+            return render_template ("alteraU.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idContaBancaria=dadosUsuario['idContaBancaria'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    senha=dadosUsuario['senha'],
+                                    selM='selected',
+                                    selF='',
+                                    selO='')
+        elif dadosUsuario['genero'] == 'F':
+            return render_template ("alteraU.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idContaBancaria=dadosUsuario['idContaBancaria'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    senha=dadosUsuario['senha'],
+                                    selM='',
+                                    selF='selected',
+                                    selO='')
+        elif dadosUsuario['genero'] == 'O':
+            return render_template ("alteraU.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idContaBancaria=dadosUsuario['idContaBancaria'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    senha=dadosUsuario['senha'],
+                                    selM='',
+                                    selF='',
+                                    selO='selected')
+
 
 #------------------------------
 

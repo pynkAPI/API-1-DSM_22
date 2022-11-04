@@ -1,31 +1,43 @@
-{% extends "layout.html" %}
+{% extends "homenew.html" %}
 {% block conteudo %}
-
 <div class="conteudo">
-        <div class="elemento">
-                <span id="tituloElemento">Solicitar alterção de dados</span>
-                <div class="blocoElemento">
-                        <div class="blocoElementoAltera">
-                                <form action="reqaltUsuario" method="POST">
-                                        <p>Nome:</p><span> {{nome}} </span>
-                                        <input type="hidden" value="{{nome}}" name="nome">
-                                        <p>Email::</p><span> {{email}} </span>
-                                        <input type="hidden" value="{{email}}" name="email">
-                                        <p>Cpf:</p><span> {{cpf}} </span>
-                                        <input type="hidden" value="{{cpf}}" name="cpf">
-                                        <p>Gênero:</p><span> {{genero}} </span>
-                                        <input type="hidden" value="{{genero}}" name="genero">
-                                        <p>Endereço:</p><span> {{endereco}} </span>
-                                        <input type="hidden" value="{{endereco}}" name="endereco">
-                                        <p>Data de nascimento:</p><span> {{datanascimento}} </span>
-                                        <input type="hidden" value="{{datanascimento}}" name="datanascimento">
-                                        <p>Senha:</p><span> {{Senha}} </span>
-                                        <input type="hidden" value="{{Senha}}" name="senha">
-                                        <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
-                                </form>
-                        </div>
+    <div class="elemento">
+        <span id="tituloElemento">Dados Atuais</span>
+        <div class="blocoElemento">
+            <div class="inputElemento">
+                <input type="hidden" value="{{idUsuario}}" name="idUsuario">
+                <input type="hidden" value="{{idContaBancaria}}" name="idContaBancaria">
+                <div class="inputValor">
+                        <span id="textoInputElemento">Nome completo: <br>{{nome}}</span>
                 </div>
+                <div class="inputValor">
+                        <span id="textoInputElemento">Email: <br>{{email}}</span>
+                </div>
+                <div class="inputValor">
+                        <span id="textoInputElemento">Endereço: <br>{{endereco}}</span>
+                </div>
+                <div class="inputValor">
+                        <span id="textoInputElemento">CPF: <br>{{cpf}}</span>
+                </div>
+                <div class="inputValor">
+                        <span id="textoInputElemento">Sexo: <br>{{genero}}</span>
+                </div>
+                <div class ="inputValor">
+                        <span id="textoInputElemento">Data de Nascimento: </span>
+                        <input id="textoInputElemento" type="date" name="datanasc" value={{dataNasc}} readonly required>
+                </div>
+                <div class ="inputValor">
+                        <span id="textoInputElemento">Senha: <br>{{senha}}</span>
+                </div>
+                <div class="botaoElemento">
+                        <a href="alteraU">
+                                <input type="button" id="botaoVoltar" value="Alterar Dados">
+                        </a>
+                </div>
+            </div>
         </div>
+   </div>
 </div>
-
+<script src="../static/scripts/confirmarsenha.js"></script>
+<script src="../static/scripts/validarCPF.js"></script>
 {% endblock %}
