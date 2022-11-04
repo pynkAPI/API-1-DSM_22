@@ -1250,7 +1250,7 @@ def alteraU():
     dadosUsuario = funcs.dadosU(session['conta'])
     cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
     if request.method == 'POST':
-        print('teste')
+        
         return
     elif request.method == 'GET':
         if dadosUsuario['genero'] == 'M':
