@@ -47,7 +47,8 @@
                             <input type="hidden" value="{{ cell }}" name="Id_agencia">
                             {% endif %}
                         {% endfor %}
-                        <input type="submit" name="alt" onclick="return pergunta();" value="Deletar" class="btn_alterar">
+                        <input type="hidden" value="" id="NewAgencia{{row[0]}}" name="IdNewAgencia">
+                        <input type="submit" name="alt" id="{{row[0]}}" onclick="return pergunta(this.id);" value="Deletar" class="btn_alterar">
                     </td>
                     </form>
                         </tr>
@@ -58,9 +59,14 @@
     </div>
 </div>
 <script>
-    function pergunta(){ 
+    function pergunta(id){ 
         // retorna true se confirmado, ou false se cancelado
-        return confirm('Tem certeza que quer deseja excluir essa agencia?');
+        texto = 'NewAgencia'+id
+        if(confirm('Tem certeza que quer deseja excluir essa agencia?') == true){
+            idFunc = prompt("Digite o id da agencia para mover as contas dos usuarios: ");
+            document.getElementById(texto).value = idFunc;
+            // alert(idFunc)
+        }
     }
 </script>
 {% endblock %}

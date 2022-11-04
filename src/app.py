@@ -1597,6 +1597,15 @@ def UpdateAG():
         funcs.upMySQL('tb_agencia',CampoBd=['id_funcionario','localidade','numero_agencia'],CampoFm=[Func,Localidade,NumAge],CampoWr=['id_agencia'],CampoPs=[id_agencia])
     if request.method == 'GET':
         id_agencia = request.args['Id_agencia']
+        NewAgencia = request.args['IdNewAgencia']
+        textoSQL = f"SELECT id_conta FROM tb_contabancaria WHERE id_agencia = '{id_agencia}'"
+        cursor.execute(textoSQL)
+        ContasBanc = cursor.fetchall()
+        
+        if ContasBanc:
+            for row in ContasBanc:
+                funcs.upMySQL('tb_contabancaria',CampoBd=['id_agencia'],CampoFm=[NewAgencia],CampoWr=['id_conta'],CampoPs=[row[0]])
+                
         funcs.DelMySQL('tb_agencia',CampoBd=['id_agencia'],CampoFm=[id_agencia])
     return agencias()
 
