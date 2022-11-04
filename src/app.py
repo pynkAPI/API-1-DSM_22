@@ -122,7 +122,8 @@ def home():
                     else:
                         pesquisaSQL[VarContador][3] = "Aguardando"
                 VarContador+=1
-                
+            if valorDevido < 0:
+                valorDevido = valorDevido - float(session['saldo'])    
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
