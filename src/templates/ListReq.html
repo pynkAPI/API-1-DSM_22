@@ -1,12 +1,16 @@
 {% extends "homenewgg.html" %}
 {% block conteudo %}
-<div class="conteudo">
-    <div class="elemento">
-        <span id="tituloElemento">Requisições</span>
-        <div class="blocoElementoAltera">
-            <div class="inputElemento">
-                <div class="func">
-                    <!-- <table class="tabelaRequisicao">
+<div class="conteudo-r">
+    <div class="texto-elemento-r">
+        <div class="tituloelemento">
+            <span id="tituloElemento">Requisições</span>
+        </div>
+    </div>    
+        <hr>
+    <div class="elemento-r">
+        <div class="scroll-div-tabela">
+            <div class="scroll-object-tabela">
+                    <table class="tabelaRequisicao">
                         <tr class="linhaTabela">
                             {% for header in cabecalhoTabela %}
                             <th>{{ header }}</th>
@@ -31,10 +35,9 @@
                         </form>
                         {% set p.value = p.value + 1 %}
                         {% endfor %}
-                    </table> -->
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
 </div>
 {% endblock %}
