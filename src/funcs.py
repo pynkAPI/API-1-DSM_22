@@ -589,6 +589,8 @@ def dadosU(numeroConta, idFuncionario):
                                         CampoFm=[idFuncionario],
                                         CampoEs=['id_usuario'])
 
+        print(idUsuario)
+
         Select = f'''SELECT nome, email, cpf, genero, endereco, datanascimento, login, senha
         FROM tb_usuario tu INNER JOIN tb_funcionario tf 
         ON tu.id_usuario = tf.id_usuario  
@@ -707,17 +709,29 @@ def desligaGA(IdFuncionario, novoResp):
                     CampoFm=[IdFuncionario])
     return 
 
-def alteraU(novosDados):
+def alteraU(novosDados,tipo):
     #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
     #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
     #se a requisicao tem id do usuario e id do funcionario aparece para o GG
-    text = '['
-    for chave, valor in novosDados.items():
-        text += f'{str(chave)}:{str(valor)} , '
-    text += ']'
-    InsMySQL( TabelaBd='tb_requisicoes',
-            CampoBd=['status_alteracao'],)
-    return print(text)
+    novosDados['cpf'] = novosDados['cpf'].replace('.','')
+    novosDados['cpf'] = novosDados['cpf'].replace('-','')
+    if tipo == 2:
+        text = '['
+        for chave, valor in novosDados.items():
+            text += f'{str(chave)}:{str(valor)} , '
+        text += ']'
+        return InsMySQL( TabelaBd='tb_requisicoes',
+                CampoBd=['status_alteracao','id_usuario','id_funcionario','descricao'],
+                CampoFm=[0,novosDados['idUsuario'], novosDados['idFuncionario'],text])
+    elif tipo == 1:
+        text = '['
+        for chave, valor in novosDados.items():
+            text += f'{str(chave)}:{str(valor)} , '
+        text += ']'
+        return InsMySQL(TabelaBd='tb_requisicoes',
+                CampoBd=['status_alteracao','id_usuario','descricao'],
+                CampoFm=[0,novosDados['idUsuario'],text])
+
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
 #tipo pode receber:

@@ -26,9 +26,13 @@
                         <span id="textoInputElemento">Data de Nascimento: </span>
                         <input id="textoInputElemento" type="date" name="datanasc" value={{dataNasc}} readonly required>
                 </div>
-                <div class ="inputValor" style="{{loginVisivel}};">
-                        <span id="textoInputElemento">Login: <br>{{login}}</span>
-                </div>
+                {% if loginVisivel == False %}
+                        <input type="hidden" value="{{login}}" name="login">
+                    {% else %}
+                        <div class ="inputValor">
+                            <span id="textoInputElemento">Login:<br>{{login}}</span>
+                        </div>
+                    {% endif %}
                 <div class ="inputValor">
                         <span id="textoInputElemento">Senha: <br>{{senha}}</span>
                 </div>

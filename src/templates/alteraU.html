@@ -36,17 +36,25 @@
                         <span id="textoInputElemento">Data de Nascimento:</span>
                         <input class="input-date" type="date" name="datanasc" required value={{dataNasc}}>
                     </div>
+                    {% if loginVisivel == False %}
+                        <input type="hidden" value="{{login}}" name="login">
+                    {% else %}
+                        <div class ="inputValor">
+                            <span id="textoInputElemento">Login:</span>
+                            <input required type="text" name="login" value="{{login}}">
+                        </div>
+                    {% endif %}
                     <div class ="inputValor">
                         <span id="textoInputElemento">Senha:</span>
                         <input required type="text" name="senha" value="{{senha}}">
                     </div>
                 </div>
-                    <div class="botaoElemento">
-                        <input type="submit" id="botaoSubmit" value="Alterar">
+                <div class="botaoElemento">
+                    <input type="submit" id="botaoSubmit" value="Alterar">
                 </form>
-                <a href="suaConta">
-                    <input type="button" id="botaoVoltar" value="Voltar">
-                </a>
+                    <a href="suaConta">
+                        <input type="button" id="botaoVoltar" value="Voltar">
+                    </a>
             </div>
         </div>   
    </div>
