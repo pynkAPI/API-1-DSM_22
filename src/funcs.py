@@ -589,7 +589,6 @@ def dadosU(numeroConta, idFuncionario):
                                         CampoFm=[idFuncionario],
                                         CampoEs=['id_usuario'])
 
-        print(idUsuario)
 
         Select = f'''SELECT nome, email, cpf, genero, endereco, datanascimento, login, senha
         FROM tb_usuario tu INNER JOIN tb_funcionario tf 
@@ -614,7 +613,6 @@ def dadosU(numeroConta, idFuncionario):
         'login':pesquisaSQL[0][6],
         'senha':pesquisaSQL[0][7]
         }
-        print(dados)
 
     #bloco usuario
     else:
@@ -640,7 +638,6 @@ def dadosU(numeroConta, idFuncionario):
         'login':'',
         'senha':pesquisaSQL[0][6]
         }
-        print(dados)  
     return dados
 
 def alteraGA(dados):

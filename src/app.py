@@ -316,7 +316,37 @@ def RequisicaoGerenteAgencia():
                 return homeG(requisicao=requisicao)
         #endregion 
         else:
-            return 
+            botao = request.form.to_dict()
+            IdConta = request.form['Id']
+
+            if botao['botao'] == 'Confirmar':
+                Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
+                DescSeparada = []
+                for row in Desc:
+                    doispontos = row.find(':')+1
+                    DescSeparada.append(row[doispontos:])
+                funcs.upMySQL('tb_usuario',
+                            CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                            CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
+                            CampoWr=['id_usuario'],
+                            CampoPs=[DescSeparada[0]])
+                funcs.upMySQL('tb_requisicoes',
+                            CampoBd=['status_alteracao'],
+                            CampoFm=[1],
+                            CampoWr=['id_requisicao'],
+                            CampoPs=[IdConta])
+                # funcs.emailCadastro(IdConta, email, True)  
+                return homeG(requisicao=requisicao)
+            else:    
+                funcs.upMySQL('tb_requisicoes',
+                            CampoBd=['status_alteracao'],
+                            CampoFm=[2],
+                            CampoWr=['id_requisicao'],
+                            CampoPs=[IdConta])
+                # funcs.emailCadastro(IdConta, email, False)  
+                return homeG(requisicao=requisicao)
+            
+    return homeG(requisicao=requisicao)
      
 
 @app.route("/homeG", methods = ['POST', 'GET'])
@@ -369,11 +399,11 @@ def homeG(requisicao=None):
                                    pesquisaSQLTabela=pesquisaSQL,
                                    requisicao=requisicao)
         elif requisicao == '2':
-            cabecalho = ('Nome', 'CPF', 'descricao')
+            cabecalho = ('Nome', 'CPF', 'descricao','')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
-                                                   CampoEs=['tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
-                                                   CampoBd=['tb_agencia.id_funcionario'],
-                                                   CampoFm=[session['idFunc']])
+                                                   CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
+                                                   CampoBd=['tb_agencia.id_funcionario','tb_requisicoes.status_alteracao'],
+                                                   CampoFm=[session['idFunc'],'0'])
             return render_template('homenewg.html',
                                    saldo=saldo,
                                    req=req,
@@ -1341,6 +1371,7 @@ def suaConta():
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
+    print(session['tipo'])
     if request.method == 'POST':
         if session['tipo'] == 2:
             dadosUsuario = funcs.dadosU('',session['idFunc'])
@@ -1430,8 +1461,8 @@ def alteraU():
         elif session['tipo'] == 1:
             dadosUsuario = funcs.dadosU(session['conta'],'')
             cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
-            if dadosUsuario['genero'] == 'M':
-                return render_template ("alteraU.html",
+            # if dadosUsuario['genero'] == 'M':
+            return render_template ("alteraU.html",
                                         idUsuario=dadosUsuario['idUsuario'],
                                         idFuncionario=dadosUsuario['idFuncionario'],
                                         nome=dadosUsuario['nome'],
@@ -1445,35 +1476,34 @@ def alteraU():
                                         selM='selected',
                                         selF='',
                                         selO='')
-            elif dadosUsuario['genero'] == 'F':
-                return render_template ("alteraU.html",
-                                        idUsuario=dadosUsuario['idUsuario'],
-                                        idFuncionario=dadosUsuario['idFuncionario'],
-                                        nome=dadosUsuario['nome'],
-                                        email=dadosUsuario['email'],
-                                        cpf=cpf,
-                                        endereco=dadosUsuario['endereco'],
-                                        dataNasc=dadosUsuario['dataNasc'],
-                                        loginVisivel=False,
-                                        senha=dadosUsuario['senha'],
-                                        selM='',
-                                        selF='selected',
-                                        selO='')
-            elif dadosUsuario['genero'] == 'O':
-                return render_template ("alteraU.html",
-                                        idUsuario=dadosUsuario['idUsuario'],
-                                        idFuncionario=dadosUsuario['idFuncionario'],
-                                        nome=dadosUsuario['nome'],
-                                        email=dadosUsuario['email'],
-                                        cpf=cpf,
-                                        endereco=dadosUsuario['endereco'],
-                                        dataNasc=dadosUsuario['dataNasc'],
-                                        loginVisivel=False,
-                                        senha=dadosUsuario['senha'],
-                                        selM='',
-                                        selF='',
-                                        selO='selected')
-
+            # elif dadosUsuario['genero'] == 'F':
+            #     return render_template ("alteraU.html",
+            #                             idUsuario=dadosUsuario['idUsuario'],
+            #                             idFuncionario=dadosUsuario['idFuncionario'],
+            #                             nome=dadosUsuario['nome'],
+            #                             email=dadosUsuario['email'],
+            #                             cpf=cpf,
+            #                             endereco=dadosUsuario['endereco'],
+            #                             dataNasc=dadosUsuario['dataNasc'],
+            #                             loginVisivel=False,
+            #                             senha=dadosUsuario['senha'],
+            #                             selM='',
+            #                             selF='selected',
+            #                             selO='')
+            # elif dadosUsuario['genero'] == 'O':
+            #     return render_template ("alteraU.html",
+            #                             idUsuario=dadosUsuario['idUsuario'],
+            #                             idFuncionario=dadosUsuario['idFuncionario'],
+            #                             nome=dadosUsuario['nome'],
+            #                             email=dadosUsuario['email'],
+            #                             cpf=cpf,
+            #                             endereco=dadosUsuario['endereco'],
+            #                             dataNasc=dadosUsuario['dataNasc'],
+            #                             loginVisivel=False,
+            #                             senha=dadosUsuario['senha'],
+            #                             selM='selected',
+            #                             selF='',
+            #                             selO='')
 
 #------------------------------
 
