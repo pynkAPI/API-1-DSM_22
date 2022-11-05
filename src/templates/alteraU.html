@@ -7,6 +7,7 @@
             <div class="inputElemento">
                 <form action="{{ url_for('alteraU') }}" method="POST">
                     <input type="hidden" value="{{idUsuario}}" name="idUsuario">
+                    <input type="hidden" value="{{idFuncionario}}" name="idFuncionario">
                     <div class="inputValor">
                         <span id="textoInputElemento">Nome completo:</span>
                         <input required type="text" name="nome" value="{{nome}}">

@@ -1257,7 +1257,7 @@ def suaConta():
     if dadosUsuario['genero'] == 'M':
         return render_template ("suaConta.html",
                                 idUsuario=dadosUsuario['idUsuario'],
-                                idContaBancaria=dadosUsuario['idContaBancaria'],
+                                idFuncionario=dadosUsuario['idFuncionario'],
                                 nome=dadosUsuario['nome'],
                                 email=dadosUsuario['email'],
                                 cpf=cpf,
@@ -1268,7 +1268,7 @@ def suaConta():
     elif dadosUsuario['genero'] == 'F':
         return render_template ("suaConta.html",
                                 idUsuario=dadosUsuario['idUsuario'],
-                                idContaBancaria=dadosUsuario['idContaBancaria'],
+                                idFuncionario=dadosUsuario['idFuncionario'],
                                 nome=dadosUsuario['nome'],
                                 email=dadosUsuario['email'],
                                 cpf=cpf,
@@ -1279,7 +1279,7 @@ def suaConta():
     else:
         return render_template ("suaConta.html",
                                 idUsuario=dadosUsuario['idUsuario'],
-                                idContaBancaria=dadosUsuario['idContaBancaria'],
+                                idFuncionario=dadosUsuario['idFuncionario'],
                                 nome=dadosUsuario['nome'],
                                 email=dadosUsuario['email'],
                                 cpf=cpf,

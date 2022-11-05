@@ -687,7 +687,8 @@ def alteraU(novosDados):
     for chave, valor in novosDados.items():
         text += f'{str(chave)}:{str(valor)} , '
     text += ']'
-    InsMySQL 
+    InsMySQL( TabelaBd='tb_requisicoes',
+            CampoBd=['status_alteracao'],)
     return print(text)
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
