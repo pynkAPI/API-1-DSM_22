@@ -320,7 +320,6 @@ def RequisicaoGerenteAgencia():
 
 @app.route("/homeG", methods = ['POST', 'GET'])
 def homeG(requisicao=None):
-
     req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
     ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
     saldo = f"{session['saldo']:.2f}".replace(".",",")
@@ -694,8 +693,6 @@ def AutenticarGerente():
             session['conta']        = numeroconta
             for row2 in resultadocap:
                 session['saldo']    = row2[1]
-                    
-            print(papel)
             if papel == 'GERENTE DE AGÊNCIA':
                 session['tipo']  = 2
             else:
@@ -1150,8 +1147,7 @@ def ListUsaGA():
     SelectAgencia = f"""SELECT id_agencia FROM tb_agencia where id_funcionario='{session['idFunc']}';"""
     cursor.execute(SelectAgencia)
     pesquisaAgen = cursor.fetchall()
-        
-    print(pesquisaAgen[0][0])
+    
     cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
     
     SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
@@ -1247,7 +1243,100 @@ def criaAgencia():
 # Página Sua Conta
 @app.route("/suaConta")
 def suaConta():
-    dadosUsuario = funcs.dadosU(session['conta'])
+    #caso ele seja gerente de agência
+    if session['tipo'] == 2:
+        dadosUsuario = funcs.dadosU('', session['idFunc'])
+
+        cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
+
+        if dadosUsuario['genero'] == 'M':
+            return render_template ("suaConta.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario=dadosUsuario['idFuncionario'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Masculino',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='',
+                                    login=dadosUsuario['login'],
+                                    senha=dadosUsuario['senha'],)
+        elif dadosUsuario['genero'] == 'F':
+            return render_template ("suaConta.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario=dadosUsuario['idFuncionario'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Feminino',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='',
+                                    login=dadosUsuario['login'],
+                                    senha=dadosUsuario['senha'],)
+        else:
+            return render_template ("suaConta.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario=dadosUsuario['idFuncionario'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Outro',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='',
+                                    login=dadosUsuario['login'],
+                                    senha=dadosUsuario['senha'],)
+
+    #caso ele seja usuario comum
+    elif session['tipo'] == 1:
+        dadosUsuario = funcs.dadosU(session['conta'], '')
+
+        cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
+
+        if dadosUsuario['genero'] == 'M':
+            return render_template ("suaConta.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario='',
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Masculino',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='display: none',
+                                    login='',
+                                    senha=dadosUsuario['senha'],)
+        elif dadosUsuario['genero'] == 'F':
+            return render_template ("suaConta.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario='',
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Feminino',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='display: none',
+                                    login='',
+                                    senha=dadosUsuario['senha'],)
+        else:
+            return render_template ("suaConta.html",
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario='',
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Outro',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='display: none',
+                                    login='',
+                                    senha=dadosUsuario['senha'],)
+
+
+    dadosUsuario = funcs.dadosU(session['conta'], session['idFunc'])
 
     cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
 
