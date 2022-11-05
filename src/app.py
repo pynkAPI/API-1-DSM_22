@@ -1250,13 +1250,24 @@ def alteraU():
     dadosUsuario = funcs.dadosU(session['conta'])
     cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
     if request.method == 'POST':
-        
+        novosDados = {
+        'idUsuario': request.form['idUsuario'],
+        'nome': request.form['nome'],
+        'email': request.form['email'],
+        'cpf': request.form['cpf'],
+        'genero': request.form['genero'],
+        'endereco': request.form['endereco'],
+        'dataNasc': request.form['datanasc'],
+        'senha': request.form['senha']
+        }
+
+        funcs.alteraU(novosDados)
+
         return
     elif request.method == 'GET':
         if dadosUsuario['genero'] == 'M':
             return render_template ("alteraU.html",
                                     idUsuario=dadosUsuario['idUsuario'],
-                                    idContaBancaria=dadosUsuario['idContaBancaria'],
                                     nome=dadosUsuario['nome'],
                                     email=dadosUsuario['email'],
                                     cpf=cpf,
@@ -1269,7 +1280,6 @@ def alteraU():
         elif dadosUsuario['genero'] == 'F':
             return render_template ("alteraU.html",
                                     idUsuario=dadosUsuario['idUsuario'],
-                                    idContaBancaria=dadosUsuario['idContaBancaria'],
                                     nome=dadosUsuario['nome'],
                                     email=dadosUsuario['email'],
                                     cpf=cpf,
@@ -1282,7 +1292,6 @@ def alteraU():
         elif dadosUsuario['genero'] == 'O':
             return render_template ("alteraU.html",
                                     idUsuario=dadosUsuario['idUsuario'],
-                                    idContaBancaria=dadosUsuario['idContaBancaria'],
                                     nome=dadosUsuario['nome'],
                                     email=dadosUsuario['email'],
                                     cpf=cpf,

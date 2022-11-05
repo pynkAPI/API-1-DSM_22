@@ -674,6 +674,17 @@ def desligaGA(IdFuncionario, novoResp):
                     CampoFm=[IdFuncionario])
     return 
 
+def alteraU(novosDados):
+    #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
+    #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
+    #se a requisicao tem id do usuario e id do funcionario aparece para o GG
+    text = '['
+    for chave, valor in novosDados.items():
+        text += f'{str(chave)}:{str(valor)} , '
+    text += ']'
+    InsMySQL 
+    return print(text)
+
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
 #tipo pode receber:
 #   -l (somente letras)
