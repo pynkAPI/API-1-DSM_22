@@ -57,7 +57,7 @@ def home():
     else:
         saldo = None
         if session['tipo'] == 1:
-            cabecalho = ('Tipo', 'Valor', 'Data e hora', 'Status', 'De:', 'Para:')
+            cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
             saldo = funcs.ValEmReal(session['saldo'])
             VarContador=0
             
@@ -122,10 +122,11 @@ def home():
                     else:
                         pesquisaSQL[VarContador][3] = "Aguardando"
                 VarContador+=1
+            valorDevidoTotal = valorDevido
             if valorDevido < 0:
                 valorDevido = valorDevido - float(session['saldo'])    
             caminhoLogin = '/'
-            return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
+            return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
 
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
@@ -205,8 +206,8 @@ def RequisicaoGerenteAgencia():
                     valorTotalBanco = valorTransacao + valorTotalBanco
 
                     funcs.upMySQL(TabelaBd='tb_transacao',
-                              CampoBd=['status_transacao', 'Datatime'],
-                              CampoFm=[1, datetime.today()],
+                              CampoBd=['status_transacao', 'Datatime', 'data_aceite_recusa'],
+                              CampoFm=[1, datetime.today(), datetime.today()],
                               CampoPs=[IdTransacao],
                               CampoWr=['id_transacao'])
 
@@ -251,8 +252,8 @@ def RequisicaoGerenteAgencia():
                 valorTotalBanco = valor + valorTotalBanco
 
                 funcs.upMySQL(TabelaBd='tb_transacao',
-                          CampoBd=['status_transacao', 'Datatime'],
-                          CampoFm=[1, datetime.today()],
+                          CampoBd=['status_transacao', 'Datatime', 'data_aceite_recusa'],
+                          CampoFm=[1, datetime.today(), datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
@@ -268,14 +269,14 @@ def RequisicaoGerenteAgencia():
                               CampoBd=['capitalinicial'],
                               CampoFm=[valorTotalBanco],
                               CampoWr=['id_capitaltotal'],
-                              CampoPs=[1])
+                              CampoPs=[1]) 
                 session['saldo'] = valorTotalBanco
 
                 return homeG(requisicao=requisicao)
             else:
                 funcs.upMySQL(TabelaBd='tb_transacao', 
-                          CampoBd=['status_transacao'],
-                          CampoFm=[2],
+                          CampoBd=['status_transacao', 'data_aceite_recusa'],
+                          CampoFm=[2, datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
                 return homeG(requisicao=requisicao)
@@ -331,7 +332,7 @@ def homeG(requisicao=None):
         #Tabela de Conferencia de Deposito
         #region
         if requisicao == '0':
-            cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
+            cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '')
 
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
                                                                INNER JOIN tb_contabancaria 
@@ -354,7 +355,7 @@ def homeG(requisicao=None):
                                    requisicao=requisicao)
         #endregion
         elif requisicao == '1':
-            cabecalho = ('Nome', 'CPF', 'Número Conta', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta', '', '')
+            cabecalho = ('Nome', 'CPF', 'Número Conta', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta', '')
 
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                            CampoEs=['tb_contabancaria.id_conta','tb_usuario.nome', 'tb_usuario.cpf', 'tb_contabancaria.numeroconta','tb_usuario.datanascimento','tb_usuario.endereco','tb_usuario.genero', 'tb_contabancaria.tipo'],
@@ -372,7 +373,7 @@ def homeG(requisicao=None):
             cabecalho = ('Nome', 'CPF', 'descricao')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
                                                    CampoEs=['tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
-                                                   CampoBd=['tb_agencia.id_funcinario'],
+                                                   CampoBd=['tb_agencia.id_funcionario'],
                                                    CampoFm=[session['idFunc']])
             return render_template('homenewg.html',
                                    saldo=saldo,
@@ -781,8 +782,8 @@ def ConferenciaDeposito():
                 valorTotalBanco = valorTransacao + valorTotalBanco
 
                 funcs.upMySQL(TabelaBd='tb_transacao',
-                          CampoBd=['status_transacao', 'Datatime'],
-                          CampoFm=[1, datetime.today()],
+                          CampoBd=['status_transacao', 'Datatime', 'data_aceite_recusa'],
+                          CampoFm=[1, datetime.today(), datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
@@ -828,8 +829,8 @@ def ConferenciaDeposito():
             valorTotalBanco = valor + valorTotalBanco
 
             funcs.upMySQL(TabelaBd='tb_transacao',
-                      CampoBd=['status_transacao', 'Datatime'],
-                      CampoFm=[1, datetime.today()],
+                      CampoBd=['status_transacao', 'Datatime', 'data_aceite_recusa'],
+                      CampoFm=[1, datetime.today(), datetime.today()],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
             
@@ -851,8 +852,8 @@ def ConferenciaDeposito():
             return ConferenciaDepositoTabela()
         else:
             funcs.upMySQL(TabelaBd='tb_transacao', 
-                      CampoBd=['status_transacao'],
-                      CampoFm=[2],
+                      CampoBd=['status_transacao', 'data_aceite_recusa'],
+                      CampoFm=[2, datetime.today()],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
             return ConferenciaDepositoTabela()
