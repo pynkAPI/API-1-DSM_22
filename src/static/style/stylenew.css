@@ -310,18 +310,21 @@ tr:hover{background-color:var(--color-background)}
     height: 50vh;
 }
 .elemento-a{
-    display: flex;
+    display:flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     padding: 1vh 3vw;
 }
+.btn_criar{
+    margin-top: 1.2vh;
+}
 .texto-elemento-a{
-    display: grid;
-    /* flex-direction: column; */
-    /* justify-content: center; */
+    display: flex;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 1vh 3vw;
+    font-weight: 800;
 }
 .conteudo-a .elemento-a:hover{
     box-shadow: none;
@@ -342,7 +345,7 @@ tr:hover{background-color:var(--color-background)}
 }
 /* Tabela Gerentes */
 .conteudo-g{
-    margin-top:2rem ;
+    margin-top:2vh;
     height: 50vh;
 }
 .elemento-g{
@@ -366,18 +369,14 @@ tr:hover{background-color:var(--color-background)}
     box-shadow: none;
 }
 .elemento-g .linhaTabela td{
-    height: 3vh;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark);
-    padding:1vw;
-}
-.elemento-g .linhaTabela th{
-    height: 8vh;
-    color: black;
-    padding: 0.8vw;
 }
 .elemento-g .linhaTabela:last-child td{
     border: none;
+}
+th, td {
+    text-align: center;
 }
 /* Tabela Usuarios GG */
 .conteudo-u{
@@ -386,39 +385,79 @@ tr:hover{background-color:var(--color-background)}
 
 }
 .elemento-u{
-    display: flex;
+    display:flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     padding: 1vh 3vw;
+}
+.btn_criar{
+    margin-top: 1.2vh;
 }
 .texto-elemento-u{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 1vh 3vw;
-    font-weight:bolder;
+    font-weight: 800;
 }
 .conteudo-u .elemento-u:hover{
     box-shadow: none;
 }
+
 .elemento-u .linhaTabela td{
     height: 3vh;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark);
-    padding:1vw;
 }
 .elemento-u .linhaTabela th{
     height: 8vh;
     color: black;
-    padding: 0.8vw;
 }
 .elemento-u .linhaTabela:last-child td{
     border: none;
 }
 tr:hover{background-color:var(--color-background)} 
 
+th, td {
+    text-align: center;
+    padding: 1.7vw;
+}
+/* Requisições GG */
+.conteudo-r{
+    margin-top:2rem ;
+    height: 50vh;
+}
+.elemento-r{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 1vh 3vw;
+}
+.texto-elemento-r{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1vh 3vw;
+    font-weight: 800;
+}
+.conteudo-r .elemento-r:hover{
+    box-shadow: none;
+}
+
+.elemento-r .linhaTabela td{
+    height: 3vh;
+    border-bottom: 1px solid var(--color-light);
+    color: var(--color-dark);
+}
+.elemento-r .linhaTabela th{
+    height: 2vh;
+    color: black;
+}
+.elemento-r .linhaTabela:last-child td{
+    border: none;
+}
 .scroll-div-tabela{
     align-items: center;
     width: 80vw;
@@ -434,6 +473,7 @@ tr:hover{background-color:var(--color-background)}
     font-size: 0.9vw;
     padding-top: 1vh;
     padding-left: 2.3vw;
+    justify-content: center;
 }
 .scroll-div-tabela::-webkit-scrollbar{
     width: 3vw;
@@ -468,8 +508,6 @@ tr:hover{background-color:var(--color-background)}
     width: 90vw;
     min-height: 100vh;
 }
-
-
 .elemento{
     display: flex;
     flex-direction: column;

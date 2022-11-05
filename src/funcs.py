@@ -459,11 +459,16 @@ def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     return valorTruncado
 
 def truncar(numero, casaDecimal):
-   #separa o numero em duas partes, a parte antes da casa decimal e depois da casa decimal 
-   sp = str(numero).split('.')
-   #faz a junção dos dois valores de acordo com as casas decimais espcificadas
-   valorTruncado = '.'.join([sp[0], sp[1][:casaDecimal]])
-   return float(valorTruncado)
+    s = '{}'.format(numero)
+    if 'e' in s or 'E' in s:
+        valorTruncado='{0:.{1}f}'.format(numero, casaDecimal)
+        return float(valorTruncado)
+    i, p, d = s.partition('.')
+    valorTruncado = '.'.join([i, (d+'0'*casaDecimal)[:casaDecimal]])
+    return float(valorTruncado)
+   
+   
+
 def ValEmReal(valor):
     valor = f"{valor:.2f}".replace(".",",")
     return valor

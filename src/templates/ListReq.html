@@ -1,38 +1,50 @@
 {% extends "homenewgg.html" %}
 {% block conteudo %}
-<div class="conteudo">
-    <div class="elemento">
-        <span id="tituloElemento">Requisições</span>
-        <div class="blocoElementoAltera">
-            <div class="inputElemento">
-                <div class="func">
-                    <!-- <table class="tabelaRequisicao">
-                        <tr class="linhaTabela">
-                            {% for header in cabecalhoTabela %}
-                            <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                        {% set p = namespace(value=0) %}
-                        {% for row in pesquisaSQL %}
-                        <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
-                            <tr class="linhaTabela">
-                                {% for cell in row %}
-                                {% if cell == row[0] %}
-                                <input type="hidden" value="{{ cell }}" name="IdContaBanc">
-                                {% else %}
-                                <td class="celula">{{ cell }}</td>
-                                {% endif %}
-                                {% endfor %}
-                                <td class="celula">
-                                    <input type="submit" name="botao" value="Alterar" class="btnd solid"
-                                        id="btnConfirmar">
-                                </td>
-                            </tr>
-                        </form>
-                        {% set p.value = p.value + 1 %}
+<div class="conteudo-r">
+    <div class="texto-elemento-r">
+        <div class="tituloelemento">
+            <span id="tituloElemento">Requisições</span>
+        </div>
+        <form action="homeGG" method="POST">
+            <div class="custom-select">
+                <select name="requisicao1" required>
+                    <option value="0">Depósitos</option>
+                    <option value="1">Abertura de Contas</option>
+                    <option value="2">Alteração de Dados</option>
+                </select>
+                <input type="submit" class="btnFiltro" value="Pesquisar">
+            </div>
+        </form>
+    </div>
+    <hr>
+    <div class="elemento-r">
+        <div class="scroll-div-tabela">
+            <div class="scroll-object-tabela">
+                <table class="tabelaRequisicao">
+                    <tr class="linhaTabela">
+                        {% for header in cabecalhoTabela %}
+                        <th>{{ header }}</th>
                         {% endfor %}
-                    </table> -->
-                </div>
+                    </tr>
+                    {% set p = namespace(value=0) %}
+                    {% for row in pesquisaSQL %}
+                    <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
+                        <tr class="linhaTabela">
+                            {% for cell in row %}
+                            {% if cell == row[0] %}
+                            <input type="hidden" value="{{ cell }}" name="IdContaBanc">
+                            {% else %}
+                            <td class="celula">{{ cell }}</td>
+                            {% endif %}
+                            {% endfor %}
+                            <td class="celula">
+                                <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
+                            </td>
+                        </tr>
+                    </form>
+                    {% set p.value = p.value + 1 %}
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>
