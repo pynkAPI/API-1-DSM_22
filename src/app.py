@@ -1899,11 +1899,31 @@ def verMais():
         pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
                                                 CampoBd=['id_transacao'],
                                                 CampoFm=[idTransacao],
-                                                CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao'])
+                                                CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
+        idContaOrigem = pesquisaSQL[0][4]
+        idContaDestino = pesquisaSQL[0][5]
         tipo = pesquisaSQL[0][0]
         dateTime = pesquisaSQL[0][1]
         valor = pesquisaSQL[0][2]
         statusTransacao = pesquisaSQL[0][3]
+
+        idContaRequisitanteComprovante = int(session['idContaBK'])
+
+        pesquisaSQLContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                          CampoBd=['id_conta'],
+                                                          CampoFm=[idContaDestino],
+                                                          CampoEs=['numeroconta','nome'])
+        
+        nomeContaDestino = pesquisaSQLContaDestino[0][1]
+        numeroContaDestino = pesquisaSQLContaDestino[0][0]
+
+        pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                          CampoBd=['id_conta'],
+                                                          CampoFm=[idContaDestino],
+                                                          CampoEs=['numeroconta','nome'])
+        nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
+        numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
+
         if statusTransacao == '0':
             statusEscrito = 'Em Aprovação'
         elif statusTransacao == '1':
@@ -1917,7 +1937,15 @@ def verMais():
                                 Hora=hora, 
                                 Data=data, 
                                 Valor=valor, 
-                                statusAprovacao=statusEscrito)
+                                statusAprovacao=statusEscrito,
+                                idContaOrigem=idContaOrigem,
+                                idContaDestino=idContaDestino,
+                                idContaRequisitanteComprovante=idContaRequisitanteComprovante,
+                                nomeContaDestino=nomeContaDestino,
+                                numeroContaDestino=numeroContaDestino, 
+                                nomeContaOrigem=nomeContaOrigem,
+                                numeroContaOrigem=numeroContaOrigem,
+                                ID=idTransacao)
 
 #Bloco para subir o site.
 if __name__ == "__main__":

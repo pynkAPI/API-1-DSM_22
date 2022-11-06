@@ -12,16 +12,40 @@
           <tr>
             <td class="celula">Comprovante de {{ Tipo }}</td>
           </tr>
-        <tr>
           {% if Tipo == 'Depósito' %}
-          <td class="celula"> R$+ {{ Valor }} </td>
+          <tr>
+            <td class="celula"> R$+ {{ Valor }} </td>
+          </tr>
           {% elif Tipo == 'Saque'  %}
+          <tr>
           <td class="celula"> R$- {{ Valor }} </td>
+          </tr>
           {% else %}
-          <td class="celula"></td>
+            {% if idContaOrigem == idContaRequisitanteComprovante %}
+            <tr>
+            <td class="celula">R${{ Valor }} transferido de {{nomeContaDestino}}</td>
+            </tr>
+            <tr>
+              <td class="celula">Enviado para: {{nomeContaDestino}}</td>
+            </tr>
+            <tr>
+              <td class="celula">Número de Conta: {{numeroContaDestino}}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td class="celula">R${{ Valor }} recebido de {{nomeContaOrigem}}</td>
+              </tr>
+              <tr>
+                <td class="celula">Recebido de: {{nomeContaOrigem}}</td>
+              </tr>
+              <tr>
+                <td class="celula">Número de Conta: {{numeroContaOrigem}}</td>
+              </tr>
+            {% endif %}
           {% endif %}
-          <td class="celula"></td>
-        </tr>
+          <tr>
+            <td class="celula"> Status Aprovação: {{ statusAprovacao }}</td>
+          </tr>
         <tr>
           <td class="celula"> Data do(a) {{ Tipo }} : {{ Data }}</td>
         </tr>
