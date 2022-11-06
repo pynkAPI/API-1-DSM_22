@@ -1,0 +1,40 @@
+ {% extends "layout.html" %} 
+ {% block conteudo %}
+ <main>
+      {% block Tabela %}    
+    <div class="Extrato">
+      <div class="scroll-div">
+        <div class="scroll-object">
+        <table class="tabelaRequisicao">
+          <tr class="linhaTabela">
+            <th>Py.NK Internet Banking</th>
+          </tr>
+          <tr>
+            <td class="celula">Comprovante de {{ Tipo }}</td>
+          </tr>
+        <tr>
+          {% if Tipo == 'Depósito' %}
+          <td class="celula"> R$+ {{ Valor }} </td>
+          {% elif Tipo == 'Saque'  %}
+          <td class="celula"> R$- {{ Valor }} </td>
+          {% else %}
+          <td class="celula"></td>
+          {% endif %}
+          <td class="celula"></td>
+        </tr>
+        <tr>
+          <td class="celula"> Data do(a) {{ Tipo }} : {{ Data }}</td>
+        </tr>
+        <tr>
+          <td class="celula"> Horário do(a) {{ Tipo }} :  {{ Hora }}</td>
+        </tr>
+        <tr>
+         <td class="celula">ID da Transação: {{ ID }}</td>
+        </tr>
+      </table> 
+      </div>
+    </div>
+  </div>
+    {% endblock Tabela %} 
+  </main>   
+  {% endblock conteudo %} 

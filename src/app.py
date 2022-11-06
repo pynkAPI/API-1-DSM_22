@@ -62,7 +62,7 @@ def home():
             VarContador=0
             
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
-                                            CampoEs=['tipo','valor','Datatime','status_transacao'],
+                                            CampoEs=['id_transacao','tipo','valor','Datatime','status_transacao'],
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
@@ -112,15 +112,16 @@ def home():
                 
                 pesquisaSQL[VarContador].append(nomes1[0][0])
                 pesquisaSQL[VarContador].append(nomes2[0][0])
-                pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
-                print(pesquisaSQL[VarContador][3])
-                if pesquisaSQL[VarContador][3] == '1':
-                    pesquisaSQL[VarContador][3] = "Efetuado"
+                pesquisaSQL[VarContador][2] = funcs.ValEmReal(pesquisaSQL[VarContador][2])
+                print(pesquisaSQL[VarContador][2])
+                
+                if pesquisaSQL[VarContador][4] == '1':
+                    pesquisaSQL[VarContador][4] = "Efetuado"
                 else:
-                    if pesquisaSQL[VarContador][3] == '2':
-                        pesquisaSQL[VarContador][3] = "Rejeitado"
+                    if pesquisaSQL[VarContador][4] == '2':
+                        pesquisaSQL[VarContador][4] = "Rejeitado"
                     else:
-                        pesquisaSQL[VarContador][3] = "Aguardando"
+                        pesquisaSQL[VarContador][4] = "Aguardando"
                 VarContador+=1
             valorDevidoTotal = valorDevido
             if valorDevido < 0:
@@ -214,14 +215,14 @@ def RequisicaoGerenteAgencia():
                     funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
                     #Verifica se ele conseguiu sair da dívida
-                    if valorDevido > 0:
+                    if valorDevido >= 0:
                         funcs.upMySQL('tb_contabancaria',
                                       CampoBd=['saldo'],
                                       CampoFm=[valorDevido],
                                       CampoWr=['id_conta'],
                                       CampoPs=[IdContaOrigem])
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                      CampoPs=[IdContaOrigem, '1'],
+                                      CampoPs=[IdContaOrigem, '0'],
                                       CampoWr=['id_conta', 'ativo'],
                                       CampoBd=['valor_devido', 'data_final'],
                                       CampoFm=[ 0, date.today()])
@@ -943,10 +944,15 @@ def TransacaoConta():
                 valorContaOrigem = valorContaOrigem - valor
                 valorDevido = valorDevido + valor
 
-                if valorDevido < 0:
-                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoBd=['valor_devido', 'data_atualizacao'],
                                       CampoFm=[valorDevido, date.today()],
+                                      CampoPs=[IdContaDestino],
+                                      CampoWr=['id_conta'])
+                if valorDevido >= 0:
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                      CampoBd=['valor_devido', 'data_atualizacao', 'ativo'],
+                                      CampoFm=[valorDevido, date.today(), '0'],
                                       CampoPs=[IdContaDestino],
                                       CampoWr=['id_conta'])
 
@@ -1661,6 +1667,34 @@ def UpdateAG():
                 
         funcs.DelMySQL('tb_agencia',CampoBd=['id_agencia'],CampoFm=[id_agencia])
     return agencias()
+
+#-----------------------------------
+@app.route("/verMais", methods = ['POST', 'GET'])
+def verMais():
+    if request.method == 'POST': 
+        idTransacao = request.form.get('IdTransacao')
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                                CampoBd=['id_transacao'],
+                                                CampoFm=[idTransacao],
+                                                CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao'])
+        tipo = pesquisaSQL[0][0]
+        dateTime = pesquisaSQL[0][1]
+        valor = pesquisaSQL[0][2]
+        statusTransacao = pesquisaSQL[0][3]
+        if statusTransacao == '0':
+            statusEscrito = 'Em Aprovação'
+        elif statusTransacao == '1':
+            statusEscrito = 'Aprovado'
+        else:
+            statusEscrito = 'Recusado'
+        data = str(dateTime.strftime('%x'))
+        hora = str(dateTime.strftime('%X'))
+        return render_template('verMais.html', 
+                                Tipo=tipo,
+                                Hora=hora, 
+                                Data=data, 
+                                Valor=valor, 
+                                statusAprovacao=statusEscrito)
 
 #Bloco para subir o site.
 if __name__ == "__main__":
