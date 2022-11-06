@@ -1,4 +1,4 @@
-{% if pagina == 0 %}
+{% if pagina == 3 %}
 {% extends "homenewgg.html" %}
 {% elif pagina == 2 %}
 {% extends "homenewg.html" %}
@@ -11,12 +11,12 @@
         <span id="tituloElemento">Alterar Dados</span>
         <div class="blocoElemento">
             <div class="inputElemento">
-                {% if pagina == 0 %}
-                <form action="{{ url_for('alteraU') }}" method="POST">
-                    {% elif pagina == 2 %}
+                {% if pagina == 3 %}
+                <form action="{{ url_for('RequisicaoGerenteAgencia') }}" method="POST">
+                    <input type="hidden" value="4" name="requisicao">
+                    {% elif pagina == 2%}
                     <form action="{{ url_for('RequisicaoGerenteAgencia') }}" method="POST">
                         <input type="hidden" value="3" name="requisicao">
-                        <input type="hidden" value="{{novosDados}}" name="Desc">
                         {% else %}
                         <form action="{{ url_for('alteraU') }}" method="POST">
                             {% endif %}

@@ -317,8 +317,7 @@ def RequisicaoGerenteAgencia():
                 return homeG(requisicao=requisicao)
         #endregion 
         else:
-            if session['tipo'] == 2:
-                
+            if requisicao == '3':
                 idUsuario   =request.form['idUsuario'],
                 nome        =request.form['nome']
                 email       =request.form['email']
@@ -335,6 +334,23 @@ def RequisicaoGerenteAgencia():
                                 CampoPs=[idUsuario[0]])
                 # funcs.emailCadastro(IdConta, email, True)  
                 return homeG(requisicao=requisicao)
+            elif requisicao == '4':
+                idUsuario   =request.form['idUsuario'],
+                nome        =request.form['nome']
+                email       =request.form['email']
+                cpf         =request.form['cpf']
+                genero      =request.form['genero']
+                endereco    =request.form['endereco']
+                datanasc    =request.form['datanasc']
+                senha       =request.form['senha']
+                
+                funcs.upMySQL('tb_usuario',
+                                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                                CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
+                                CampoWr=['id_usuario'],
+                                CampoPs=[idUsuario[0]])
+                # funcs.emailCadastro(IdConta, email, True)  
+                return home()
             else:
                 botao = request.form.to_dict()
                 IdConta = request.form['Id']
@@ -1391,6 +1407,52 @@ def suaConta():
                                     loginVisivel=False,
                                     login='',
                                     senha=dadosUsuario['senha'],)
+    else:
+        #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
+        #REQUISIÇÃO EM ESPERA
+        dadosUsuario = funcs.dadosU('', session['idFunc'])
+        print(dadosUsuario['cpf'])
+        cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
+        if dadosUsuario['genero'] == 'M':
+            return render_template ("suaConta.html",pagina=3,
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario=dadosUsuario['idFuncionario'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Masculino',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='',
+                                    login=dadosUsuario['login'],
+                                    senha=dadosUsuario['senha'],)
+        elif dadosUsuario['genero'] == 'F':
+            return render_template ("suaConta.html",pagina=3,
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario=dadosUsuario['idFuncionario'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Feminino',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='',
+                                    login=dadosUsuario['login'],
+                                    senha=dadosUsuario['senha'],)
+        else:
+            return render_template ("suaConta.html",pagina=3,
+                                    idUsuario=dadosUsuario['idUsuario'],
+                                    idFuncionario=dadosUsuario['idFuncionario'],
+                                    nome=dadosUsuario['nome'],
+                                    email=dadosUsuario['email'],
+                                    cpf=cpf,
+                                    genero='Outro',
+                                    endereco=dadosUsuario['endereco'],
+                                    dataNasc=dadosUsuario['dataNasc'],
+                                    loginVisivel='',
+                                    login=dadosUsuario['login'],
+                                    senha=dadosUsuario['senha'],)
+
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
@@ -1466,6 +1528,24 @@ def alteraU():
                                         endereco=dadosUsuario['endereco'],
                                         dataNasc=dadosUsuario['dataNasc'],
                                         loginVisivel=False,
+                                        login=dadosUsuario['login'],
+                                        senha=dadosUsuario['senha'],
+                                        selM='selected',
+                                        selF='',
+                                        selO='')
+        else:
+            dadosUsuario = funcs.dadosU('',session['idFunc'])
+            cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
+            # if dadosUsuario['genero'] == 'M':
+            return render_template ("alteraU.html",pagina=3,novosDados=dadosUsuario,
+                                        idUsuario=dadosUsuario['idUsuario'],
+                                        idFuncionario=dadosUsuario['idFuncionario'],
+                                        nome=dadosUsuario['nome'],
+                                        email=dadosUsuario['email'],
+                                        cpf=cpf,
+                                        endereco=dadosUsuario['endereco'],
+                                        dataNasc=dadosUsuario['dataNasc'],
+                                        loginVisivel='',
                                         login=dadosUsuario['login'],
                                         senha=dadosUsuario['senha'],
                                         selM='selected',
