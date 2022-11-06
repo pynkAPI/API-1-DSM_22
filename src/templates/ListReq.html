@@ -1,52 +1,66 @@
 {% extends "homenewgg.html" %}
 {% block conteudo %}
-<div class="conteudo-r">
-    <div class="texto-elemento-r">
-        <div class="tituloelemento">
-            <span id="tituloElemento">Requisições</span>
-        </div>
-        <form action="homeGG" method="POST">
-            <div class="custom-select">
-                <select name="requisicao1" required>
-                    <option value="0">Depósitos</option>
-                    <option value="1">Abertura de Contas</option>
-                    <option value="2">Alteração de Dados</option>
-                </select>
-                <input type="submit" class="btnFiltro" value="Pesquisar">
-            </div>
-        </form>
+<div class="Extrato">
+           
+    <div class="texto-extrato">
+        <h2>Requisições</h2>
     </div>
-    <hr>
-    <div class="elemento-r">
-        <div class="scroll-div-tabela">
-            <div class="scroll-object-tabela">
-                <table class="tabelaRequisicao">
-                    <tr class="linhaTabela">
-                        {% for header in cabecalhoTabela %}
-                        <th>{{ header }}</th>
-                        {% endfor %}
-                    </tr>
-                    {% set p = namespace(value=0) %}
-                    {% for row in pesquisaSQL %}
-                    <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
-                        <tr class="linhaTabela">
-                            {% for cell in row %}
-                            {% if cell == row[0] %}
-                            <input type="hidden" value="{{ cell }}" name="IdContaBanc">
-                            {% else %}
-                            <td class="celula">{{ cell }}</td>
-                            {% endif %}
-                            {% endfor %}
-                            <td class="celula">
-                                <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
-                            </td>
-                        </tr>
-                    </form>
-                    {% set p.value = p.value + 1 %}
+    <form action="{{ url_for('homeGG') }}" method="POST">
+    <div class="custom-select">
+        <select name="requisicao1" required>
+          <option value="0">Depósitos</option>
+          <option value="1">Abertura de Contas</option>
+          <option value="2">Alteração de Dados</option>
+        </select>
+        <input type="submit" class="btnFiltro" value="Pesquisar">
+    </div>
+    </form>
+    <div class="scroll-div">
+        <div class="scroll-object">
+            <table class="tabelaRequisicao">
+                <!-- Inicio da Tabela -->
+                <tr class="linhaTabela">
+                    <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)     -->
+                    {% for header in cabecalhoTabela %}
+                    <th>{{ header }}</th>
                     {% endfor %}
-                </table>
-            </div>
+                </tr>
+                {% for row in pesquisaSQL %}
+                <form action="{{ url_for('RequisicaoGerenteAgencia') }}" method="POST">
+                <tr class="linhaTabela">
+                    <!-- Forma as linhas da tabela -->
+                    <input type="hidden" value="{{ requisicao }}" name="requisicao">
+                    {% for cell in row %}
+                    <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                    <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                    {% if row[0] == cell %}
+                    <input type="hidden" value="{{ cell }}" name="Id">
+                    {% else %}
+                    <td class="celula">{{ cell }}</td>
+                    {% endif %}
+
+                    {% endfor %}
+                    {% if requisicao == '0' %}
+                    <td> 
+                        <input type="submit" name="botao" value="Confirmar" class="btnd solid" id="btnConfirmar">
+                        <input type="submit" name="botao" value="Recusar" class="btnd solid" id="btnRecusar">
+                    </td> 
+                    {% elif requisicao == '1'%}
+                    <td> 
+                        <input type="submit" name="botao" value="Confirmar" class="btnd solid" id="btnConfirmar">
+                        <input type="submit" name="botao" value="Recusar" class="btnd solid" id="btnRecusar">
+                    </td> 
+                    {% else %}
+                    <td> 
+                        <input type="hidden" value="{{pesquisaSQL[0][3]}}" name="Desc">
+                        <input type="submit" name="botao" value="Confirmar" class="btnd solid" id="btnConfirmar">
+                        <input type="submit" name="botao" value="Recusar" class="btnd solid" id="btnRecusar">
+                    </td> 
+                    {% endif %}
+                </tr>
+                </form>
+                {% endfor %}
+            </table>
         </div>
     </div>
-</div>
 {% endblock %}

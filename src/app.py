@@ -371,7 +371,10 @@ def RequisicaoGerenteAgencia():
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
                     # funcs.emailCadastro(IdConta, email, True)  
-                    return homeG(requisicao=requisicao)
+                    if session['tipo'] == 2:
+                        return homeG(requisicao=requisicao)
+                    else:
+                        return render_template('ListReq.html')
                 else:    
                     funcs.upMySQL('tb_requisicoes',
                                 CampoBd=['status_alteracao'],
@@ -379,7 +382,10 @@ def RequisicaoGerenteAgencia():
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
                     # funcs.emailCadastro(IdConta, email, False)  
-                    return homeG(requisicao=requisicao)
+                    if session['tipo'] == 2:
+                        return homeG(requisicao=requisicao)
+                    else:
+                        return render_template('ListReq.html')
             
     return homeG(requisicao=requisicao)
      
@@ -461,11 +467,6 @@ def homeG(requisicao=None):
     
 @app.route("/homeGG", methods = ['POST', 'GET'])
 def homeGG(requisicao=None):
-
-    req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
-    ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
-    saldo = f"{session['saldo']:.2f}".replace(".",",")
-    caminhoLogin = 'loginG'
     if request.method == "POST":
         if requisicao == None:
             requisicao = request.form.get('requisicao1')
@@ -498,9 +499,10 @@ def homeGG(requisicao=None):
         elif requisicao == '2':
             cabecalho = ('Nome', 'CPF', 'descricao')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
-                                                   CampoEs=['tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
-                                                   CampoBd=['tb_agencia.id_funcinario'],
-                                                   CampoFm=[session['idFunc']])
+                                                   CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
+                                                   CampoBd=['tb_requisicoes.status_alteracao'],
+                                                   CampoFm=['0'])
+            print(pesquisaSQL)
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
         else:
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
