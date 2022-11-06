@@ -129,7 +129,6 @@ def home():
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
-
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
             cursor = mysql.connection.cursor()
         
@@ -1866,6 +1865,31 @@ def UpdateAG():
                 
         funcs.DelMySQL('tb_agencia',CampoBd=['id_agencia'],CampoFm=[id_agencia])
     return agencias()
+
+@app.route("/configuraCheque")
+def configuraCheque():
+
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                           CampoBd=['id_regra_operacoes'],
+                                           CampoFm=[1],
+                                           CampoEs=['porcentagem'])
+    porcentagem = pesquisaSQL[0][0]
+    porcentagem = porcentagem*100
+    return render_template('configuracaoChequeEspecial.html', porcentagem=porcentagem)
+
+@app.route("/altaraConfigCheque", methods = ['POST', 'GET'])
+def altaraConfigCheque():
+    if request.method == 'POST':
+        porcentagem = request.form.get('porcentagem')
+        porcentagem = float(porcentagem)/100
+        funcs.upMySQL(TabelaBd='tb_regra_operacoes',
+                      CampoBd=['porcentagem'],
+                      CampoFm=[porcentagem],
+                      CampoPs=[1],
+                      CampoWr=['id_regra_operacoes'])
+
+        return configuraCheque()
+
 
 #-----------------------------------
 @app.route("/verMais", methods = ['POST', 'GET'])
