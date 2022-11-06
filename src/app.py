@@ -317,35 +317,53 @@ def RequisicaoGerenteAgencia():
                 return homeG(requisicao=requisicao)
         #endregion 
         else:
-            botao = request.form.to_dict()
-            IdConta = request.form['Id']
-
-            if botao['botao'] == 'Confirmar':
-                Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
-                DescSeparada = []
-                for row in Desc:
-                    doispontos = row.find(':')+1
-                    DescSeparada.append(row[doispontos:])
+            if session['tipo'] == 2:
+                
+                idUsuario   =request.form['idUsuario'],
+                nome        =request.form['nome']
+                email       =request.form['email']
+                cpf         =request.form['cpf']
+                genero      =request.form['genero']
+                endereco    =request.form['endereco']
+                datanasc    =request.form['datanasc']
+                senha       =request.form['senha']
+                
                 funcs.upMySQL('tb_usuario',
-                            CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
-                            CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
-                            CampoWr=['id_usuario'],
-                            CampoPs=[DescSeparada[0]])
-                funcs.upMySQL('tb_requisicoes',
-                            CampoBd=['status_alteracao'],
-                            CampoFm=[1],
-                            CampoWr=['id_requisicao'],
-                            CampoPs=[IdConta])
+                                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                                CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
+                                CampoWr=['id_usuario'],
+                                CampoPs=[idUsuario[0]])
                 # funcs.emailCadastro(IdConta, email, True)  
                 return homeG(requisicao=requisicao)
-            else:    
-                funcs.upMySQL('tb_requisicoes',
-                            CampoBd=['status_alteracao'],
-                            CampoFm=[2],
-                            CampoWr=['id_requisicao'],
-                            CampoPs=[IdConta])
-                # funcs.emailCadastro(IdConta, email, False)  
-                return homeG(requisicao=requisicao)
+            else:
+                botao = request.form.to_dict()
+                IdConta = request.form['Id']
+                if botao['botao'] == 'Confirmar':
+                    Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
+                    DescSeparada = []
+                    for row in Desc:
+                        doispontos = row.find(':')+1
+                        DescSeparada.append(row[doispontos:])
+                    funcs.upMySQL('tb_usuario',
+                                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                                CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
+                                CampoWr=['id_usuario'],
+                                CampoPs=[DescSeparada[0]])
+                    funcs.upMySQL('tb_requisicoes',
+                                CampoBd=['status_alteracao'],
+                                CampoFm=[1],
+                                CampoWr=['id_requisicao'],
+                                CampoPs=[IdConta])
+                    # funcs.emailCadastro(IdConta, email, True)  
+                    return homeG(requisicao=requisicao)
+                else:    
+                    funcs.upMySQL('tb_requisicoes',
+                                CampoBd=['status_alteracao'],
+                                CampoFm=[2],
+                                CampoWr=['id_requisicao'],
+                                CampoPs=[IdConta])
+                    # funcs.emailCadastro(IdConta, email, False)  
+                    return homeG(requisicao=requisicao)
             
     return homeG(requisicao=requisicao)
      
@@ -1051,7 +1069,7 @@ def Config():
 # Página Sua Conta Gerente Agencia
 @app.route("/SuaContaG")
 def SuaContaG():
-    return render_template("suaContaG.html")
+    return render_template("suaContaG.html",pagina=1)
 
 # Página Sua Conta Gerente Geral
 @app.route("/SuaConta")
@@ -1284,11 +1302,10 @@ def suaConta():
         #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
         #REQUISIÇÃO EM ESPERA
         dadosUsuario = funcs.dadosU('', session['idFunc'])
-
+        print(dadosUsuario['cpf'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
-
         if dadosUsuario['genero'] == 'M':
-            return render_template ("suaConta.html",
+            return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
                                     idFuncionario=dadosUsuario['idFuncionario'],
                                     nome=dadosUsuario['nome'],
@@ -1301,7 +1318,7 @@ def suaConta():
                                     login=dadosUsuario['login'],
                                     senha=dadosUsuario['senha'],)
         elif dadosUsuario['genero'] == 'F':
-            return render_template ("suaConta.html",
+            return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
                                     idFuncionario=dadosUsuario['idFuncionario'],
                                     nome=dadosUsuario['nome'],
@@ -1314,7 +1331,7 @@ def suaConta():
                                     login=dadosUsuario['login'],
                                     senha=dadosUsuario['senha'],)
         else:
-            return render_template ("suaConta.html",
+            return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
                                     idFuncionario=dadosUsuario['idFuncionario'],
                                     nome=dadosUsuario['nome'],
@@ -1336,7 +1353,7 @@ def suaConta():
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
 
         if dadosUsuario['genero'] == 'M':
-            return render_template ("suaConta.html",
+            return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
                                     idFuncionario='',
                                     nome=dadosUsuario['nome'],
@@ -1349,7 +1366,7 @@ def suaConta():
                                     login='',
                                     senha=dadosUsuario['senha'],)
         elif dadosUsuario['genero'] == 'F':
-            return render_template ("suaConta.html",
+            return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
                                     idFuncionario='',
                                     nome=dadosUsuario['nome'],
@@ -1362,7 +1379,7 @@ def suaConta():
                                     login='',
                                     senha=dadosUsuario['senha'],)
         else:
-            return render_template ("suaConta.html",
+            return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
                                     idFuncionario='',
                                     nome=dadosUsuario['nome'],
@@ -1377,7 +1394,7 @@ def suaConta():
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
-    print(session['tipo'])
+    # print(request.method)
     if request.method == 'POST':
         if session['tipo'] == 2:
             dadosUsuario = funcs.dadosU('',session['idFunc'])
@@ -1421,8 +1438,8 @@ def alteraU():
         if session['tipo'] == 2:
             dadosUsuario = funcs.dadosU('',session['idFunc'])
             cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
-            if dadosUsuario['genero'] == 'M':
-                return render_template ("alteraU.html",
+            # if dadosUsuario['genero'] == 'M':
+            return render_template ("alteraU.html",pagina=2,novosDados=dadosUsuario,
                                         idUsuario=dadosUsuario['idUsuario'],
                                         idFuncionario=dadosUsuario['idFuncionario'],
                                         nome=dadosUsuario['nome'],
@@ -1436,39 +1453,11 @@ def alteraU():
                                         selM='selected',
                                         selF='',
                                         selO='')
-            elif dadosUsuario['genero'] == 'F':
-                return render_template ("alteraU.html",
-                                        idUsuario=dadosUsuario['idUsuario'],
-                                        idFuncionario=dadosUsuario['idFuncionario'],
-                                        nome=dadosUsuario['nome'],
-                                        email=dadosUsuario['email'],
-                                        cpf=cpf,
-                                        endereco=dadosUsuario['endereco'],
-                                        dataNasc=dadosUsuario['dataNasc'],
-                                        loginVisivel='',
-                                        senha=dadosUsuario['senha'],
-                                        selM='',
-                                        selF='selected',
-                                        selO='')
-            elif dadosUsuario['genero'] == 'O':
-                return render_template ("alteraU.html",
-                                        idUsuario=dadosUsuario['idUsuario'],
-                                        idFuncionario=dadosUsuario['idFuncionario'],
-                                        nome=dadosUsuario['nome'],
-                                        email=dadosUsuario['email'],
-                                        cpf=cpf,
-                                        endereco=dadosUsuario['endereco'],
-                                        dataNasc=dadosUsuario['dataNasc'],
-                                        loginVisivel='',
-                                        senha=dadosUsuario['senha'],
-                                        selM='',
-                                        selF='',
-                                        selO='selected')
         elif session['tipo'] == 1:
             dadosUsuario = funcs.dadosU(session['conta'],'')
             cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
             # if dadosUsuario['genero'] == 'M':
-            return render_template ("alteraU.html",
+            return render_template ("alteraU.html",pagina=1,
                                         idUsuario=dadosUsuario['idUsuario'],
                                         idFuncionario=dadosUsuario['idFuncionario'],
                                         nome=dadosUsuario['nome'],
@@ -1482,35 +1471,6 @@ def alteraU():
                                         selM='selected',
                                         selF='',
                                         selO='')
-            # elif dadosUsuario['genero'] == 'F':
-            #     return render_template ("alteraU.html",
-            #                             idUsuario=dadosUsuario['idUsuario'],
-            #                             idFuncionario=dadosUsuario['idFuncionario'],
-            #                             nome=dadosUsuario['nome'],
-            #                             email=dadosUsuario['email'],
-            #                             cpf=cpf,
-            #                             endereco=dadosUsuario['endereco'],
-            #                             dataNasc=dadosUsuario['dataNasc'],
-            #                             loginVisivel=False,
-            #                             senha=dadosUsuario['senha'],
-            #                             selM='',
-            #                             selF='selected',
-            #                             selO='')
-            # elif dadosUsuario['genero'] == 'O':
-            #     return render_template ("alteraU.html",
-            #                             idUsuario=dadosUsuario['idUsuario'],
-            #                             idFuncionario=dadosUsuario['idFuncionario'],
-            #                             nome=dadosUsuario['nome'],
-            #                             email=dadosUsuario['email'],
-            #                             cpf=cpf,
-            #                             endereco=dadosUsuario['endereco'],
-            #                             dataNasc=dadosUsuario['dataNasc'],
-            #                             loginVisivel=False,
-            #                             senha=dadosUsuario['senha'],
-            #                             selM='selected',
-            #                             selF='',
-            #                             selO='')
-
 #------------------------------
 
 #Requisição de alteração de dados

@@ -1,4 +1,9 @@
-{% extends "layout.html" %}
+<!-- {% extends "layout.html" %} -->
+{% if pagina == 0 %}
+{% extends "homenewgg.html" %}
+{% else %}
+{% extends "homenewg.html" %}
+{% endif %}
 {% block sidebar %}
             <aside>
                 <div class="topo">
