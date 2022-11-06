@@ -581,36 +581,63 @@ def dadosGA(IdFuncionario):
 
     return dados
 
-def dadosU(numeroConta):
-    cursor = mysql.connection.cursor()
+def dadosU(numeroConta, idFuncionario):
+    #bloco funcionario
+    if numeroConta == '':
+        idUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
+                                        CampoBd=['id_funcionario'],
+                                        CampoFm=[idFuncionario],
+                                        CampoEs=['id_usuario'])
 
-    idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                    CampoBd=['numeroconta'],
-                                    CampoFm=[numeroConta],
-                                    CampoEs=['id_usuario'])
 
-    Select = f'''SELECT id_conta, nome, email, cpf, genero, endereco, datanascimento, senha 
-    FROM tb_usuario INNER JOIN tb_contabancaria 
-    ON tb_usuario.id_usuario = tb_contabancaria.id_usuario  
-    WHERE numeroconta = {numeroConta};'''
-    
-    cursor.execute(Select)
-    pesquisaSQL = cursor.fetchall()
-    mysql.connection.commit() 
-    cursor.close()
+        Select = f'''SELECT nome, email, cpf, genero, endereco, datanascimento, login, senha
+        FROM tb_usuario tu INNER JOIN tb_funcionario tf 
+        ON tu.id_usuario = tf.id_usuario  
+        WHERE tu.id_usuario = {idUsuario[0][0]};'''
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute(Select)
+        pesquisaSQL = cursor.fetchall()
+        mysql.connection.commit() 
+        cursor.close()
 
-    dados = {
+        dados = {
         'idUsuario':idUsuario[0][0],
-        'idContaBancaria':pesquisaSQL[0][0],
-        'nome':pesquisaSQL[0][1],
-        'email':pesquisaSQL[0][2],
-        'cpf':pesquisaSQL[0][3],
-        'genero':pesquisaSQL[0][4],
-        'endereco':pesquisaSQL[0][5],
-        'dataNasc':pesquisaSQL[0][6],
+        'idFuncionario':idFuncionario,
+        'nome':pesquisaSQL[0][0],
+        'email':pesquisaSQL[0][1],
+        'cpf':pesquisaSQL[0][2],
+        'genero':pesquisaSQL[0][3],
+        'endereco':pesquisaSQL[0][4],
+        'dataNasc':pesquisaSQL[0][5],
+        'login':pesquisaSQL[0][6],
         'senha':pesquisaSQL[0][7]
-    }
-    
+        }
+
+    #bloco usuario
+    else:
+        idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                        CampoBd=['numeroconta'],
+                                        CampoFm=[numeroConta],
+                                        CampoEs=['id_usuario'])
+
+        pesquisaSQL = SlcEspecificoMySQL(TabelaBd='tb_usuario',
+                                        CampoBd=['id_usuario'],
+                                        CampoFm=[idUsuario[0][0]],
+                                        CampoEs=['nome','email','cpf','genero','endereco','datanascimento','senha'])
+        
+        dados = {
+        'idUsuario':idUsuario[0][0],
+        'idFuncionario':idFuncionario,
+        'nome':pesquisaSQL[0][0],
+        'email':pesquisaSQL[0][1],
+        'cpf':pesquisaSQL[0][2],
+        'genero':pesquisaSQL[0][3],
+        'endereco':pesquisaSQL[0][4],
+        'dataNasc':pesquisaSQL[0][5],
+        'login':'',
+        'senha':pesquisaSQL[0][6]
+        }
     return dados
 
 def alteraGA(dados):
@@ -679,17 +706,29 @@ def desligaGA(IdFuncionario, novoResp):
                     CampoFm=[IdFuncionario])
     return 
 
-def alteraU(novosDados):
+def alteraU(novosDados,tipo):
     #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
     #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
     #se a requisicao tem id do usuario e id do funcionario aparece para o GG
-    text = '['
-    for chave, valor in novosDados.items():
-        text += f'{str(chave)}:{str(valor)} , '
-    text += ']'
-    InsMySQL( TabelaBd='tb_requisicoes',
-            CampoBd=['status_alteracao'],)
-    return print(text)
+    novosDados['cpf'] = novosDados['cpf'].replace('.','')
+    novosDados['cpf'] = novosDados['cpf'].replace('-','')
+    if tipo == 2:
+        text = '['
+        for chave, valor in novosDados.items():
+            text += f'{str(chave)}:{str(valor)} , '
+        text += ']'
+        return InsMySQL( TabelaBd='tb_requisicoes',
+                CampoBd=['status_alteracao','id_usuario','id_funcionario','descricao'],
+                CampoFm=[0,novosDados['idUsuario'], novosDados['idFuncionario'],text])
+    elif tipo == 1:
+        text = '['
+        for chave, valor in novosDados.items():
+            text += f'{str(chave)}:{str(valor)} , '
+        text += ']'
+        return InsMySQL(TabelaBd='tb_requisicoes',
+                CampoBd=['status_alteracao','id_usuario','descricao'],
+                CampoFm=[0,novosDados['idUsuario'],text])
+
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
 #tipo pode receber:
