@@ -273,7 +273,6 @@ main .tabelaRequisicao .linhaTabela th{
     height: 3rem;
     font-weight: 750;
     color: black;
-    background-color: #CC5587;
 }
 main .tabelaRequisicao .linhaTabela:last-child td{
     border: none;
@@ -294,6 +293,7 @@ tr:hover{background-color:var(--color-background)}
 .scroll-object{
     font-size: 1rem;
     padding: 2vh;
+    
 }
 .scroll-div::-webkit-scrollbar{
     width: 1em;
@@ -318,6 +318,15 @@ tr:hover{background-color:var(--color-background)}
 }
 .btn_criar{
     margin-top: 1.2vh;
+}
+.seletor{
+    margin-top: 4vh;
+}
+.btnFiltro{
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 0.3vw;
+    border-radius: var(--border-radius-2);
 }
 .texto-elemento-a{
     display: flex;
@@ -355,9 +364,7 @@ tr:hover{background-color:var(--color-background)}
     align-items: flex-end;
     padding: 1vh 3vw;
 }
-.btn_criar{
-    margin-top: 1.2vh;
-}
+
 .texto-elemento-g{
     display: flex;
     justify-content: space-between;
@@ -471,9 +478,9 @@ th, td {
 }
 .scroll-object-tabela{
     font-size: 0.9vw;
-    padding-top: 1vh;
-    padding-left: 2.3vw;
+    padding: 2vw;
     justify-content: center;
+    width: 100%;
 }
 .scroll-div-tabela::-webkit-scrollbar{
     width: 3vw;
