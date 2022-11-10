@@ -1186,15 +1186,15 @@ def AltSaldo():
     return render_template('AltSaldo.html',saldo=saldo,saldoV=saldoV)    
 #------------------------------
 
-#Bloco de Listagem de usuarios
+#Bloco de Listagem de usuarios GG
 @app.route("/ListUsa",  methods = ['POST', 'GET'])
 def ListUsa():
     cursor = mysql.connection.cursor()
         
-    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento",'localidade',"Status","Alterar dados")
     
-    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,IF(TC.status_contabancaria='1', "ativo", "desativado")
-    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario;"""
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TA.localidade,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario inner join tb_agencia as TA on TA.id_agencia=TC.id_agencia;"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
@@ -1626,9 +1626,11 @@ def updateUsuGG():
 def gerentes():
     cursor = mysql.connection.cursor()
         
-    cabecalho = ('Nome', 'Papel','Matricula')
+    cabecalho = ('Nome', 'Papel','Matricula','localidade')
     
-    SelectGA = f"""SELECT id_funcionario, nome, papel, num_matricula FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+    SelectGA = f"""SELECT TF.id_funcionario, nome, papel, num_matricula,TA.localidade 
+    FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario left join tb_agencia as TA on TA.id_agencia=TF.id_agencia
+    where papel = 'GERENTE DE AGÊNCIA' order by TF.id_funcionario"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     mysql.connection.commit() 
