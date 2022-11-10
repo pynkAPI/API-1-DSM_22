@@ -963,7 +963,16 @@ def Transacao():
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        if  float(session['saldo']) > 0  and float(request.form['valor']) > 0 and float(request.form['valor']) < float(session['saldo']):
+        pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                      CampoBd=['id_capitaltotal'],
+                                                      CampoFm=[1],
+                                                      CampoEs=['capitalinicial'])
+        totalBanco =  pesquisaTotalBanco[0][0]  
+        saldoInvertido  = float(session['saldo'])*-1   
+        # Este If limita o usuário não poder ter um saldo negativo menor do que o valor total do banco
+        # Exemplo: Se o banco tem 10 reais e o Siclano ter -10 ele não irá conseguir mais transferir 
+        # Além disso ele também não deixa ele fazer transferencias com valores negativos e também com o valor que excede o valor total                                     
+        if saldoInvertido < totalBanco and float(request.form['valor']) > 0 and float(request.form['valor']) <= totalBanco:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
