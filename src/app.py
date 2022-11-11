@@ -637,7 +637,7 @@ def SaqueConta():
                     else:
                         funcs.InsMySQL(TabelaBd='tb_cheque_especial',
                                        CampoBd=['id_conta', 'data_inicio', 'data_atualizacao','data_final', 'valor_devido', 'ativo'],
-                                       CampoFm=[idConta[0][0],  datetime.today(), datetime.today(), None, valor, '1'])
+                                       CampoFm=[idConta[0][0],  datetime.today(), date.today(), None, valor, '1'])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
                 funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
@@ -953,17 +953,26 @@ def AceiteConta():
 #------------------------------
 #Bloco de renderização da tela de Transação
 @app.route("/Transacao")
-def Transacao():
+def Transacao(mensagem=''):
     if session['saldo'] != None:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
-    return render_template('transferencianew.html',saldo=saldo)
+    return render_template('transferencianew.html',saldo=saldo, mensagemTransacao=mensagem)
 
 #------------------------------
 #Bloco de transação entre contas
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        if  float(session['saldo']) > 0  and float(request.form['valor']) > 0 and float(request.form['valor']) < float(session['saldo']):
+        pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                      CampoBd=['id_capitaltotal'],
+                                                      CampoFm=[1],
+                                                      CampoEs=['capitalinicial'])
+        totalBanco =  pesquisaTotalBanco[0][0]  
+        saldoInvertido  = float(session['saldo'])*-1   
+        # Este If limita o usuário não poder ter um saldo negativo menor do que o valor total do banco
+        # Exemplo: Se o banco tem 10 reais e o Siclano ter -10 ele não irá conseguir mais transferir 
+        # Além disso ele também não deixa ele fazer transferencias com valores negativos e também com o valor que excede o valor total                                     
+        if saldoInvertido < totalBanco and float(request.form['valor']) > 0 and float(request.form['valor']) <= totalBanco:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
@@ -976,101 +985,91 @@ def TransacaoConta():
                                                 CampoBd=['numeroconta'],
                                                 CampoFm=[session['conta']],
                                                 CampoEs=['id_conta', 'saldo'])
-                                                  
+            valorContaOrigem = pesquisaContaOrigem[0][1]
+            valorContaOrigem = valorContaOrigem - valor       
+
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]
             if IdContaDestino == IdContaOrigem:
                 return Transacao()
-
+            DestinoSaiuCheque = True
+            OrigemSaiuCheque = True
             pesquisaSQLContaDestinoCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                                      CampoBd=['ativo', 'id_conta'],
                                                                      CampoFm=['1', IdContaDestino],
                                                                      CampoEs=['valor_devido', 'data_atualizacao'])
             #verifica se o usuário da conta Destino está na situação de cheque especial da conta 
+
+            #region Verifica Cheque Especial Conta Destino
             if pesquisaSQLContaDestinoCheque:
+                DestinoSaiuCheque = False
                 #pega o valor de quanto a conta Destino está devendo ao banco
                 valorDevido = pesquisaSQLContaDestinoCheque[0][0]
                 #pega o dia da ultima atualização da conta destino
-                dataInicio = pesquisaSQLContaDestinoCheque[0][1]
-                diasPeriodo = funcs.periodoEntreDatas(data1=str(dataInicio), data2=str(date.today()))
-                if diasPeriodo > 0:
-                    pesquisaSQLRegraCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
-                                                                          CampoBd=['id_regra_operacoes'],
-                                                                          CampoFm=[1],
-                                                                          CampoEs=['porcentagem', 'valor_fixo'])
-                    porcentagem = pesquisaSQLRegraCheque[0][0]
-                    valorDevido = funcs.calculaChequeEspecial(tempo=diasPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
-
-                valorContaOrigem = pesquisaContaOrigem[0][1]
-
+                
                 valorContaOrigem = valorContaOrigem - valor
                 valorDevido = valorDevido + valor
-
+                
                 funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoBd=['valor_devido', 'data_atualizacao'],
                                       CampoFm=[valorDevido, date.today()],
                                       CampoPs=[IdContaDestino],
                                       CampoWr=['id_conta'])
+                
+                funcs.upMySQL(TabelaBd='tb_contabancaria',
+                          CampoBd=['saldo'],
+                          CampoFm=[valorContaOrigem],
+                          CampoPs=[IdContaOrigem],
+                          CampoWr=['id_conta'])
+                
                 if valorDevido >= 0:
+                    DestinoSaiuCheque = True
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoBd=['valor_devido', 'data_atualizacao', 'ativo'],
                                       CampoFm=[valorDevido, date.today(), '0'],
                                       CampoPs=[IdContaDestino],
                                       CampoWr=['id_conta'])
 
+         
+            if valorContaOrigem < 0:
+                pesquisaContaOrigemCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                                     CampoBd=['id_conta', 'ativo'],
+                                                                     CampoFm=[IdContaOrigem, '1'],
+                                                                     CampoEs=['valor_devido', 'data_atualizacao'])
+                if pesquisaContaOrigemCheque:
+                    OrigemSaiuCheque = False
+                    valorDevidoContaOrigem = pesquisaContaOrigemCheque[0][0] + valorContaOrigem
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                  CampoBd=['valor_devido', 'data_atualizacao'],
+                                  CampoFm=[valorDevidoContaOrigem, date.today()],
+                                  CampoPs=[IdContaOrigem, '1'],
+                                  CampoWr=['id_conta', 'ativo'])
+                else:
+                    funcs.InsMySQL(TabelaBd='tb_cheque_especial',
+                                   CampoBd=['id_conta', 'data_inicio', 'data_atualizacao', 'valor_devido', 'ativo'],
+                                   CampoFm=[IdContaOrigem, date.today(), date.today(), valorContaOrigem, '1'])
+                #endregion
+            if DestinoSaiuCheque == True:
+                valorContaDestino = pesquisaContaDestino[0][1]
+                valorContaDestino = valorContaDestino + valor
                 funcs.upMySQL(TabelaBd='tb_contabancaria',
-                                  CampoBd=['saldo'],
-                                  CampoFm=[valorContaOrigem],
-                                  CampoPs=[IdContaOrigem],
-                                  CampoWr=['id_conta'])
-                if valorContaOrigem < 0:
-                    pesquisaContaOrigemCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
-                                                                         CampoBd=['id_conta', 'ativo'],
-                                                                         CampoFm=[IdContaOrigem, '1'],
-                                                                         CampoEs=['valor_devido', 'data_atualizacao'])
-                    if pesquisaContaOrigemCheque:
-                        valorDevidoContaOrigem = pesquisaContaOrigemCheque[0][0] + valorContaOrigem
-                        dataAtualizacao = pesquisaContaOrigemCheque[0][1]
-                        dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
-                        if dataPeriodo > 0:
-                            valorDevidoContaOrigem = funcs.calculaChequeEspecial(valorDevido=valorDevidoContaOrigem, porecentagem=porcentagem, tempo=dataPeriodo)
-                        funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                      CampoBd=['valor_devido', 'data_atualizacao'],
-                                      CampoFm=[valorDevidoContaOrigem, date.today()],
-                                      CampoPs=[IdContaOrigem, '1'],
-                                      CampoWr=['id_conta', 'ativo'])
-                    else:
-                        funcs.InsMySQL(TabelaBd='tb_cheque_especial',
-                                       CampoBd=['id_conta', 'data_inicio', 'data_atualizacao', 'valor_devido', 'ativo'],
-                                       CampoFm=[IdContaOrigem, date.today(), date.today(), valorContaOrigem, '1'])
-
-                funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
-                funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
-                return Transacao()
-
-            valorContaDestino = pesquisaContaDestino[0][1]
-            valorContaOrigem = pesquisaContaOrigem[0][1]
-
-            valorContaDestino = valorContaDestino + valor
-            valorContaOrigem = valorContaOrigem - valor
-
-            funcs.upMySQL(TabelaBd='tb_contabancaria',
-                      CampoBd=['saldo'],
-                      CampoFm=[valorContaOrigem],
-                      CampoPs=[IdContaOrigem],
-                      CampoWr=['id_conta'])
-
-            funcs.upMySQL(TabelaBd='tb_contabancaria',
                       CampoBd=['saldo'],
                       CampoFm=[valorContaDestino],
                       CampoPs=[IdContaDestino],
                       CampoWr=['id_conta'])
 
-            session['saldo'] = valorContaOrigem
+            if OrigemSaiuCheque == True:
+                funcs.upMySQL(TabelaBd='tb_contabancaria',
+                              CampoBd=['saldo'],
+                              CampoFm=[valorContaOrigem],
+                              CampoPs=[IdContaOrigem],
+                              CampoWr=['id_conta'])
 
+            session['saldo'] = valorContaOrigem
             funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
-            funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
             return Transacao()
+        else:
+           return Transacao(mensagem='Não foi possível realziar a operação')
     return Transacao()
         
 #------------------------------

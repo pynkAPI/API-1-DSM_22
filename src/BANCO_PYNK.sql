@@ -97,7 +97,7 @@ ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contaba
 INSERT INTO tb_regra_operacoes(descricao, porcentagem, valor_fixo, frequencia) VALUES('CHEQUE ESPECIAL',  0.10, 10, 'Diário');
 
 INSERT INTO tb_capitaltotal 
-VALUES(1, 10000,0);
+VALUES(1, 10,0);
 
 INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
 VALUES('GERENTE AGÊNCIA', '2',  'O', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'teste@gmail.com');
