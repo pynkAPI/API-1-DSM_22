@@ -5,6 +5,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 from select import select
 from tokenize import Double
@@ -962,16 +963,8 @@ def Transacao(mensagem=''):
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
-                                                      CampoBd=['id_capitaltotal'],
-                                                      CampoFm=[1],
-                                                      CampoEs=['capitalinicial'])
-        totalBanco =  pesquisaTotalBanco[0][0]  
-        saldoInvertido  = float(session['saldo'])*-1   
-        # Este If limita o usuário não poder ter um saldo negativo menor do que o valor total do banco
-        # Exemplo: Se o banco tem 10 reais e o Siclano ter -10 ele não irá conseguir mais transferir 
-        # Além disso ele também não deixa ele fazer transferencias com valores negativos e também com o valor que excede o valor total                                     
-        if saldoInvertido < totalBanco and float(request.form['valor']) > 0 and float(request.form['valor'])+saldoInvertido <= totalBanco:
+                                          
+        if float(request.form['valor']) > 0:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
@@ -990,7 +983,7 @@ def TransacaoConta():
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]
             if IdContaDestino == IdContaOrigem:
-                return Transacao()
+                return Transacao(mensagem='Não foi possível realziar a operação')
             DestinoSaiuCheque = True
             OrigemSaiuCheque = True
             pesquisaSQLContaDestinoCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
@@ -1005,7 +998,17 @@ def TransacaoConta():
                 #pega o valor de quanto a conta Destino está devendo ao banco
                 valorDevido = pesquisaSQLContaDestinoCheque[0][0]
                 #pega o dia da ultima atualização da conta destino
+                dataAtualizacao = pesquisaSQLContaDestinoCheque[0][1]
                 
+                dataPeriodo = funcs.periodoEntreDatas(data1= dataAtualizacao, data2= str(date.today))
+
+                if dataPeriodo > 0:
+                    pesquisaRegraOperacao = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                     CampoBd=['id_regra_operacoes'],
+                                                                     CampoFm=[1],
+                                                                     CampoEs=['porcentagem'])
+                    porcentagem = pesquisaRegraOperacao[0][0]
+                    valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
                 valorContaOrigem = valorContaOrigem - valor
                 valorDevido = valorDevido + valor
                 

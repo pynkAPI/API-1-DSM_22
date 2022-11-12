@@ -3,6 +3,7 @@ import math
 import os
 from email.message import EmailMessage
 from email import encoders
+from dateutil.relativedelta import relativedelta
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -401,6 +402,13 @@ def periodoEntreDatas(data1, data2):
     data2 = datetime.strptime(data2, "%Y-%m-%d")
     return abs((data2 - data1).days)
 
+def verificaAniversarioDeposito(data1, data2):
+    data1 = data1 + relativedelta(months=1)
+    if data1 >= data2:
+        aniversario = True
+    
+    return aniversario
+
 def emailComprovante(nome_arq, destinatario):
     subject = "Comprovante de movimentação"
     body = "Aqui está o comprovante da sua última movimentação."
@@ -753,6 +761,13 @@ def geraValor(qtdCaracteres, tipo):
 
     return senha
 
+def verificaAniversarioDeposito(data1, data2):
+    data1 = data1 + relativedelta(months=1)
+    if data1 >= data2:
+        aniversario = True
+    
+    return aniversario
+
 def altAG(id_agencia):
     upMySQL(TabelaBd='tb_agencia',
             CampoBd=['localidade','id_funcionario'],
@@ -780,3 +795,5 @@ def altAG(id_agencia):
 #         CampoWr=['id_agencia'],
 #         CampoPs=[id_agencia])
 #     return
+
+
