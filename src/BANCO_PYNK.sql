@@ -20,7 +20,7 @@ CREATE TABLE tb_funcionario (
 id_funcionario int AUTO_INCREMENT PRIMARY KEY,
 id_usuario int NOT NULL,
 papel varchar(255) NOT NULL,
-num_matricola varchar(255) NOT NULL,
+num_matricula varchar(255) NOT NULL,
 login VARCHAR(255) NOT NULL, 
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario)
 );
@@ -120,13 +120,13 @@ VALUES(4, 1, 'CONTA CORRENTE', 1234, curdate(), -200, '1');
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
 VALUES(5, 1, 'CONTA CORRENTE', 4321, curdate(), 0, '1');
 
-INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
+INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
 VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1');
 
-INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
+INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
 VALUES('GERENTE DE AGÊNCIA', '0', 2, 'GA2');
 
-INSERT INTO tb_funcionario(papel, num_matricola, id_usuario, login) 
+INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
 VALUES('GERENTE GERAL', '0', 3, 'GG');
 
 INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)

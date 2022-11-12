@@ -5,7 +5,6 @@
 {% endif %}
 {% block conteudo %}
 <div class="conteudo">
-    <h1>{{pagina}}</h1>
     <span id="tituloElemento">Alterar Dados</span>
     <div class="blocoElementoAltera">
         <div class="inputElemento">
@@ -41,7 +40,12 @@
                 <div class="inputValor">
                     <span id="textoInputElemento">Data de Nascimento:</span>
                     <input class="input-date" type="date" name="datanasc" required value="{{row[14]}}">
-                </div><br>
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Senha:</span>
+                    <input required type="text" name="senha" value="{{row[15]}}">
+                </div>
+                <br>
                 {% endfor %}<br>
                 <div class="botaoElemento">
                     <input type="submit" id="botaoSubmit" value="Alterar">

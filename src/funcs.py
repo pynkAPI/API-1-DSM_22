@@ -326,7 +326,7 @@ def criaComprovante (dicionario, numero_conta):
 
 def LoadConfig():
     config = {}
-    conf = open("config.conf", "r")
+    conf = open("src/config.conf", "r")
     for line in conf:
         line = line.strip()
         if line[:4] == 'host':
