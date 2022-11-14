@@ -1,10 +1,4 @@
 import os
-import email
-from email.message import EmailMessage
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from datetime import date, datetime
 from select import select
 from tokenize import Double
@@ -211,7 +205,6 @@ def RequisicaoGerenteAgencia():
                               CampoPs=[IdTransacao],
                               CampoWr=['id_transacao'])
 
-                    funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
                     #Verifica se ele conseguiu sair da dívida
                     if valorDevido >= 0:
@@ -257,7 +250,6 @@ def RequisicaoGerenteAgencia():
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
-                funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['saldo'],
@@ -304,7 +296,6 @@ def RequisicaoGerenteAgencia():
                                CampoFm=[1, idAgencia],
                                CampoWr=['id_conta'],
                                CampoPs=[IdConta])
-                funcs.emailCadastro(IdConta, email, True)  
                 return homeG(requisicao=requisicao)
             else:    
                 funcs.upMySQL('tb_contabancaria',
@@ -312,7 +303,6 @@ def RequisicaoGerenteAgencia():
                               CampoFm=[2],
                               CampoWr=['id_conta'],
                               CampoPs=[IdConta])
-                funcs.emailCadastro(IdConta, email, False)  
                 return homeG(requisicao=requisicao)
         #endregion 
         else:
@@ -331,7 +321,6 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
-                # funcs.emailCadastro(IdConta, email, True)  
                 return homeG(requisicao=requisicao)
             elif requisicao == '4':
                 idUsuario   =request.form['idUsuario'],
@@ -348,7 +337,6 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
-                # funcs.emailCadastro(IdConta, email, True)  
                 return home()
             else:
                 botao = request.form.to_dict()
@@ -368,8 +356,7 @@ def RequisicaoGerenteAgencia():
                                 CampoBd=['status_alteracao'],
                                 CampoFm=[1],
                                 CampoWr=['id_requisicao'],
-                                CampoPs=[IdConta])
-                    # funcs.emailCadastro(IdConta, email, True)  
+                                CampoPs=[IdConta]) 
                     if session['tipo'] == 2:
                         return homeG(requisicao=requisicao)
                     else:
@@ -380,7 +367,6 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[2],
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
-                    # funcs.emailCadastro(IdConta, email, False)  
                     if session['tipo'] == 2:
                         return homeG(requisicao=requisicao)
                     else:
@@ -640,7 +626,6 @@ def SaqueConta():
                                        CampoFm=[idConta[0][0],  datetime.today(), datetime.today(), None, valor, '1'])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
-                funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
@@ -850,7 +835,6 @@ def ConferenciaDeposito():
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
-                funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
                 #Verifica se ele conseguiu sair da dívida
                 if valorDevido > 0:
@@ -897,7 +881,6 @@ def ConferenciaDeposito():
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
             
-            funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
             funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
@@ -942,12 +925,10 @@ def AceiteConta():
                            CampoFm=[1],
                            CampoWr=['id_conta'],
                            CampoPs=[IdConta])
-            funcs.emailCadastro(IdConta, email, True)  
             return AceiteContaTabela()
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.emailCadastro(IdConta, email, False)  
             return AceiteContaTabela()
        
 #------------------------------
@@ -1045,7 +1026,6 @@ def TransacaoConta():
                                        CampoFm=[IdContaOrigem, date.today(), date.today(), valorContaOrigem, '1'])
 
                 funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
-                funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
                 return Transacao()
 
             valorContaDestino = pesquisaContaDestino[0][1]
@@ -1069,7 +1049,6 @@ def TransacaoConta():
             session['saldo'] = valorContaOrigem
 
             funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
-            funcs.email(conta_origem=IdContaOrigem, tipo='transferencia', valor=float(request.form['valor']))
             return Transacao()
     return Transacao()
         
