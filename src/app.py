@@ -36,7 +36,7 @@ def index():
     session['conta'] = None
     session['tipo']  = None
     session['idContabk'] = None
-    return render_template('login.html')
+    return render_template('login.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 #Pagina inicial Gerentes
 @app.route("/loginG")
@@ -704,9 +704,9 @@ def cadastro():
                         CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo', 'status_contabancaria'],
                         CampoFm=[id_usuario, 1, tipoConta, datetime.today(), numeroCampo, 0, '0'])
         flash(numeroCampo)
-        return render_template('login.html')
+        return render_template('login.html', tituloNavegador='Login | Py.nk')
 
-    return render_template('cadastro.html')
+    return render_template('novo_cadastro.html', tituloNavegador='Cadastro | Py.nk')
 #------------------------------
 #Paginas de Login
 @app.route("/login", methods = ['POST', 'GET'])

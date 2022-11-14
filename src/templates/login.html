@@ -1,6 +1,13 @@
 {% extends "template.html" %}
 
 {% block contents %}
+<nav class="navbar">
+    <img src="../static/img/prosa.png" alt="logo">
+    <ul>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="{{ url_for('cadastro') }}">Cadastre-se</a></li>
+    </ul>
+</nav>
 
 <main class="login">
     <form action="{{ url_for('login') }}" method="POST">
@@ -13,8 +20,9 @@
             <input type="password" name="senha" id="senha" required>
             <label for="senha">Senha</label>
         </div>
-        <button type="submit" value="ENTRAR" class="entrar ripple">ENTRAR<i class='bx bx-right-arrow-alt bx-sm'
+        <button type="submit" value="ENTRAR" class="entrar ripple">Entrar<i class='bx bx-right-arrow-alt bx-sm'
                 style='color:#ffffff'></i></button>
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}

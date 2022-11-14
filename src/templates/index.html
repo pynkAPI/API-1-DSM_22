@@ -1,0 +1,33 @@
+{% extends "template.html" %}
+
+{% block contents %}
+<nav class="navbar">
+    <img src="../static/img/prosa.png" alt="logo">
+    <ul>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="{{ url_for('index') }}">Login</a></li>
+    </ul>
+</nav>
+
+<main class="index">
+    <section class="frase-imagem">
+        <h1><span>Cadastre-se</span> e tenha uma vida <br> financeira <span>descomplicada</span></h1>
+        <img src="../static/img/capa_cadastro.png" alt="capa">
+    </section>
+    <section class="form_index">
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="titulo">
+                <h2>Vem ser</h2>
+                <img src="../static/img/logorosa2.png" alt="logo">
+            </div>
+            <div class="div_input">
+                <input oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf" id="CPFId" required>
+                <label for="CPFId">Digite seu CPF</label>
+            </div>
+            <button type="submit" value="COMEÇAR" class="comecar ripple">Começar<i class='bx bx-right-arrow-alt bx-sm' style='color:#ffffff'></i></button>
+        </form>
+    </section>
+</main>
+
+<script src="../static/scripts/validarCPF.js"></script>
+{% endblock %}
