@@ -55,10 +55,18 @@
         <tr>
          <td class="celula">ID da Transação: {{ ID }}</td>
         </tr>
+        <tr>
+          <td class="celula">
+            <a href="http://127.0.0.1:5000/download/{{ID}}">
+              <input type="button" value="Download">
+            </a>
+          </td>
+        </tr>
       </table> 
       </div>
     </div>
   </div>
     {% endblock Tabela %} 
-  </main>   
+  </main>
+    
   {% endblock conteudo %} 
