@@ -30,6 +30,7 @@ def index():
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
+    session['tipoConta'] = None
     session['idContabk'] = None
     return render_template('login.html')
 #------------------------------
@@ -52,15 +53,10 @@ def home():
     else:
         saldo = None
         if session['tipo'] == 1:
-            #Teste para as datas
-            #a = date.today()
-            #d = date(2022,1,31)
-            #d2 = date(2022,2,28)
-            #funcs.verificaQuantidadeRendimento(data1=d, data2=date.today())
             cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
             saldo = funcs.ValEmReal(session['saldo'])
             VarContador=0
-            
+            data = datetime.today()
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
                                             CampoEs=['id_transacao','tipo','valor','Datatime','status_transacao'],
                                             CampoBd=['id_conta_origem','id_conta_destino'],
@@ -80,7 +76,7 @@ def home():
                                                                  CampoEs=['valor_poupanca', 'data_atualizacao'])
                 valorPoupanca = pesquisaContaPoupanca[0][0]
                 dataAtualizacaoPoupanca = pesquisaContaPoupanca[0][1]
-                dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=d2)
+                dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
                 if dataPeriodoPoupanca > 0:
                     pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
                                                                              CampoFm=[2],
@@ -88,6 +84,11 @@ def home():
                                                                              CampoEs=['porcentagem'])
                     porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
                     valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                    funcs.upMySQL(TabelaBd='tb_poupanca',
+                                  CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                  CampoFm=[date.today(), valorPoupanca],
+                                  CampoWr=['ativo', 'id_conta'],
+                                  CampoPs=[1, session['idContaBK']])
 
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
