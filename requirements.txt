@@ -11,3 +11,4 @@ Pillow==9.2.0
 reportlab==3.6.11
 Werkzeug==2.2.2
 zipp==3.8.1
+python-dateutil==2.8.2

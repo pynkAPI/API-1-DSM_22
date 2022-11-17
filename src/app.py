@@ -1,10 +1,4 @@
 import os
-import email
-from email.message import EmailMessage
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 from select import select
@@ -58,6 +52,11 @@ def home():
     else:
         saldo = None
         if session['tipo'] == 1:
+            #Teste para as datas
+            #a = date.today()
+            #d = date(2022,1,31)
+            #d2 = date(2022,2,28)
+            #funcs.verificaQuantidadeRendimento(data1=d, data2=date.today())
             cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
             saldo = funcs.ValEmReal(session['saldo'])
             VarContador=0
@@ -73,6 +72,23 @@ def home():
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
+
+            if session['tipoConta'] == 'CONTA POUPANÇA':
+                pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
+                                                                 CampoBd=['id_conta', 'ativo'],
+                                                                 CampoFm=[session['idContaBK'], 1],
+                                                                 CampoEs=['valor_poupanca', 'data_atualizacao'])
+                valorPoupanca = pesquisaContaPoupanca[0][0]
+                dataAtualizacaoPoupanca = pesquisaContaPoupanca[0][1]
+                dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=d2)
+                if dataPeriodoPoupanca > 0:
+                    pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                             CampoFm=[2],
+                                                                             CampoBd=['id_regra_operacoes'],
+                                                                             CampoEs=['porcentagem'])
+                    porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                    valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
                                                              CampoFm=[session['idContaBK'], '1'],
@@ -127,6 +143,9 @@ def home():
             valorDevidoTotal = valorDevido
             if valorDevido < 0:
                 valorDevido = valorDevido - float(session['saldo'])    
+                valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=3)
+                valorDevido = valorDevido - 0.005
+                valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=2)
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else:
@@ -727,6 +746,7 @@ def login():
                 session['nome']     = row[1]
                 session['saldo']    = row[15]
                 session['idContaBK']= row[9]
+                session['tipoConta'] = row[12]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1

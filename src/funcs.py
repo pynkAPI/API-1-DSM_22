@@ -327,7 +327,7 @@ def criaComprovante (dicionario, numero_conta):
 
 def LoadConfig():
     config = {}
-    conf = open("src/config.conf", "r")
+    conf = open("config.conf", "r")
     for line in conf:
         line = line.strip()
         if line[:4] == 'host':
@@ -463,6 +463,13 @@ def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     #realiza a correção de acordo com a regra feita pelo cliente
     valorTruncado = valorTruncado - 0.005
     #realiza o truncamento para a correção do valor em duas casas decimais
+    valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
+    return valorTruncado
+
+def calculaPoupanca(valorPoupanca, tempo, porecentagem):
+    valor = ((1+porecentagem)**tempo)*valorPoupanca
+    valorTruncado = truncar(numero=valor,casaDecimal=3)
+    valorTruncado = valorTruncado - 0.005
     valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
     return valorTruncado
 
@@ -761,12 +768,16 @@ def geraValor(qtdCaracteres, tipo):
 
     return senha
 
-def verificaAniversarioDeposito(data1, data2):
-    data1 = data1 + relativedelta(months=1)
-    if data1 >= data2:
-        aniversario = True
-    
-    return aniversario
+
+def verificaQuantidadeRendimento(data1, data2):
+    contadora = 0
+    dataSoma = data1
+    while dataSoma <= data2:
+        contadora += 1
+        dataSoma = data1 + relativedelta(months=contadora)
+    return contadora
+
+        
 
 def altAG(id_agencia):
     upMySQL(TabelaBd='tb_agencia',
