@@ -2,37 +2,6 @@
 {% block conteudo %}
 <div class="conteudo">
     <div class="elemento">
-        <span id="tituloElemento">Dados Atuais</span>
-        <div class="blocoElemento">
-            <div class="inputElemento">
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Nome completo: <br>{{nome}}</span>
-                    </div>
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Email: <br>{{email}}</span>
-                    </div>
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Endereço: <br>{{endereco}}</span>
-                    </div>
-                    <div class="inputValor">
-                        <span id="textoInputElemento">CPF: <br>{{cpf}}</span>
-                    </div>
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Sexo: <br>{{genero}}</span>
-                    </div>
-                    <div class ="inputValor">
-                        <span id="textoInputElemento">Data de Nascimento: </span>
-                        <input id="textoInputElemento" type="date" name="datanasc" value={{dataNasc}} readonly required>
-                    </div>
-                    <div class ="inputValor">
-                        <span id="textoInputElemento">Login: <br>{{login}}</span>
-                    </div>
-                    <div class ="inputValor">
-                        <span id="textoInputElemento">Senha: <br>{{senha}}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
         <span id="tituloElemento">Alterar Dados</span>
         <div class="blocoElemento">
             <div class="inputElemento">
@@ -70,9 +39,15 @@
                         <span id="textoInputElemento">Login:</span>
                         <input required type="text" name="login" value="{{login}}">
                     </div>
-                    <div class ="inputValor">
+                    <div class="inputValor">
                         <span id="textoInputElemento">Senha:</span>
-                        <input required type="text" name="senha" value="{{senha}}">
+                        <input required type="password" id="SenhaId" name="senha"
+                        required value="{{senha}}">
+                    </div>
+                    <div class="inputValor">
+                        <span id="textoInputElemento">Confirmar senha:</span>
+                        <input type="password" value="{{senha}}" id="RepetirsenhaId"
+                name="Repetirsenha" required>
                     </div>
                 </div>
                     <div class="botaoElemento">
