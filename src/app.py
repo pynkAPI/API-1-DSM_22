@@ -27,20 +27,23 @@ app.config['MYSQL_DB'] = config['db']
 mysql = MySQL(app)
 # Bloco de Paginas.
 
-#Pagina inicial
+# Pagina inicial
 @app.route("/")
 @app.route("/login")
 def index():
+    # Zerando session do cliente
     session['login'] = False
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
     session['idContabk'] = None
+
     return render_template('login.html')
 #------------------------------
 #Pagina inicial Gerentes
 @app.route("/loginG")
 def loginG():
+    # Zerando session dos gerentes
     session['login'] = False
     session['nome']  = None
     session['conta'] = None
@@ -52,13 +55,15 @@ def loginG():
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
+    # Verificando se ocorreu o login
     if session['login'] == False:
         abort(401)
     else:
         saldo = None
+        # Verificando se o tipo do login é cliente
         if session['tipo'] == 1:
             cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
-            saldo = funcs.ValEmReal(session['saldo'])
+            saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
             
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
@@ -72,6 +77,7 @@ def home():
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
+
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
                                                              CampoFm=[session['idContaBK'], '1'],
@@ -97,24 +103,29 @@ def home():
             pesquisaSQL = [list(row) for row in pesquisaSQL]
             for row in pesquisaContas:
                 
+                # Pegando o nome do usuario que é a conta de origem
                 nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[0]],
                                                         CampoEs=['nome'])
-                nomes1 = [list(row) for row in nomes1]
-                                            
+
+                # Pegando o nome do usuario que é a conta de destino                            
                 nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[1]],
                                                         CampoEs=['nome'])
-                
+
+                # Convertendo tupla para array
+                nomes1 = [list(row) for row in nomes1]
                 nomes2 = [list(row) for row in nomes2]
                 
+                # Juntando os nomes pesquisados para a variavel de geração do extrato
                 pesquisaSQL[VarContador].append(nomes1[0][0])
                 pesquisaSQL[VarContador].append(nomes2[0][0])
+
                 pesquisaSQL[VarContador][2] = funcs.ValEmReal(pesquisaSQL[VarContador][2])
-                print(pesquisaSQL[VarContador][2])
                 
+                # Tratando o Status da transação
                 if pesquisaSQL[VarContador][4] == '1':
                     pesquisaSQL[VarContador][4] = "Efetuado"
                 else:
@@ -122,24 +133,31 @@ def home():
                         pesquisaSQL[VarContador][4] = "Rejeitado"
                     else:
                         pesquisaSQL[VarContador][4] = "Aguardando"
+
                 VarContador+=1
+
             valorDevidoTotal = valorDevido
             if valorDevido < 0:
-                valorDevido = valorDevido - float(session['saldo'])    
+                valorDevido = valorDevido - float(session['saldo'])   
+            # Definindo o caminho de volta para o index 
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
-        else:
+        else: # Caso seja um gerente
+            # Contando a quantidade de requisições
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
             cursor = mysql.connection.cursor()
-        
-            textoSQL = f"SELECT count(*) FROM pynk.tb_contabancaria;"
+
+            # Contando a quantidade de usuários
+            textoSQL = f"SELECT count(*) FROM tb_contabancaria;"
             
             cursor.execute(textoSQL)
             tusuarios = cursor.fetchall()
             mysql.connection.commit() 
 
-            saldo = f"{session['saldo']:.2f}".replace(".",",")
+            saldo = funcs.ValEmReal(session['saldo'])
+            # Definindo o caminho de volta para o index
             caminhoLogin = 'loginG'
+            #Tratamento de envio para a tela do gerente geral ou de agencia
             if session['tipo'] == 2:
                 return homeG()
             else:
