@@ -403,11 +403,17 @@ def periodoEntreDatas(data1, data2):
     return abs((data2 - data1).days)
 
 def verificaAniversarioDeposito(data1, data2):
+    aniversario = False
+    contadora = 0
     data1 = data1 + relativedelta(months=1)
     if data1 >= data2:
+        contadora += 1
         aniversario = True
-    
-    return aniversario
+        while data1 >= data2:
+            data1 = data1 + relativedelta(months=1)
+            contadora += 1    
+    retorna = [aniversario, contadora]
+    return retorna
 
 def emailComprovante(nome_arq, destinatario):
     subject = "Comprovante de movimentação"
