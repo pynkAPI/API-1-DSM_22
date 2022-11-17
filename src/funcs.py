@@ -260,39 +260,6 @@ def verificaAniversarioDeposito(data1, data2):
     
     return aniversario
 
-def emailComprovante(nome_arq, destinatario):
-    subject = "Comprovante de movimentação"
-    body = "Aqui está o comprovante da sua última movimentação."
-    sender_email = "py.nk.fatec@gmail.com"
-    receiver_email = destinatario
-    password = "hjdixtkskjwtvxqr"
-
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-
-    message.attach(MIMEText(body, "plain"))
-
-    filename = nome_arq  
-
-    with open(filename, "rb") as attachment:
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-  
-    encoders.encode_base64(part)
-
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename={filename}"
-    )
-
-    message.attach(part)
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
-        smtp.login(sender_email, password)
-        smtp.sendmail(sender_email, receiver_email, message.as_string())
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
 '401': 'Antes de fazer essa requisição se autentifique. Credenciais inválidas.',
@@ -642,13 +609,17 @@ def geraComprovante(dados):
     if dados[0][0] == 'Depósito':
         if dados[0][4] == 'Em Aprovação':
             c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE DEPÓSITO (EM APROVAÇÃO)')
-            line-=0.02
+            line-=0.04
         else:
             c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE DEPÓSITO')
-            line-=0.02
+            line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
         c.line(width*0.1, height*line, width*0.9, height*line)
         line-=0.02
-        c.drawString(width*0.1, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
         line-=0.02
         c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
         line-=0.02
@@ -657,26 +628,20 @@ def geraComprovante(dados):
         c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
         line-=0.02
         c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
-        line-=0.02
-        c.drawString(width*0.1, height*line, f'COMPROVANTE GERADO A PARTIR DO ID: {str(dados[0][7]).upper()}')
-        line-=0.02
-        c.line(width*0.1, height*line, width*0.9, height*line)
-        line-=0.02
-        c.drawString(width*0.1, height*line, 'DADOS DA(S) CONTA')
-        line-=0.02
-        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
-        line-=0.02
-        c.drawString(width*0.1, height*line, f'NOME DO PROPRIETÁRIO: {str(dados[0][10]).upper()}')
         line-=0.02
         c.showPage()
         c.save()
         return nomeArq
     elif dados[0][0] == 'Saque':
         c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE SAQUE')
+        line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
         line-=0.02
         c.line(width*0.1, height*line, width*0.9, height*line)
         line-=0.02
-        c.drawString(width*0.1, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
         line-=0.02
         c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
         line-=0.02
@@ -685,26 +650,20 @@ def geraComprovante(dados):
         c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
         line-=0.02
         c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
-        line-=0.02
-        c.drawString(width*0.1, height*line, f'COMPROVANTE GERADO A PARTIR DO ID: {str(dados[0][7]).upper()}')
-        line-=0.02
-        c.line(width*0.1, height*line, width*0.9, height*line)
-        line-=0.02
-        c.drawString(width*0.1, height*line, 'DADOS DA(S) CONTA')
-        line-=0.02
-        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
-        line-=0.02
-        c.drawString(width*0.1, height*line, f'NOME DO PROPRIETÁRIO: {str(dados[0][10]).upper()}')
         line-=0.02
         c.showPage()
         c.save()
         return nomeArq
     elif dados[0][0] == 'Transferência':
         c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE TRANSFERÊNCIA')
+        line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
         line-=0.02
         c.line(width*0.1, height*line, width*0.9, height*line)
         line-=0.02
-        c.drawString(width*0.1, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
         line-=0.02
         c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
         line-=0.02
@@ -714,20 +673,17 @@ def geraComprovante(dados):
         line-=0.02
         c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
         line-=0.02
-        c.drawString(width*0.1, height*line, f'COMPROVANTE GERADO A PARTIR DO ID: {str(dados[0][7]).upper()}')
-        line-=0.02
         c.line(width*0.1, height*line, width*0.9, height*line)
         line-=0.02
-        c.drawString(width*0.1, height*line, 'DADOS DA(S) CONTA')
+        c.drawCentredString(width*0.5, height*line, 'DADOS DO DESTINATÁRIO')
         line-=0.02
-        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        c.drawString(width*0.1, height*line, f'TRANSFERIDO PARA: {str(dados[0][8]).upper()}')
         line-=0.02
-        c.drawString(width*0.1, height*line, f'NOME DO PROPRIETÁRIO: {str(dados[0][10]).upper()}')
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][9]).upper()}')
         line-=0.02
         c.showPage()
         c.save()
         return nomeArq
-
 
 
 # def DelAG(id_agencia):

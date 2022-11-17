@@ -1062,7 +1062,7 @@ def TransacaoConta():
                               CampoWr=['id_conta'])
 
             session['saldo'] = valorContaOrigem
-            funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
+            funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='Transferência', valor=float(request.form['valor']), status='1')
             return Transacao()
         else:
            return Transacao(mensagem='Não foi possível realziar a operação')
@@ -1894,12 +1894,10 @@ def altaraConfigCheque():
 def verMais():
     if request.method == 'POST': 
         idTransacao = request.form.get('IdTransacao')
-        print(idTransacao)
         pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
-                                                CampoBd=['id_transacao'],
-                                                CampoFm=[idTransacao],
-                                                CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
-        print(pesquisaSQL)
+                                            CampoBd=['id_transacao'],
+                                            CampoFm=[idTransacao],
+                                            CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
         idContaOrigem = pesquisaSQL[0][4]
         idContaDestino = pesquisaSQL[0][5]
         tipo = pesquisaSQL[0][0]
@@ -1910,17 +1908,17 @@ def verMais():
         idContaRequisitanteComprovante = int(session['idContaBK'])
 
         pesquisaSQLContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                          CampoBd=['id_conta'],
-                                                          CampoFm=[idContaDestino],
-                                                          CampoEs=['numeroconta','nome'])
-        
+                                                            CampoBd=['id_conta'],
+                                                            CampoFm=[idContaDestino],
+                                                            CampoEs=['numeroconta','nome'])
+
         nomeContaDestino = pesquisaSQLContaDestino[0][1]
         numeroContaDestino = pesquisaSQLContaDestino[0][0]
 
         pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                          CampoBd=['id_conta'],
-                                                          CampoFm=[idContaDestino],
-                                                          CampoEs=['numeroconta','nome'])
+                                                            CampoBd=['id_conta'],
+                                                            CampoFm=[idContaOrigem],
+                                                            CampoEs=['numeroconta','nome'])
         nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
         numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
 
@@ -1974,7 +1972,7 @@ def download(ID):
 
     pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
                                                         CampoBd=['id_conta'],
-                                                        CampoFm=[idContaDestino],
+                                                        CampoFm=[idContaOrigem],
                                                         CampoEs=['numeroconta','nome'])
     nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
     numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
