@@ -297,33 +297,39 @@ def RequisicaoGerenteAgencia():
         elif requisicao == '1':
             botao = request.form.to_dict()
             IdConta = request.form['Id']
-            pesquisaAgenciaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
-                                                          CampoEs=['id_agencia'],
-                                                          CampoBd=['id_funcionario'],
-                                                          CampoFm=[session['idFunc']])
-            idAgencia = pesquisaAgenciaSQL[0][0]
-            email = ''
-            email = funcs.SlcEspecificoMySQL('tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
-                                         CampoBd=['tb_contabancaria.id_conta'],
-                                         CampoFm=[IdConta],
-                                         CampoEs=['tb_usuario.email'])
+            # pesquisaAgenciaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+            #                                               CampoEs=['id_agencia'],
+            #                                               CampoBd=['id_funcionario'],
+            #                                               CampoFm=[session['idFunc']])                                                        
+            # idAgencia = pesquisaAgenciaSQL[0][0]
+            # email = ''
+            # email = funcs.SlcEspecificoMySQL('tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+            #                              CampoBd=['tb_contabancaria.id_conta'],
+            #                              CampoFm=[IdConta],
+            #                              CampoEs=['tb_usuario.email'])
 
             if botao['botao'] == 'Confirmar':
                 funcs.upMySQL('tb_contabancaria',
-                               CampoBd=['status_contabancaria', 'id_agencia'],
-                               CampoFm=[1, idAgencia],
+                               CampoBd=['status_contabancaria'],
+                               CampoFm=[1],
                                CampoWr=['id_conta'],
                                CampoPs=[IdConta])
-                funcs.emailCadastro(IdConta, email, True)  
-                return homeG(requisicao=requisicao)
+                # funcs.emailCadastro(IdConta, email, True)  
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
             else:    
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['status_contabancaria'],
                               CampoFm=[2],
                               CampoWr=['id_conta'],
                               CampoPs=[IdConta])
-                funcs.emailCadastro(IdConta, email, False)  
-                return homeG(requisicao=requisicao)
+                # funcs.emailCadastro(IdConta, email, False)  
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
         #endregion 
         # Aceitar alteração de dados
         #region
