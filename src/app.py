@@ -28,20 +28,23 @@ app.config['MYSQL_DB'] = config['db']
 mysql = MySQL(app)
 # Bloco de Paginas.
 
-#Pagina inicial
+# Pagina inicial
 @app.route("/")
 @app.route("/login")
 def index():
+    # Zerando session do cliente
     session['login'] = False
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
     session['idContabk'] = None
+
     return render_template('login.html')
 #------------------------------
 #Pagina inicial Gerentes
 @app.route("/loginG")
 def loginG():
+    # Zerando session dos gerentes
     session['login'] = False
     session['nome']  = None
     session['conta'] = None
@@ -53,13 +56,15 @@ def loginG():
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
 def home():
+    # Verificando se ocorreu o login
     if session['login'] == False:
         abort(401)
     else:
         saldo = None
+        # Verificando se o tipo do login é cliente
         if session['tipo'] == 1:
             cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
-            saldo = funcs.ValEmReal(session['saldo'])
+            saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
             
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
@@ -73,6 +78,7 @@ def home():
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
+
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
                                                              CampoFm=[session['idContaBK'], '1'],
@@ -98,24 +104,29 @@ def home():
             pesquisaSQL = [list(row) for row in pesquisaSQL]
             for row in pesquisaContas:
                 
+                # Pegando o nome do usuario que é a conta de origem
                 nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[0]],
                                                         CampoEs=['nome'])
-                nomes1 = [list(row) for row in nomes1]
-                                            
+
+                # Pegando o nome do usuario que é a conta de destino                            
                 nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[1]],
                                                         CampoEs=['nome'])
-                
+
+                # Convertendo tupla para array
+                nomes1 = [list(row) for row in nomes1]
                 nomes2 = [list(row) for row in nomes2]
                 
+                # Juntando os nomes pesquisados para a variavel de geração do extrato
                 pesquisaSQL[VarContador].append(nomes1[0][0])
                 pesquisaSQL[VarContador].append(nomes2[0][0])
+
                 pesquisaSQL[VarContador][2] = funcs.ValEmReal(pesquisaSQL[VarContador][2])
-                print(pesquisaSQL[VarContador][2])
                 
+                # Tratando o Status da transação
                 if pesquisaSQL[VarContador][4] == '1':
                     pesquisaSQL[VarContador][4] = "Efetuado"
                 else:
@@ -123,24 +134,31 @@ def home():
                         pesquisaSQL[VarContador][4] = "Rejeitado"
                     else:
                         pesquisaSQL[VarContador][4] = "Aguardando"
+
                 VarContador+=1
+
             valorDevidoTotal = valorDevido
             if valorDevido < 0:
-                valorDevido = valorDevido - float(session['saldo'])    
+                valorDevido = valorDevido - float(session['saldo'])   
+            # Definindo o caminho de volta para o index 
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
-        else:
+        else: # Caso seja um gerente
+            # Contando a quantidade de requisições
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
             cursor = mysql.connection.cursor()
-        
-            textoSQL = f"SELECT count(*) FROM pynk.tb_contabancaria;"
+
+            # Contando a quantidade de usuários
+            textoSQL = f"SELECT count(*) FROM tb_contabancaria;"
             
             cursor.execute(textoSQL)
             tusuarios = cursor.fetchall()
             mysql.connection.commit() 
 
-            saldo = f"{session['saldo']:.2f}".replace(".",",")
+            saldo = funcs.ValEmReal(session['saldo'])
+            # Definindo o caminho de volta para o index
             caminhoLogin = 'loginG'
+            #Tratamento de envio para a tela do gerente geral ou de agencia
             if session['tipo'] == 2:
                 return homeG()
             else:
@@ -151,6 +169,7 @@ def home():
 def RequisicaoGerenteAgencia():
     if request.method == "POST":
         requisicao = request.form['requisicao']
+        # print(requisicao)
         #Conferencia Deposito
         #region
         if requisicao == '0':
@@ -234,7 +253,10 @@ def RequisicaoGerenteAgencia():
                                   CampoPs=[1])
                     session['saldo'] = valorTotalBanco
 
-                    return homeG(requisicao=requisicao)           
+                    if session['tipo'] == 2:
+                        return homeG(requisicao=requisicao)
+                    else:
+                        return render_template('ListReq.html',requisicao=requisicao)           
 
                 pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                             CampoEs=['tb_contabancaria.id_conta' ,'tb_contabancaria.saldo'],
@@ -258,7 +280,6 @@ def RequisicaoGerenteAgencia():
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
-
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['saldo'],
                               CampoFm=[valor],
@@ -272,36 +293,42 @@ def RequisicaoGerenteAgencia():
                               CampoPs=[1]) 
                 session['saldo'] = valorTotalBanco
 
-                return homeG(requisicao=requisicao)
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
             else:
                 funcs.upMySQL(TabelaBd='tb_transacao', 
                           CampoBd=['status_transacao', 'data_aceite_recusa'],
                           CampoFm=[2, datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
-                return homeG(requisicao=requisicao)
-        #endregion 
 
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
+        #endregion 
         # Aceite de Abertura de Conta
         #region
         elif requisicao == '1':
             botao = request.form.to_dict()
             IdConta = request.form['Id']
-            pesquisaAgenciaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
-                                                          CampoEs=['id_agencia'],
-                                                          CampoBd=['id_funcionario'],
-                                                          CampoFm=[session['idFunc']])
-            idAgencia = pesquisaAgenciaSQL[0][0]
-            email = ''
-            email = funcs.SlcEspecificoMySQL('tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
-                                         CampoBd=['tb_contabancaria.id_conta'],
-                                         CampoFm=[IdConta],
-                                         CampoEs=['tb_usuario.email'])
+            # pesquisaAgenciaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_agencia',
+            #                                               CampoEs=['id_agencia'],
+            #                                               CampoBd=['id_funcionario'],
+            #                                               CampoFm=[session['idFunc']])                                                        
+            # idAgencia = pesquisaAgenciaSQL[0][0]
+            # email = ''
+            # email = funcs.SlcEspecificoMySQL('tb_usuario INNER JOIN tb_contabancaria ON tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+            #                              CampoBd=['tb_contabancaria.id_conta'],
+            #                              CampoFm=[IdConta],
+            #                              CampoEs=['tb_usuario.email'])
 
             if botao['botao'] == 'Confirmar':
                 funcs.upMySQL('tb_contabancaria',
-                               CampoBd=['status_contabancaria', 'id_agencia'],
-                               CampoFm=[1, idAgencia],
+                               CampoBd=['status_contabancaria'],
+                               CampoFm=[1],
                                CampoWr=['id_conta'],
                                CampoPs=[IdConta])
                 
@@ -312,11 +339,14 @@ def RequisicaoGerenteAgencia():
                               CampoFm=[2],
                               CampoWr=['id_conta'],
                               CampoPs=[IdConta])
+
                 
                 return homeG(requisicao=requisicao)
+                
         #endregion 
-        else:
-            if requisicao == '3':
+        # Aceitar alteração de dados
+        #region
+        elif requisicao == '3':
                 idUsuario   =request.form['idUsuario'],
                 nome        =request.form['nome']
                 email       =request.form['email']
@@ -331,6 +361,7 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
+
               
                 return homeG(requisicao=requisicao)
             elif requisicao == '4':
@@ -343,8 +374,25 @@ def RequisicaoGerenteAgencia():
                 datanasc    =request.form['datanasc']
                 senha       =request.form['senha']
                 
+            funcs.upMySQL('tb_usuario',
+                            CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                            CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
+                            CampoWr=['id_usuario'],
+                            CampoPs=[idUsuario[0]])
+            # funcs.emailCadastro(IdConta, email, True)  
+            return home()
+        else:
+            botao = request.form.to_dict()
+            IdConta = request.form['Id']
+            if botao['botao'] == 'Confirmar':
+                Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
+                DescSeparada = []
+                for row in Desc:
+                    doispontos = row.find(':')+1
+                    DescSeparada.append(row[doispontos:])
                 funcs.upMySQL('tb_usuario',
                                 CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
@@ -364,7 +412,7 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[DescSeparada[0]])
-                    funcs.upMySQL('tb_requisicoes',
+                funcs.upMySQL('tb_requisicoes',
                                 CampoBd=['status_alteracao'],
                                 CampoFm=[1],
                                 CampoWr=['id_requisicao'],
@@ -385,7 +433,7 @@ def RequisicaoGerenteAgencia():
                         return homeG(requisicao=requisicao)
                     else:
                         return render_template('ListReq.html')
-            
+          
     return homeG(requisicao=requisicao)
      
 
@@ -483,9 +531,10 @@ def homeGG(requisicao=None):
                                                                INNER JOIN tb_usuario 
                                                                ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
                                                                CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
-                                                               CampoBd=['status_transacao', 'tb_agencia.id_funcionario'],
-                                                               CampoFm=[0, session['idFunc']])
-            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+                                                               CampoBd=['status_transacao'],
+                                                               CampoFm=[0])
+            # print(pesquisaSQL);                                                               
+            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         #endregion
         elif requisicao == '1':
             cabecalho = ('Nome', 'CPF', 'Número Conta', 'Data Nasc', 'Endereço', 'Genero', 'Tipo Conta', '', '')
@@ -494,7 +543,7 @@ def homeGG(requisicao=None):
                                            CampoEs=['tb_contabancaria.id_conta','tb_usuario.nome', 'tb_usuario.cpf', 'tb_contabancaria.numeroconta','tb_usuario.datanascimento','tb_usuario.endereco','tb_usuario.genero', 'tb_contabancaria.tipo'],
                                            CampoBd=['tb_contabancaria.status_contabancaria'],
                                            CampoFm=[0])    
-            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         elif requisicao == '2':
             cabecalho = ('Nome', 'CPF', 'descricao')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
@@ -502,9 +551,9 @@ def homeGG(requisicao=None):
                                                    CampoBd=['tb_requisicoes.status_alteracao'],
                                                    CampoFm=['0'])
             print(pesquisaSQL)
-            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         else:
-            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho)
+            return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
     return render_template('ListReq.html')
 
 #Aplicar filtro no extrato
