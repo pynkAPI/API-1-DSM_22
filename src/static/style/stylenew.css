@@ -543,6 +543,11 @@ th, td {
     font-size: 2vw;
 }
 
+#mensagemErro{
+    color: var(--color-dark);
+    font-size: 1.5vw;
+}
+
 .blocoElemento{
     display: flex;
     flex-direction: column;

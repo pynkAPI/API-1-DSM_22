@@ -20,7 +20,7 @@ Baseado nos requisitos apresentados pelo cliente a Py.nk está desenvolvendo um 
 #### •Sprint 1
 A Sprint 1 ocorreu dentro dos conformes, erramos detalhes de execução como comentários pouco descritivos no Git e apresentação. Porém, foi muito importante no sentido de entendermos o passo do time, reconhecermos fragilidades e barreiras pessoais. Os **acertos** percebidos pelo time foram a **cooperação**, **empenho**, **entrega** e **organização**. Enquanto que os **erros** foram mal organização da **sprint planning**, **tempo de estudo irreal** e **ausência** de alguns integrantes do grupo. É bom ressaltar que muitos desses erros foram causados por falta de conhecimento ou pouca experiência do grupo e que esses pontos foram levantados em conjunto com todos os integrantes.
 
-**Destaque da Sprint 1**: Felipe Augusto Graciano
+**Destaque da Sprint 1**: Felipe Augusto Graciano.
 
 **Burndown Chart da Sprint 1**:
 
@@ -44,6 +44,21 @@ A Sprint 2 apresentou mudanças muito claras em relação a Sprint 1, muitas del
 **GIF do Produto entregue na Sprint 2**:
 
 <img src="/doc/img/Gif Programa Sprint 2.gif">
+
+#### •Sprint 3
+A Sprint 3 foi uma sprint extremamente produtiva, nela foram realizadas maior parte das tarefas densas com várias regras de negócio de forma a praticamente finalizar o produto. Sobrando assim para a Sprint 4 as atividades que são em sua maioria somente melhorias de qualidade de vida, reformulação de algumas partes que não contemplam mais a situação do projeto e algumas alterações nas regras de negócio que foram questionadas pelo cliente.
+Apesar da perda de integrantes o grupo apresentou melhorias em diversos aspectos, sendo assim, uma alteração positiva para a equipe. 
+Os acertos percebidos foram **produtividade** e **comprometimento**. Enquanto que os erros observados foram **falta de comunicação** e  **negligência das cerimônias SCRUM**.
+
+**Destaque da Sprint 3**: Otávio Abreu dos Santos Silva.
+
+**Burndown Chart da Sprint 3**:
+
+<img src="/doc/img/Burndown Sprint 3.png">
+
+**GIF do Produto entregue na Sprint 3**:
+
+<img src="/doc/img/Gif Programa Sprint 3.gif">
 
 • [To the top ↑](#top)
 
@@ -138,7 +153,7 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |  Otávio Abreu dos Santos Silva  |     Master     |   https://github.com/otavioabreu27  |              https://www.linkedin.com/in/o-abreu/              |
 |    Yasmin Helena Souza Mosena   | Desenvolvedora |      https://github.com/ymosena     |    https://www.linkedin.com/in/yasmin-m%C3%B3sena-11b256249/   |
 | Pedro Henrique Silva De Almeida |  Desenvolvedor | https://github.com/PedroHSdeAlmeida |          https://www.linkedin.com/in/pedrohsalmeidaa/          |
-|        Felipe Silva Alves       |  Desenvolvedor |     https://github.com/fealvesfe    |    https://www.linkedin.com/in/felipe-silva-alves-b43651200/   |
+|        Elaine Aparecida dos Santos       |  Desenvolvedor |     https://github.com/elaineads    |    https://www.linkedin.com/in/elaineads/   |
 |      Augusto Henrique Buin      |  Desenvolvedor |    https://github.com/AugustoBuin   |  https://www.linkedin.com/in/augusto-henrique-buin-a58bb0208/  |
 |     Felipe Augusto Graciano     |  Desenvolvedor |      https://github.com/Yetgvg      |                                -                               |
 
