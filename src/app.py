@@ -31,6 +31,7 @@ def index():
     session['nome']  = None
     session['conta'] = None
     session['tipo']  = None
+    session['tipoConta'] = None
     session['idContabk'] = None
 
     return render_template('login.html')
@@ -60,7 +61,7 @@ def home():
             cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
             saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
-            
+            data = datetime.today()
             pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
                                             CampoEs=['id_transacao','tipo','valor','Datatime','status_transacao'],
                                             CampoBd=['id_conta_origem','id_conta_destino'],
@@ -72,6 +73,27 @@ def home():
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
+
+            if session['tipoConta'] == 'CONTA POUPANÇA':
+                pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
+                                                                 CampoBd=['id_conta', 'ativo'],
+                                                                 CampoFm=[session['idContaBK'], 1],
+                                                                 CampoEs=['valor_poupanca', 'data_atualizacao'])
+                valorPoupanca = pesquisaContaPoupanca[0][0]
+                dataAtualizacaoPoupanca = pesquisaContaPoupanca[0][1]
+                dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
+                if dataPeriodoPoupanca > 0:
+                    pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                             CampoFm=[2],
+                                                                             CampoBd=['id_regra_operacoes'],
+                                                                             CampoEs=['porcentagem'])
+                    porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                    valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                    funcs.upMySQL(TabelaBd='tb_poupanca',
+                                  CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                  CampoFm=[date.today(), valorPoupanca],
+                                  CampoWr=['ativo', 'id_conta'],
+                                  CampoPs=[1, session['idContaBK']])
 
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
@@ -133,8 +155,11 @@ def home():
 
             valorDevidoTotal = valorDevido
             if valorDevido < 0:
-                valorDevido = valorDevido - float(session['saldo'])   
-            # Definindo o caminho de volta para o index 
+                valorDevido = valorDevido - float(session['saldo'])    
+                valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=3)
+                valorDevido = valorDevido - 0.005
+                valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=2)
+
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
         else: # Caso seja um gerente
@@ -744,9 +769,12 @@ def cadastro():
             id_usuario = row[0]
         #Gera o numero da conta, usando o nome do usuário, id da agência e o cpf do usuário
         numeroCampo = funcs.geraId(str(nome),str(1),str(cpf))
+        
+        idAgencia = funcs.verificaAgencia()
+        
         funcs.InsMySQL('tb_contabancaria',
                         CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo', 'status_contabancaria'],
-                        CampoFm=[id_usuario, 1, tipoConta, datetime.today(), numeroCampo, 0, '0'])
+                        CampoFm=[id_usuario, idAgencia, tipoConta, datetime.today(), numeroCampo, 0, '0'])
         flash(numeroCampo)
         return render_template('login.html')
 
@@ -770,6 +798,7 @@ def login():
                 session['nome']     = row[1]
                 session['saldo']    = row[15]
                 session['idContaBK']= row[9]
+                session['tipoConta'] = row[12]
             session['login'] = True
             session['conta'] = numeroconta
             session['tipo']  = 1

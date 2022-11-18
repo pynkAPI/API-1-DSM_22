@@ -1,6 +1,8 @@
 from logging import raiseExceptions
 import math
 import os
+from dateutil.relativedelta import relativedelta
+from importlib.metadata import requires
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from importlib.metadata import requires
@@ -254,11 +256,47 @@ def periodoEntreDatas(data1, data2):
     return abs((data2 - data1).days)
 
 def verificaAniversarioDeposito(data1, data2):
+    aniversario = False
+    contadora = 0
     data1 = data1 + relativedelta(months=1)
     if data1 >= data2:
+        contadora += 1
         aniversario = True
-    
-    return aniversario
+        while data1 >= data2:
+            data1 = data1 + relativedelta(months=1)
+            contadora += 1    
+    retorna = [aniversario, contadora]
+    return retorna
+
+def emailComprovante(nome_arq, destinatario):
+    subject = "Comprovante de movimentação"
+    body = "Aqui está o comprovante da sua última movimentação."
+    sender_email = "py.nk.fatec@gmail.com"
+    receiver_email = destinatario
+    password = "hjdixtkskjwtvxqr"
+
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+
+    message.attach(MIMEText(body, "plain"))
+
+    filename = nome_arq  
+
+    with open(filename, "rb") as attachment:
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+  
+    encoders.encode_base64(part)
+
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename={filename}"
+    )
+
+    message.attach(part)
+
 
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
@@ -281,6 +319,13 @@ def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     #realiza a correção de acordo com a regra feita pelo cliente
     valorTruncado = valorTruncado - 0.005
     #realiza o truncamento para a correção do valor em duas casas decimais
+    valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
+    return valorTruncado
+
+def calculaPoupanca(valorPoupanca, tempo, porecentagem):
+    valor = ((1+porecentagem)**tempo)*valorPoupanca
+    valorTruncado = truncar(numero=valor,casaDecimal=3)
+    valorTruncado = valorTruncado - 0.005
     valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
     return valorTruncado
 
@@ -532,6 +577,23 @@ def desligaGA(IdFuncionario, novoResp):
                     CampoFm=[IdFuncionario])
     return 
 
+def verificaAgencia():
+    cursor = mysql.connection.cursor()
+    
+    Select = f'''SELECT id_agencia,
+                 count(id_agencia)
+                 FROM tb_contabancaria  
+                 group by id_agencia  
+                 order by count(id_agencia) asc
+                 LIMIT 1;'''
+
+    cursor.execute(Select)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit() 
+    cursor.close()
+    idAgencia = pesquisaSQL[0][0]
+    return idAgencia
+
 def alteraU(novosDados,tipo):
     #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
     #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
@@ -579,12 +641,14 @@ def geraValor(qtdCaracteres, tipo):
 
     return senha
 
-def verificaAniversarioDeposito(data1, data2):
-    data1 = data1 + relativedelta(months=1)
-    if data1 >= data2:
-        aniversario = True
-    
-    return aniversario
+def verificaQuantidadeRendimento(data1, data2):
+    contadora = 0
+    dataSoma = data1
+    while dataSoma <= data2:
+        contadora += 1
+        dataSoma = data1 + relativedelta(months=contadora)
+    return contadora
+
 
 def altAG(id_agencia):
     upMySQL(TabelaBd='tb_agencia',
