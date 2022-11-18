@@ -43,7 +43,14 @@
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Senha:</span>
-                    <input required type="text" name="senha" value="{{row[15]}}">
+                    <input required type="password" id="SenhaId" name="senha"
+                    required value="{{row[15]}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Confirmar senha:</span>
+                    <input type="password" value="{{row[15]}}" id="RepetirsenhaId"
+            name="Repetirsenha" required>
+
                 </div>
                 <br>
                 {% endfor %}<br>

@@ -1234,11 +1234,12 @@ def AltSaldo():
 @app.route("/ListUsa",  methods = ['POST', 'GET'])
 def ListUsa():
     cursor = mysql.connection.cursor()
-        
-    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento",'localidade',"Status","Alterar dados")
+
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Tipo conta","Status","Alterar dados")
     
-    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TA.localidade,IF(TC.status_contabancaria='1', "ativo", "desativado")
-    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario inner join tb_agencia as TA on TA.id_agencia=TC.id_agencia;"""
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TC.tipo,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia;"""
+
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
@@ -1264,10 +1265,11 @@ def ListUsaGA():
     cursor.execute(SelectAgencia)
     pesquisaAgen = cursor.fetchall()
     
-    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Status","Alterar dados")
+    cabecalho = ("Nome", "Email", "CPF", "Gênero", "Tipo conta","Data nascimento","Endereço","Status","Alterar dados")
     
-    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,IF(TC.status_contabancaria='1', "ativo", "desativado")
-    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_agencia={pesquisaAgen[0][0]}"""
+    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,TU.endereco,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU on TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia 
+    where TC.id_agencia={pesquisaAgen[0][0]}""" 
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
@@ -1660,7 +1662,8 @@ def updateUsuGG():
             
         funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento",'senha'],CampoFm=[nome, email, cpf, genero, endereco, dataNasc, senha],CampoWr=['id_usuario'],CampoPs=[IdUsu])
         
-    if pagina == 0:    
+    if pagina == '0':    
+        print('entra aq porra')
         return ListUsa()
     else:
         return ListUsa()
@@ -1670,12 +1673,12 @@ def updateUsuGG():
 @app.route("/gerentes", methods = ['POST', 'GET'])
 def gerentes():
     cursor = mysql.connection.cursor()
-        
-    cabecalho = ('Nome', 'Papel','Matricula','localidade')
+
+    cabecalho = ('Nome', 'Papel','Matricula',"Agência")
     
-    SelectGA = f"""SELECT TF.id_funcionario, nome, papel, num_matricula,TA.localidade 
-    FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario left join tb_agencia as TA on TA.id_funcionario=TF.id_funcionario
-    where papel = 'GERENTE DE AGÊNCIA' order by TF.id_funcionario"""
+    SelectGA = f"""SELECT TF.id_funcionario, TU.nome, TF.papel, TF.num_matricula , TA.localidade 
+                   FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario INNER JOIN tb_agencia as TA on TA.id_funcionario=TF.id_funcionario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     mysql.connection.commit() 
