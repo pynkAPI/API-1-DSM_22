@@ -1,15 +1,9 @@
 import os
-import email
-from email.message import EmailMessage
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 from select import select
 from tokenize import Double
-from flask import Flask, render_template,request, url_for, redirect, session, flash, abort
+from flask import Flask, render_template,request, url_for, redirect, session, flash, abort, send_file
 from flask_mysqldb import MySQL
 import funcs
 import random
@@ -1117,7 +1111,7 @@ def TransacaoConta():
                               CampoWr=['id_conta'])
 
             session['saldo'] = valorContaOrigem
-            funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='transferencia', valor=float(request.form['valor']), status='1')
+            funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='Transferência', valor=float(request.form['valor']), status='1')
             return Transacao()
         else:
            return Transacao(mensagem='Não foi possível realziar a operação')
@@ -1950,9 +1944,9 @@ def verMais():
     if request.method == 'POST': 
         idTransacao = request.form.get('IdTransacao')
         pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
-                                                CampoBd=['id_transacao'],
-                                                CampoFm=[idTransacao],
-                                                CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
+                                            CampoBd=['id_transacao'],
+                                            CampoFm=[idTransacao],
+                                            CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
         idContaOrigem = pesquisaSQL[0][4]
         idContaDestino = pesquisaSQL[0][5]
         tipo = pesquisaSQL[0][0]
@@ -1963,17 +1957,17 @@ def verMais():
         idContaRequisitanteComprovante = int(session['idContaBK'])
 
         pesquisaSQLContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                          CampoBd=['id_conta'],
-                                                          CampoFm=[idContaDestino],
-                                                          CampoEs=['numeroconta','nome'])
-        
+                                                            CampoBd=['id_conta'],
+                                                            CampoFm=[idContaDestino],
+                                                            CampoEs=['numeroconta','nome'])
+
         nomeContaDestino = pesquisaSQLContaDestino[0][1]
         numeroContaDestino = pesquisaSQLContaDestino[0][0]
 
         pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                          CampoBd=['id_conta'],
-                                                          CampoFm=[idContaDestino],
-                                                          CampoEs=['numeroconta','nome'])
+                                                            CampoBd=['id_conta'],
+                                                            CampoFm=[idContaOrigem],
+                                                            CampoEs=['numeroconta','nome'])
         nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
         numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
 
@@ -1985,6 +1979,7 @@ def verMais():
             statusEscrito = 'Recusado'
         data = str(dateTime.strftime('%x'))
         hora = str(dateTime.strftime('%X'))
+
         return render_template('verMais.html', 
                                 Tipo=tipo,
                                 Hora=hora, 
@@ -1999,6 +1994,54 @@ def verMais():
                                 nomeContaOrigem=nomeContaOrigem,
                                 numeroContaOrigem=numeroContaOrigem,
                                 ID=idTransacao)
+
+@app.route("/download/<ID>", methods = ['GET'])
+def download(ID):
+    idTransacao = ID
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                            CampoBd=['id_transacao'],
+                                            CampoFm=[idTransacao],
+                                            CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
+    idContaOrigem = pesquisaSQL[0][4]
+    idContaDestino = pesquisaSQL[0][5]
+    tipo = pesquisaSQL[0][0]
+    dateTime = pesquisaSQL[0][1]
+    valor = pesquisaSQL[0][2]
+    statusTransacao = pesquisaSQL[0][3]
+
+    idContaRequisitanteComprovante = int(session['idContaBK'])
+
+    pesquisaSQLContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                        CampoBd=['id_conta'],
+                                                        CampoFm=[idContaDestino],
+                                                        CampoEs=['numeroconta','nome'])
+    
+    nomeContaDestino = pesquisaSQLContaDestino[0][1]
+    numeroContaDestino = pesquisaSQLContaDestino[0][0]
+
+    pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                        CampoBd=['id_conta'],
+                                                        CampoFm=[idContaOrigem],
+                                                        CampoEs=['numeroconta','nome'])
+    nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
+    numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
+
+    if statusTransacao == '0':
+        statusEscrito = 'Em Aprovação'
+    elif statusTransacao == '1':
+        statusEscrito = 'Aprovado'
+    else:
+        statusEscrito = 'Recusado'
+    data = str(dateTime.strftime('%x'))
+    hora = str(dateTime.strftime('%X'))
+
+    dados = ((tipo, hora, data, valor, statusEscrito, idContaOrigem, idContaDestino,
+            idContaRequisitanteComprovante, nomeContaDestino, numeroContaDestino,
+            nomeContaOrigem, numeroContaOrigem, idTransacao),)
+
+    nomeArq = funcs.geraComprovante(dados)
+    send_file(nomeArq, as_attachment=True)
+    return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
 
 #Bloco para subir o site.
 if __name__ == "__main__":

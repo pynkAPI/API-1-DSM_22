@@ -1,16 +1,9 @@
 from logging import raiseExceptions
 import math
 import os
-from email.message import EmailMessage
-from email import encoders
-from dateutil.relativedelta import relativedelta
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import ssl
-import smtplib
-from importlib.metadata import requires
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from importlib.metadata import requires
 from flask import Flask, render_template,request, url_for, redirect, session, abort
 from flask_mysqldb import MySQL
 from datetime import datetime
@@ -213,121 +206,9 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
             CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor', 'status_transacao'],
             CampoFm = [conta_origem, conta_destino, data, tipo, valor, status])
 
-def email(conta_origem, tipo, valor):
-    data = datetime.now()
-    id_ultima_movimentacao = SlcEspecificoMySQL(TabelaBd='tb_transacao',
-                                                CampoBd=['id_conta_origem'],
-                                                CampoFm=[conta_origem],
-                                                CampoEs=['max(id_transacao)'])
-
-    dados_transacao = SlcEspecificoMySQL(TabelaBd='tb_transacao',
-                                        CampoBd=['id_transacao'],
-                                        CampoFm=[id_ultima_movimentacao[0][0]],
-                                        CampoEs=['*'])
-    
-    nome_origem = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                            CampoBd=['id_conta'],
-                                            CampoFm=[dados_transacao[0][1]],
-                                            CampoEs=['tb_usuario.nome'])
-
-    nome_destino = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                            CampoBd=['id_conta'],
-                                            CampoFm=[dados_transacao[0][2]],
-                                            CampoEs=['tb_usuario.nome'])
-    
-    numero_conta_origem = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                            CampoBd=['id_conta'],
-                                            CampoFm=[dados_transacao[0][1]],
-                                            CampoEs=['numeroconta'])
-    
-    numero_conta_destino = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                            CampoBd=['id_conta'],
-                                            CampoFm=[dados_transacao[0][2]],
-                                            CampoEs=['numeroconta'])
-
-    movimentacao = {
-        'conta_origem' : numero_conta_origem[0][0],
-        'nome_origem' : nome_origem[0][0],
-        'conta_destino' : numero_conta_destino[0][0],
-        'nome_destino' : nome_destino[0][0],
-        'tipo' : tipo,
-        'data': str(data.strftime('%x')),
-        'hora': str(data.strftime('%X')),
-        'id' : id_ultima_movimentacao[0][0],
-        'valor' : valor
-    }
-
-    email = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                            CampoBd=['id_conta'],
-                                            CampoFm=[dados_transacao[0][1]],
-                                            CampoEs=['tb_usuario.email'])
-
-    nome_comp = criaComprovante(movimentacao, numero_conta_origem[0][0])
-
-    emailComprovante(nome_comp, email[0][0])
-
-    os.remove(nome_comp)
-
-    if movimentacao['tipo'] == 'transferencia':
-        email = SlcEspecificoMySQL (TabelaBd='tb_contabancaria INNER JOIN tb_usuario ON tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                CampoBd=['id_conta'],
-                                                CampoFm=[dados_transacao[0][2]],
-                                                CampoEs=['tb_usuario.email'])
-
-        nome_comp = criaComprovante(movimentacao, numero_conta_destino[0][0])
-
-        emailComprovante(nome_comp, email[0][0])
-
-        os.remove(nome_comp)
-
-def criaComprovante (dicionario, numero_conta):
-    nome_comp = f"{dicionario['id']}{numero_conta}.pdf"
-    c = canvas.Canvas(nome_comp)
-    c.setFont("Helvetica", 12)
-    if dicionario ['tipo'] == 'Depósito':
-        c.drawString(80,750,"Py.NK Internet Banking")
-        c.drawString(80,720,"Comprovante de Depósito")
-        c.drawString(80,690,f"+R${dicionario['valor']} depositado.")
-        c.line(80,675,510,675)
-        c.drawString(80,650,f"Data do Depósito: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-        c.drawString(80,620,f"Horário do Depósito: {dicionario['hora']}")
-        c.drawString(80,590,f"ID da Transação: {dicionario['id']}")
-    elif dicionario ['tipo'] == 'Saque':
-        c.drawString(80,750,"Py.NK Internet Banking")
-        c.drawString(80,720,"Comprovante de Saque")
-        c.drawString(80,690,f"-R${dicionario['valor']} sacado.")
-        c.line(80,675,510,675)
-        c.drawString(80,650,f"Data do Saque: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-        c.drawString(80,620,f"Horário do Saque: {dicionario['hora']}")
-        c.drawString(80,590,f"ID da Transação: {dicionario['id']}")
-    elif dicionario['tipo'] == 'transferencia':
-        if numero_conta == dicionario['conta_origem']:
-            c.drawString(80,750,"Py.NK Internet Banking")
-            c.drawString(80,720,f"Comprovante de Transferência Realizada")
-            c.drawString(80,690,f"R${dicionario['valor']} transferido para {dicionario['nome_destino']}")
-            c.line(80,675,510,675)
-            c.drawString(80,650,f"Data da Transferência: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-            c.drawString(80,620,f"Horário da Transferência: {dicionario['hora']}")
-            c.drawString(80,590,f"Enviado para: {dicionario['nome_destino']}")
-            c.drawString(80,560,f"Numero de conta: {dicionario['conta_destino']}")
-            c.drawString(80,530,f"ID da Transação: {dicionario['id']}")
-        elif numero_conta == dicionario['conta_destino']:
-            c.drawString(80,750,"Py.NK Internet Banking")
-            c.drawString(80,720,f"Comprovante de Transferência Recebida")
-            c.drawString(80,690,f"R${dicionario['valor']} recebido de {dicionario['nome_origem']}")
-            c.line(80,675,510,675)
-            c.drawString(80,650,f"Data da Transferência: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-            c.drawString(80,620,f"Horário da Transferência: {dicionario['hora']}")
-            c.drawString(80,590,f"Enviado por: {dicionario['nome_origem']}")
-            c.drawString(80,560,f"Numero de conta: {dicionario['conta_origem']}")
-            c.drawString(80,530,f"ID da Transação: {dicionario['id']}")
-    c.showPage()
-    c.save()
-    return nome_comp 
-
 def LoadConfig():
     config = {}
-    conf = open("src/config.conf", "r")
+    conf = open("config.conf", "r")
     for line in conf:
         line = line.strip()
         if line[:4] == 'host':
@@ -366,36 +247,6 @@ def cancelMySQL(id_usuario, senha, numeroconta):
     else:
         raise Exception('401')
 
-def emailCadastro(id, destinatario, aceite):
-    remetente = "py.nk.fatec@gmail.com"
-    senha = "hjdixtkskjwtvxqr"
-    if aceite == True:
-        numeroconta = SlcEspecificoMySQL('tb_contabancaria',
-                                         CampoBd=['id_conta'],
-                                         CampoFm=[id],
-                                         CampoEs=['numeroconta'])
-        
-        assunto = 'Bem vindo ao Py.NK!'
-        corpo = f'''Seja bem vindo(a)! 
-        Nós do PyNK agradecemos a preferência, utilize o código {str(numeroconta)[3:-5]} para acessar sua conta.'''
-
-    elif aceite == False:
-        assunto = 'Irregularidade no cadastro Py.NK.'
-        corpo = f'''Olá, algo de errado aconteceu.
-        Durante a triagem do seu cadastro o Py.NK encontrou algumas divergências, sua conta não foi criada.'''
-
-    em = EmailMessage()
-    em['From'] = remetente
-    em['To'] = destinatario
-    em['subject'] = assunto
-    em.set_content(corpo)
-
-    context = ssl.create_default_context()
-
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-        smtp.login(remetente, senha)
-        smtp.sendmail(remetente, destinatario, em.as_string())
-
 
 def periodoEntreDatas(data1, data2):
     data1 = datetime.strptime(data1, "%Y-%m-%d")
@@ -409,39 +260,6 @@ def verificaAniversarioDeposito(data1, data2):
     
     return aniversario
 
-def emailComprovante(nome_arq, destinatario):
-    subject = "Comprovante de movimentação"
-    body = "Aqui está o comprovante da sua última movimentação."
-    sender_email = "py.nk.fatec@gmail.com"
-    receiver_email = destinatario
-    password = "hjdixtkskjwtvxqr"
-
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-
-    message.attach(MIMEText(body, "plain"))
-
-    filename = nome_arq  
-
-    with open(filename, "rb") as attachment:
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-  
-    encoders.encode_base64(part)
-
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename={filename}"
-    )
-
-    message.attach(part)
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
-        smtp.login(sender_email, password)
-        smtp.sendmail(sender_email, receiver_email, message.as_string())
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
 '401': 'Antes de fazer essa requisição se autentifique. Credenciais inválidas.',
@@ -776,6 +594,97 @@ def altAG(id_agencia):
             CampoPs=[id_agencia])
     
     return 0
+
+def geraComprovante(dados):
+    nomeArq = f"movimentacao_{dados[0][2]}_{dados[0][1]}.pdf"
+    nomeArq = nomeArq.replace(":","")
+    nomeArq = nomeArq.replace("/","_")
+    c = canvas.Canvas(nomeArq, pagesize=A4)
+    c.setFont('Courier', 11)
+    width, height = A4
+    line = 0.9
+    c.drawCentredString(width*0.5, height*line,'PYNKSYS - SISTEMA DE EMISSÃO DE COMPROVANTES DIGITAIS')
+    line-=0.02
+    c.drawCentredString(width*0.5, height*0.1, 'PY.NK, o seu banco em qualquer lugar a qualquer hora.')
+    if dados[0][0] == 'Depósito':
+        if dados[0][4] == 'Em Aprovação':
+            c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE DEPÓSITO (EM APROVAÇÃO)')
+            line-=0.04
+        else:
+            c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE DEPÓSITO')
+            line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'DATA: {str(dados[0][2]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
+        line-=0.02
+        c.showPage()
+        c.save()
+        return nomeArq
+    elif dados[0][0] == 'Saque':
+        c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE SAQUE')
+        line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'DATA: {str(dados[0][2]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
+        line-=0.02
+        c.showPage()
+        c.save()
+        return nomeArq
+    elif dados[0][0] == 'Transferência':
+        c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE TRANSFERÊNCIA')
+        line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'DATA: {str(dados[0][2]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DO DESTINATÁRIO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'TRANSFERIDO PARA: {str(dados[0][8]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][9]).upper()}')
+        line-=0.02
+        c.showPage()
+        c.save()
+        return nomeArq
+
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
