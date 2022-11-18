@@ -39,9 +39,15 @@
                         <span id="textoInputElemento">Login:</span>
                         <input required type="text" name="login" value="{{login}}">
                     </div>
-                    <div class ="inputValor">
+                    <div class="inputValor">
                         <span id="textoInputElemento">Senha:</span>
-                        <input required type="text" name="senha" value="{{senha}}">
+                        <input required type="password" id="SenhaId" name="senha"
+                        required value="{{senha}}">
+                    </div>
+                    <div class="inputValor">
+                        <span id="textoInputElemento">Confirmar senha:</span>
+                        <input type="password" value="{{senha}}" id="RepetirsenhaId"
+                name="Repetirsenha" required>
                     </div>
                 </div>
                     <div class="botaoElemento">
