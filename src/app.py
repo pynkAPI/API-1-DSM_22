@@ -5,6 +5,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 from select import select
 from tokenize import Double
@@ -230,7 +231,7 @@ def RequisicaoGerenteAgencia():
                               CampoPs=[IdTransacao],
                               CampoWr=['id_transacao'])
 
-                    funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
+                    
 
                     #Verifica se ele conseguiu sair da dívida
                     if valorDevido >= 0:
@@ -278,8 +279,6 @@ def RequisicaoGerenteAgencia():
                           CampoFm=[1, datetime.today(), datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
-
-                # funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
 
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['saldo'],
@@ -332,22 +331,18 @@ def RequisicaoGerenteAgencia():
                                CampoFm=[1],
                                CampoWr=['id_conta'],
                                CampoPs=[IdConta])
-                # funcs.emailCadastro(IdConta, email, True)  
-                if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
-                else:
-                    return render_template('ListReq.html',requisicao=requisicao)
+                
+                return homeG(requisicao=requisicao)
             else:    
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['status_contabancaria'],
                               CampoFm=[2],
                               CampoWr=['id_conta'],
                               CampoPs=[IdConta])
-                # funcs.emailCadastro(IdConta, email, False)  
-                if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
-                else:
-                    return render_template('ListReq.html',requisicao=requisicao)
+
+                
+                return homeG(requisicao=requisicao)
+                
         #endregion 
         # Aceitar alteração de dados
         #region
@@ -366,21 +361,18 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
-                # funcs.emailCadastro(IdConta, email, True)  
-                if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
-                else:
-                    return render_template('ListReq.html',requisicao=requisicao)
-        #endregion 
-        elif requisicao == '4':
-            idUsuario   =request.form['idUsuario'],
-            nome        =request.form['nome']
-            email       =request.form['email']
-            cpf         =request.form['cpf']
-            genero      =request.form['genero']
-            endereco    =request.form['endereco']
-            datanasc    =request.form['datanasc']
-            senha       =request.form['senha']
+
+              
+                return homeG(requisicao=requisicao)
+            elif requisicao == '4':
+                idUsuario   =request.form['idUsuario'],
+                nome        =request.form['nome']
+                email       =request.form['email']
+                cpf         =request.form['cpf']
+                genero      =request.form['genero']
+                endereco    =request.form['endereco']
+                datanasc    =request.form['datanasc']
+                senha       =request.form['senha']
                 
             funcs.upMySQL('tb_usuario',
                             CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
@@ -400,6 +392,23 @@ def RequisicaoGerenteAgencia():
                     DescSeparada.append(row[doispontos:])
                 funcs.upMySQL('tb_usuario',
                                 CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+
+                                CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
+                                CampoWr=['id_usuario'],
+                                CampoPs=[idUsuario[0]])
+             
+                return home()
+            else:
+                botao = request.form.to_dict()
+                IdConta = request.form['Id']
+                if botao['botao'] == 'Confirmar':
+                    Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
+                    DescSeparada = []
+                    for row in Desc:
+                        doispontos = row.find(':')+1
+                        DescSeparada.append(row[doispontos:])
+                    funcs.upMySQL('tb_usuario',
+                                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
                                 CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[DescSeparada[0]])
@@ -408,22 +417,23 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[1],
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
-                # funcs.emailCadastro(IdConta, email, True)  
-                if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
-                else:
-                    return render_template('ListReq.html')
-            else:    
-                funcs.upMySQL('tb_requisicoes',
-                            CampoBd=['status_alteracao'],
-                            CampoFm=[2],
-                            CampoWr=['id_requisicao'],
-                            CampoPs=[IdConta])
-                # funcs.emailCadastro(IdConta, email, False)  
-                if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
-                else:
-                    return render_template('ListReq.html')  
+                    
+                    if session['tipo'] == 2:
+                        return homeG(requisicao=requisicao)
+                    else:
+                        return render_template('ListReq.html')
+                else:    
+                    funcs.upMySQL('tb_requisicoes',
+                                CampoBd=['status_alteracao'],
+                                CampoFm=[2],
+                                CampoWr=['id_requisicao'],
+                                CampoPs=[IdConta])
+            
+                    if session['tipo'] == 2:
+                        return homeG(requisicao=requisicao)
+                    else:
+                        return render_template('ListReq.html')
+          
     return homeG(requisicao=requisicao)
      
 
@@ -679,7 +689,7 @@ def SaqueConta():
                                        CampoFm=[idConta[0][0],  datetime.today(), date.today(), None, valor, '1'])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
-                funcs.email(conta_origem=idConta[0][0], tipo='Saque', valor= float(request.form['valor']))
+                
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
@@ -889,7 +899,7 @@ def ConferenciaDeposito():
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
-                funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
+                
 
                 #Verifica se ele conseguiu sair da dívida
                 if valorDevido > 0:
@@ -936,7 +946,7 @@ def ConferenciaDeposito():
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
             
-            funcs.email(conta_origem=IdContaOrigem, tipo='Depósito', valor=valorTransacao)
+    
 
             funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
@@ -981,12 +991,12 @@ def AceiteConta():
                            CampoFm=[1],
                            CampoWr=['id_conta'],
                            CampoPs=[IdConta])
-            funcs.emailCadastro(IdConta, email, True)  
+   
             return AceiteContaTabela()
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-            funcs.emailCadastro(IdConta, email, False)  
+       
             return AceiteContaTabela()
        
 #------------------------------
@@ -1002,16 +1012,8 @@ def Transacao(mensagem=''):
 @app.route("/TransacaoConta",  methods = ['POST', 'GET'])
 def TransacaoConta():
     if request.method == 'POST':
-        pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
-                                                      CampoBd=['id_capitaltotal'],
-                                                      CampoFm=[1],
-                                                      CampoEs=['capitalinicial'])
-        totalBanco =  pesquisaTotalBanco[0][0]  
-        saldoInvertido  = float(session['saldo'])*-1   
-        # Este If limita o usuário não poder ter um saldo negativo menor do que o valor total do banco
-        # Exemplo: Se o banco tem 10 reais e o Siclano ter -10 ele não irá conseguir mais transferir 
-        # Além disso ele também não deixa ele fazer transferencias com valores negativos e também com o valor que excede o valor total                                     
-        if saldoInvertido < totalBanco and float(request.form['valor']) > 0 and float(request.form['valor']) <= totalBanco:
+                                          
+        if float(request.form['valor']) > 0:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
@@ -1030,7 +1032,7 @@ def TransacaoConta():
             IdContaDestino = pesquisaContaDestino[0][0]
             IdContaOrigem = pesquisaContaOrigem[0][0]
             if IdContaDestino == IdContaOrigem:
-                return Transacao()
+                return Transacao(mensagem='Não foi possível realziar a operação')
             DestinoSaiuCheque = True
             OrigemSaiuCheque = True
             pesquisaSQLContaDestinoCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
@@ -1045,7 +1047,17 @@ def TransacaoConta():
                 #pega o valor de quanto a conta Destino está devendo ao banco
                 valorDevido = pesquisaSQLContaDestinoCheque[0][0]
                 #pega o dia da ultima atualização da conta destino
+                dataAtualizacao = pesquisaSQLContaDestinoCheque[0][1]
                 
+                dataPeriodo = funcs.periodoEntreDatas(data1= dataAtualizacao, data2= str(date.today))
+
+                if dataPeriodo > 0:
+                    pesquisaRegraOperacao = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                     CampoBd=['id_regra_operacoes'],
+                                                                     CampoFm=[1],
+                                                                     CampoEs=['porcentagem'])
+                    porcentagem = pesquisaRegraOperacao[0][0]
+                    valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
                 valorContaOrigem = valorContaOrigem - valor
                 valorDevido = valorDevido + valor
                 
@@ -1668,7 +1680,7 @@ def gerentes():
     cabecalho = ('Nome', 'Papel','Matricula','localidade')
     
     SelectGA = f"""SELECT TF.id_funcionario, nome, papel, num_matricula,TA.localidade 
-    FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario left join tb_agencia as TA on TA.id_agencia=TF.id_agencia
+    FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario left join tb_agencia as TA on TA.id_funcionario=TF.id_funcionario
     where papel = 'GERENTE DE AGÊNCIA' order by TF.id_funcionario"""
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
