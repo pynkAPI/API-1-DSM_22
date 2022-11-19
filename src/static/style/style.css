@@ -3,7 +3,7 @@
 * {
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
+    outline: none;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -12,8 +12,80 @@ body, html, main {
     width: 100%;
 }
 
-body, input {
-    font-family: 'Oxygen', sans-serif;
+.index,
+.login,
+.cadastro,
+.login-adm {
+    background-image: linear-gradient(-135deg, #FF518F, #FF518F, #FD006C);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Tela Inicial */
+.index .frase-imagem {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.index .frase-imagem h1 {
+    position: absolute;
+    top: 6rem;
+    color: #FFF;
+    font-size: 5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.index .frase-imagem h1 img {
+    position: relative;
+    width: 20rem;
+    margin: 0 0 -1.5rem -1rem;
+}
+
+.index .frase-imagem img {
+    position: absolute;
+    width: 80rem;
+    margin: 0 -7rem 0 auto;
+    bottom: 0;
+}
+
+.index .form_index {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Login Administrativo */
+.login-adm .logo-imagem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    z-index: 1;
+}
+
+.login-adm .logo-imagem .logo {
+    width: 25rem;
+    margin-bottom: 2rem;
+}
+
+.login-adm .logo-imagem .capa {
+    width: 50rem;
+}
+
+.login-adm .form-login-adm {
+    width: 40%;
+    display: flex;
+    justify-content: center;
 }
 
 .container {
@@ -249,13 +321,13 @@ body, input {
     color: gray;
 }
 
-::-webkit-calendar-picker-indicator {
+/* ::-webkit-calendar-picker-indicator {
     background-color: #B71258;
     padding: 20px;
     cursor: pointer;
     border-radius: 3px;
 }
-
+ */
 .containerErro {
     display: flex;
     flex-direction: row;
@@ -326,4 +398,31 @@ body, input {
 
 .botaoedit{
 margin-left: 100%;
+}
+
+@media (max-width: 1500px) {
+    .index .frase-imagem {
+        width: 70%;
+    }
+
+    .index .form_index {
+        width: 30%;
+        padding-right: 3rem;
+    }
+}
+
+@media (max-width: 1350px) {
+    .login-adm .logo-imagem {
+        display: none;
+    }
+
+    .login-adm .form-login-adm {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .index .frase-imagem {
+        display: none;
+    }
 }

@@ -2,7 +2,7 @@
 
 {% block contents %}
 <nav class="navbar">
-    <img src="../static/img/prosa.png" alt="logo">
+    <a href="{{ url_for('paginaInicial') }}"><img src="../static/img/prosa.png" alt="logo"></a>
     <ul>
         <li><a href="#">Sobre</a></li>
         <li><a href="{{ url_for('cadastro') }}">Cadastre-se</a></li>
@@ -10,7 +10,7 @@
 </nav>
 
 <main class="login">
-    <form action="{{ url_for('login') }}" method="POST">
+    <form action="{{ url_for('login') }}" method="POST" class="form">
         <img src="../static/img/logorosa2.png" alt="logo">
         <div class="div_input">
             <input type="text" name="numeroconta" id="numeroConta" required>
@@ -32,20 +32,6 @@
         {% endif %}
         {% endwith %}
     </form>
-
-    <!-- CAIXAS ANIMADAS -->
-    <div class="box">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
 </main>
 <!-- /login -->
 

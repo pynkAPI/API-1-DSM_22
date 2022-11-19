@@ -30,6 +30,9 @@ mysql = MySQL(app)
 
 #Pagina inicial
 @app.route("/")
+def paginaInicial():
+    return render_template('index.html', tituloNavegador='Py.nk')
+
 @app.route("/login")
 def index():
     session['login'] = False
@@ -47,7 +50,7 @@ def loginG():
     session['conta'] = None
     session['tipo']  = None
     session['idContaBK'] = None
-    return render_template('loginG.html')
+    return render_template('loginG.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 
 #Pagina Home
@@ -707,7 +710,7 @@ def cadastro():
         flash(numeroCampo)
         return render_template('login.html', tituloNavegador='Login | Py.nk')
 
-    return render_template('novo_cadastro.html', tituloNavegador='Cadastro | Py.nk')
+    return render_template('index.html', tituloNavegador='Cadastro | Py.nk')
 #------------------------------
 #Paginas de Login
 @app.route("/login", methods = ['POST', 'GET'])

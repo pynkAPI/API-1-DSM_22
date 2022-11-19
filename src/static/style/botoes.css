@@ -1,6 +1,6 @@
 .entrar,
-.comecar {
-    width: 16rem;
+.comecar,
+.cadastrar {
     height: 3rem;
     font-size: 1rem;
     text-transform: uppercase;
@@ -13,6 +13,16 @@
     justify-content: center;
     border-radius: 10px;
     margin-top: 1rem;
+}
+
+.entrar,
+.comecar {
+    width: 16rem;
+}
+
+.cadastrar {
+    width: 60%;
+    margin: 2rem 0;
 }
 
 /* Efeito de onda */
@@ -43,7 +53,8 @@
     transition: 0s;
 }
 
-@media (max-width: 620px) {
+@media (max-width: 620px),
+(max-height: 620px) {
     .entrar,
     .comecar {
         width: 10rem;

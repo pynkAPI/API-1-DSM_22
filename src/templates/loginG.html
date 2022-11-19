@@ -1,38 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'template.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
-    <title>Login|Py.nk</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> -->
-    <link rel="stylesheet" href="../static/style/style.css">
-    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-</head>
-<body>
-    <div class="container">
-        <div class="img">
-            <img id="logo" src="../static/img/pynkpng.png" alt=""><br>
-            <img id="cliente" src="../static/img/login.svg" alt="Cliente">
-        </div>
-        <div class="forms-container">
-            <div class="cadastro-login">
-                <form action="AutenticarGerente" method="POST" class="form-login">
-                    <h2 class="title">FAÇA SEU LOGIN</h2>
-                    <div class="input-field">
-                        <i class='bx bxs-user'></i>
-                        <input type="text" placeholder="NÚMERO DA CONTA" name="numeroconta" required>
-                    </div>
-                    <div class="input-field">
-                        <i class='bx bxs-lock'></i>
-                        <input type="password" placeholder="SENHA" name="senha" required>
-                    </div>
-                    <input type="submit" value="ENTRAR" class="btn solid">
-                </form>
-            </div>
-        </div>
+{% block contents %}
+<div class="login-adm">
+    <div class="logo-imagem">
+        <img src="../static/img/pynkpng.png" alt="logo" class="logo">
+        <img src="../static/img/capaLogin.png" alt="capa" class="capa">
     </div>
-</body>
-</html>
+
+    <div class="form-login-adm">
+        <form action="AutenticarGerente" method="POST">
+            <h2>Login</h2>
+            <div class="div_input">
+                <input type="text" name="numeroconta" id="usuario" required>
+                <label for="usuario">Usuário</label>
+            </div>
+            <div class="div_input">
+                <input type="password" name="senha" id="senha" required>
+                <label for="senha">Senha</label>
+            </div>
+            <button type="submit" class="entrar ripple">Entrar<i class='bx bx-right-arrow-alt bx-sm' style='color:#ffffff'></i></button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
