@@ -63,8 +63,8 @@
         </div>
 
         <div class="div_input">
-            <input type="text" name="email" id="email" required>
-            <label for="email">Email</label>
+            <input onblur="validateEmail(this)" type="text" name="email" id="IdEmail" required>
+            <label for="IdEemail">Email</label>
         </div>
 
         <div class="div_input">
@@ -100,7 +100,9 @@
     </form>
 </section>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="../static/scripts/mudaStepCadastro.js"></script>
 <script src="../static/scripts/validarCPF.js"></script>
 <script src="../static/scripts/confirmarsenha.js"></script>
+<script src="../static/scripts/ValidarEmail.js"></script>
 {% endblock %}
