@@ -386,18 +386,17 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
-
-              
                 return homeG(requisicao=requisicao)
-            elif requisicao == '4':
-                idUsuario   =request.form['idUsuario'],
-                nome        =request.form['nome']
-                email       =request.form['email']
-                cpf         =request.form['cpf']
-                genero      =request.form['genero']
-                endereco    =request.form['endereco']
-                datanasc    =request.form['datanasc']
-                senha       =request.form['senha']
+        
+        elif requisicao == '4':
+            idUsuario   =request.form['idUsuario'],
+            nome        =request.form['nome']
+            email       =request.form['email']
+            cpf         =request.form['cpf']
+            genero      =request.form['genero']
+            endereco    =request.form['endereco']
+            datanasc    =request.form['datanasc']
+            senha       =request.form['senha']
                 
             funcs.upMySQL('tb_usuario',
                             CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
@@ -405,7 +404,7 @@ def RequisicaoGerenteAgencia():
                             CampoWr=['id_usuario'],
                             CampoPs=[idUsuario[0]])
             # funcs.emailCadastro(IdConta, email, True)  
-            return home()
+            return homeG(requisicao=requisicao)
         else:
             botao = request.form.to_dict()
             IdConta = request.form['Id']
@@ -422,7 +421,7 @@ def RequisicaoGerenteAgencia():
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
              
-                return home()
+                return homeG(requisicao=requisicao)
             else:
                 botao = request.form.to_dict()
                 IdConta = request.form['Id']
@@ -437,7 +436,7 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[DescSeparada[0]])
-                funcs.upMySQL('tb_requisicoes',
+                    funcs.upMySQL('tb_requisicoes',
                                 CampoBd=['status_alteracao'],
                                 CampoFm=[1],
                                 CampoWr=['id_requisicao'],
