@@ -79,26 +79,27 @@ def home():
                                                                  CampoBd=['id_conta', 'ativo'],
                                                                  CampoFm=[session['idContaBK'], 1],
                                                                  CampoEs=['valor_poupanca', 'data_atualizacao'])
-                valorPoupanca = pesquisaContaPoupanca[0][0]
-                dataAtualizacaoPoupanca = pesquisaContaPoupanca[0][1]
-                dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
-                if dataPeriodoPoupanca > 0:
-                    pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
-                                                                             CampoFm=[2],
-                                                                             CampoBd=['id_regra_operacoes'],
-                                                                             CampoEs=['porcentagem'])
-                    porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
-                    valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
-                    funcs.upMySQL(TabelaBd='tb_poupanca',
-                                  CampoBd=['data_atualizacao', 'valor_poupanca'],
-                                  CampoFm=[date.today(), valorPoupanca],
-                                  CampoWr=['ativo', 'id_conta'],
-                                  CampoPs=[1, session['idContaBK']])
-                    funcs.upMySQL(TabelaBd='tb_contabancaria',
-                                  CampoBd=['saldo'],
-                                  CampoFm=[valorPoupanca],
-                                  CampoWr=['id_conta'],
-                                  CampoPs=[session['idContaBK']])
+                if pesquisaContaPoupanca:
+                    valorPoupanca = pesquisaContaPoupanca[0][0]
+                    dataAtualizacaoPoupanca = pesquisaContaPoupanca[0][1]
+                    dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
+                    if dataPeriodoPoupanca > 0:
+                        pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                                 CampoFm=[2],
+                                                                                 CampoBd=['id_regra_operacoes'],
+                                                                                 CampoEs=['porcentagem'])
+                        porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                        valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupanca],
+                                      CampoWr=['ativo', 'id_conta'],
+                                      CampoPs=[1, session['idContaBK']])
+                        funcs.upMySQL(TabelaBd='tb_contabancaria',
+                                      CampoBd=['saldo'],
+                                      CampoFm=[valorPoupanca],
+                                      CampoWr=['id_conta'],
+                                      CampoPs=[session['idContaBK']])
 
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
@@ -1062,18 +1063,24 @@ def TransacaoConta():
             valorContaOrigem = pesquisaContaOrigem[0][1]
             valorContaOrigem = valorContaOrigem - valor       
 
-        
-
             IdContaDestino = pesquisaContaDestino[0][0]
             tipoContaDestino = pesquisaContaDestino[0][3]
             IdContaOrigem = pesquisaContaOrigem[0][0]
 
             if IdContaDestino == IdContaOrigem:
                 return Transacao(mensagem='Não foi possível realziar a operação')
-            if session['tipoConta'] == 'CONTA POUPANÇA' and valorContaOrigem ==0:
+            if session['tipoConta'] == 'CONTA POUPANÇA' and valorContaOrigem < 0:
+                return Transacao(mensagem='Não foi possível realziar a operação')
+            elif session['tipoConta'] == 'CONTA POUPANÇA' and valorContaOrigem == 0:
                 funcs.upMySQL(TabelaBd='tb_poupanca',
                               CampoBd=['valor_poupanca', 'ativo', 'data_final'],
-                              CampoFm=[valor, 0, date.today()],
+                              CampoFm=[valorContaOrigem, 0, date.today()],
+                              CampoWr=['id_conta'],
+                              CampoPs=[session['idContaBK']])
+            elif session['tipoConta'] == 'CONTA POUPANÇA' and float(session['saldo']) > 0:
+                funcs.upMySQL(TabelaBd='tb_poupanca',
+                              CampoBd=['valor_poupanca', 'ativo', 'data_final'],
+                              CampoFm=[valorContaOrigem, 0, date.today()],
                               CampoWr=['id_conta'],
                               CampoPs=[session['idContaBK']])
 
@@ -1125,8 +1132,45 @@ def TransacaoConta():
                                       CampoFm=[valorDevido, date.today(), '0'],
                                       CampoPs=[IdContaDestino],
                                       CampoWr=['id_conta'])
+            else:
+                pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
+                                                                 CampoBd=['id_conta', 'ativo'],
+                                                                 CampoFm=[IdContaDestino, 1],
+                                                                 CampoEs=['valor_poupado', 'data_atualizacao'])
+                if pesquisaContaPoupanca:
+                    valorPoupado = pesquisaContaPoupanca[0][0] + valor
+                    dataPoupado = pesquisaContaPoupanca[0][1]
+                    dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataPoupado, data2=datetime.today())
+                    if dataPeriodoPoupanca > 0:
+                        pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                                 CampoFm=[2],
+                                                                                 CampoBd=['id_regra_operacoes'],
+                                                                                 CampoEs=['porcentagem'])
+                        porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                        valorPoupado = funcs.calculaPoupanca(valorPoupanca=valorPoupado, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupado],
+                                      CampoWr=['ativo', 'id_conta'],
+                                      CampoPs=[1, IdContaDestino])
+                        funcs.upMySQL(TabelaBd='tb_contabancaria',
+                                      CampoBd=['saldo'],
+                                      CampoFm=[valorPoupado],
+                                      CampoWr=['id_conta'],
+                                      CampoPs=[IdContaDestino])
+                elif tipoContaDestino == 'CONTA POUPANÇA':
+                    valorContaDestino = valorContaDestino + valor
+                    funcs.InsMySQL(TabelaBd='tb_poupanca',
+                                   CampoBd=['id_conta', 'data_inicio', 'data_atualizacao', 'valor_poupanca', 'ativo'],
+                                   CampoFm=[IdContaDestino, date.today(), date.today(), valorContaDestino, 1])
+                    funcs.upMySQL(TabelaBd='tb_contabancaria',
+                      CampoBd=['saldo'],
+                      CampoFm=[valorContaDestino],
+                      CampoPs=[IdContaDestino],
+                      CampoWr=['id_conta'])
+                    DestinoSaiuCheque = False
 
-         
+                    
             if valorContaOrigem < 0:
                 pesquisaContaOrigemCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                                      CampoBd=['id_conta', 'ativo'],
