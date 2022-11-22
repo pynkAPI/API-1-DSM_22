@@ -267,37 +267,6 @@ def verificaAniversarioDeposito(data1, data2):
             contadora += 1    
     retorna = [aniversario, contadora]
     return retorna
-
-def emailComprovante(nome_arq, destinatario):
-    subject = "Comprovante de movimentação"
-    body = "Aqui está o comprovante da sua última movimentação."
-    sender_email = "py.nk.fatec@gmail.com"
-    receiver_email = destinatario
-    password = "hjdixtkskjwtvxqr"
-
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-
-    message.attach(MIMEText(body, "plain"))
-
-    filename = nome_arq  
-
-    with open(filename, "rb") as attachment:
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-  
-    encoders.encode_base64(part)
-
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename={filename}"
-    )
-
-    message.attach(part)
-
-
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
 '401': 'Antes de fazer essa requisição se autentifique. Credenciais inválidas.',
@@ -749,6 +718,8 @@ def geraComprovante(dados):
         c.save()
         return nomeArq
 
+def geraExtrato():
+    return 1
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',

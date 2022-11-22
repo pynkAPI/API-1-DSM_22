@@ -24,6 +24,9 @@ mysql = MySQL(app)
 
 # Pagina inicial
 @app.route("/")
+def paginaInicial():
+    return render_template('index.html', tituloNavegador='Py.nk')
+
 @app.route("/login")
 def index():
     # Zerando session do cliente
@@ -33,8 +36,7 @@ def index():
     session['tipo']  = None
     session['tipoConta'] = None
     session['idContabk'] = None
-
-    return render_template('login.html')
+    return render_template('login.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 #Pagina inicial Gerentes
 @app.route("/loginG")
@@ -45,7 +47,7 @@ def loginG():
     session['conta'] = None
     session['tipo']  = None
     session['idContaBK'] = None
-    return render_template('loginG.html')
+    return render_template('loginG.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 
 #Pagina Home
@@ -440,20 +442,20 @@ def RequisicaoGerenteAgencia():
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
                     
-                    if session['tipo'] == 2:
+                if session['tipo'] == 2:
                         return homeG(requisicao=requisicao)
-                    else:
+                else:
                         return render_template('ListReq.html')
-                else:    
-                    funcs.upMySQL('tb_requisicoes',
+    else:    
+        funcs.upMySQL('tb_requisicoes',
                                 CampoBd=['status_alteracao'],
                                 CampoFm=[2],
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
             
-                    if session['tipo'] == 2:
+        if session['tipo'] == 2:
                         return homeG(requisicao=requisicao)
-                    else:
+        else:
                         return render_template('ListReq.html')
           
     return homeG(requisicao=requisicao)
@@ -509,7 +511,7 @@ def homeG(requisicao=None):
                                    pesquisaSQLTabela=pesquisaSQL,
                                    requisicao=requisicao)
         elif requisicao == '2':
-            cabecalho = ('Nome', 'CPF', 'descricao','')
+            cabecalho = ('Nome', 'CPF', 'Campos Alterados','')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
                                                    CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
                                                    CampoBd=['tb_agencia.id_funcionario','tb_requisicoes.status_alteracao'],
@@ -779,9 +781,9 @@ def cadastro():
                         CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo', 'status_contabancaria'],
                         CampoFm=[id_usuario, idAgencia, tipoConta, datetime.today(), numeroCampo, 0, '0'])
         flash(numeroCampo)
-        return render_template('login.html')
+        return render_template('login.html', tituloNavegador='Login | Py.nk')
 
-    return render_template('cadastro.html')
+    return render_template('index.html', tituloNavegador='Cadastro | Py.nk')
 #------------------------------
 #Paginas de Login
 @app.route("/login", methods = ['POST', 'GET'])
@@ -1397,7 +1399,6 @@ def suaConta():
         #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
         #REQUISIÇÃO EM ESPERA
         dadosUsuario = funcs.dadosU('', session['idFunc'])
-        print(dadosUsuario['cpf'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
         if dadosUsuario['genero'] == 'M':
             return render_template ("suaConta.html",pagina=session['tipo'],
@@ -1490,7 +1491,6 @@ def suaConta():
         #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
         #REQUISIÇÃO EM ESPERA
         dadosUsuario = funcs.dadosU('', session['idFunc'])
-        print(dadosUsuario['cpf'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
         if dadosUsuario['genero'] == 'M':
             return render_template ("suaConta.html",pagina=3,
@@ -1535,7 +1535,6 @@ def suaConta():
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
-    # print(request.method)
     if request.method == 'POST':
         if session['tipo'] == 2:
             dadosUsuario = funcs.dadosU('',session['idFunc'])
@@ -1666,8 +1665,7 @@ def AltDadosUsuGG():
     cursor = mysql.connection.cursor()
     IdContaBanc = request.form['IdContaBanc']
     pagina = request.form['pagina']
-        
-    print(IdContaBanc)
+
     SelectGA = f"""SELECT * FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_conta={IdContaBanc};"""
     cursor.execute(SelectGA)
     dados = cursor.fetchall()
@@ -1896,8 +1894,6 @@ def alterarAG():
     left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
     left join tb_usuario as TU on TF.id_usuario=TU.id_usuario 
     where id_agencia = {id_agencia} order by localidade"""
-    
-    print(textoSQL)
     
     FuncionarioSQL = f"""SELECT id_funcionario,nome FROM tb_funcionario as TF 
     inner join tb_usuario as TU ON TF.id_usuario=TU.id_usuario 
