@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-{% block head %}
 <head>
+    {% block head %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link rel="icon" href="../static/img/prosa.png">
-    <title>Login | Py.nk</title>
+    <title>{{ tituloNavegador }}</title>
+
     <link rel="stylesheet" href="../static/style/style.css">
-    <link rel="stylesheet" href="../static/style/login.css">
+    <link rel="stylesheet" href="../static/style/navbar.css">
+    <link rel="stylesheet" href="../static/style/animacaoFundo.css">
+    <link rel="stylesheet" href="../static/style/formularios.css">
+    <link rel="stylesheet" href="../static/style/botoes.css">
     <link rel="stylesheet" href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css/">
+    {% endblock %}
 </head>
-{% endblock %}
 
 <body>
-    {% block nav %}
-    <nav class="navbar">
-        <img src="../static/img/prosa.png" alt="logo">
-        <ul>
-            <li><a href="#">Sobre</a></li>
-            <li><a href="{{ url_for('cadastro') }}">Cadastre-se</a></li>
-        </ul>
-    </nav>
+    {% block fundo %}
+    <!-- CAIXAS ANIMADAS -->
+    <div class="box">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
     {% endblock %}
 
     {% block contents %} {% endblock %}
