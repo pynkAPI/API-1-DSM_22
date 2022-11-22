@@ -685,6 +685,8 @@ def geraComprovante(dados):
         c.save()
         return nomeArq
 
+def geraExtrato():
+    return 1
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
