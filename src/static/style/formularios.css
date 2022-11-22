@@ -1,0 +1,260 @@
+/* formatação externa dos formulários */
+form,
+.form {
+    background-color: #fff;
+    border-radius: 150px 100px 222px 150px;
+    box-shadow: 5px 5px 0px 5px #FB1C7B;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* formatação interna dos formulários */
+.div_input{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 2rem 0;
+    position: relative;
+}
+
+input {
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none;
+    transition: 0.1s ease-in-out; /* início e fim lentos */
+    font-size: 1rem;
+}
+
+input:focus, /* elemento em foco */
+input:valid { /* conteúdo validado */
+    border-bottom: 1px solid #FB1C7B;
+    background-color: #fff;
+}
+
+input:focus ~ label, /* em relação ao label */
+input:valid ~ label {
+    transform: translateY(-24px);
+    font-size: 12px;
+    color: #FB1C7B;
+}
+
+label {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    transition: 0.2s ease-in-out;
+    cursor: text;
+}
+
+select {
+    height: 2rem;
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none;
+    font-size: 1rem;
+}
+
+select:valid {
+    border-color: #FB1C7B;
+}
+
+select:focus ~ label,
+select:valid ~ label {
+    font-size: 12px;
+    color: #FB1C7B;
+}
+
+/* formulário página inicial */
+.index .form {
+    height: 23rem;
+    width: 25rem;
+}
+
+.index .form img {
+    width: 16rem;
+    margin-bottom: 1rem;
+}
+
+.index .form .div_input {
+    margin: 1rem 0;
+}
+
+.index .form .div_input input {
+    width: 63%;
+}
+
+.index .form .div_input label {
+    left: 4.5rem;
+}
+
+/* formulário de cadastro */
+.cadastro {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    min-height: 115vh;
+}
+
+.cadastro form {
+    width: 50%;
+    min-height: 80%;
+    margin-top: 4rem;
+    max-width: 40rem;
+}
+
+.cadastro form h2 {
+    font-size: 3rem;
+    color: #FB1C7B;
+    margin: 3rem 0 2rem 0;
+}
+
+.cadastro form h2 img {
+    width: 10rem;
+    margin-bottom: -1rem;
+}
+
+.cadastro .div_input {
+    margin-bottom: 1rem;
+}
+
+.cadastro .div_input input {
+    width: 80%;
+}
+
+.cadastro .div_input label {
+    left: 4rem;
+}
+
+.cadastro .select,
+.cadastro .input-data {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    position: relative;
+}
+
+.cadastro .select select {
+    margin: 1.5rem 0 1rem 0;
+}
+
+.cadastro .input-data input {
+    margin: 2rem 0 1rem 0;
+}
+
+.cadastro .select label,
+.cadastro .input-data label {
+    text-align: left;
+    position: absolute;
+    transform: translateY(-45px);
+}
+
+.cadastro .select label {
+    margin-top: 1rem;
+}
+
+.cadastro .checkbox {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 0 -.8rem;
+    font-size: .9rem;
+}
+
+.cadastro .checkbox input {
+    accent-color: #FB1C7B;
+    margin-right: .5rem;
+}
+
+/* formulário de login */
+.login form {
+    width: 27rem;
+    height: 30rem;
+}
+
+.login .div_input input,
+.login-adm .div_input input {
+    width: 60%;
+}
+
+.login .div_input label,
+.login-adm .div_input label {
+    left: 5rem;
+}
+
+/* formulário de login administrativo */
+.login-adm form {
+    width: 25rem;
+    height: 27rem;
+}
+
+.login-adm form h2 {
+    color: #FB1C7B;
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+@media (max-width: 620px),
+(max-height: 620px) {
+    .login,
+    .index {
+        font-size: .8rem;
+    }
+
+    /* formulário página inicial */
+    .index .form {
+        width: 20rem;
+        height: 20rem;
+    }
+
+    .index .form img {
+        width: 10rem;
+    }
+
+    .index .form .div_input input {
+        width: 50%;
+    }
+
+    .index .form .div_input label {
+        left: 5rem;
+    }
+
+    /* formulário de login */
+    .login form {
+        width: 20rem;
+        height: 23rem;
+    }
+
+    .login-adm form {
+        width: 20rem;
+        height: 20rem;
+    }
+
+    .login form img {
+        width: 10rem;
+    }
+
+    .login-adm form h2 {
+        font-size: 2rem;
+    }
+
+    .login form .div_input,
+    .login-adm form .div_input {
+        width: 16rem;
+        margin: 1rem 0;
+    }
+
+    .login form .div_input label,
+    .login-adm form .div_input label {
+        left: 3.2rem;
+    }
+
+    .login form .div_input input
+    .login-adm form .div_input input {
+        height: 1.5rem;
+    }
+}

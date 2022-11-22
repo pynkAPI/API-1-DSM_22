@@ -24,6 +24,9 @@ mysql = MySQL(app)
 
 # Pagina inicial
 @app.route("/")
+def paginaInicial():
+    return render_template('index.html', tituloNavegador='Py.nk')
+
 @app.route("/login")
 def index():
     # Zerando session do cliente
@@ -33,8 +36,7 @@ def index():
     session['tipo']  = None
     session['tipoConta'] = None
     session['idContabk'] = None
-
-    return render_template('login.html')
+    return render_template('login.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 #Pagina inicial Gerentes
 @app.route("/loginG")
@@ -45,7 +47,7 @@ def loginG():
     session['conta'] = None
     session['tipo']  = None
     session['idContaBK'] = None
-    return render_template('loginG.html')
+    return render_template('loginG.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 
 #Pagina Home
@@ -386,15 +388,15 @@ def RequisicaoGerenteAgencia():
 
               
                 return homeG(requisicao=requisicao)
-            elif requisicao == '4':
-                idUsuario   =request.form['idUsuario'],
-                nome        =request.form['nome']
-                email       =request.form['email']
-                cpf         =request.form['cpf']
-                genero      =request.form['genero']
-                endereco    =request.form['endereco']
-                datanasc    =request.form['datanasc']
-                senha       =request.form['senha']
+        elif requisicao == '4':
+            idUsuario   =request.form['idUsuario'],
+            nome        =request.form['nome']
+            email       =request.form['email']
+            cpf         =request.form['cpf']
+            genero      =request.form['genero']
+            endereco    =request.form['endereco']
+            datanasc    =request.form['datanasc']
+            senha       =request.form['senha']
                 
             funcs.upMySQL('tb_usuario',
                             CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
@@ -440,20 +442,20 @@ def RequisicaoGerenteAgencia():
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
                     
-                    if session['tipo'] == 2:
+                if session['tipo'] == 2:
                         return homeG(requisicao=requisicao)
-                    else:
+                else:
                         return render_template('ListReq.html')
-                else:    
-                    funcs.upMySQL('tb_requisicoes',
+    else:    
+        funcs.upMySQL('tb_requisicoes',
                                 CampoBd=['status_alteracao'],
                                 CampoFm=[2],
                                 CampoWr=['id_requisicao'],
                                 CampoPs=[IdConta])
             
-                    if session['tipo'] == 2:
+        if session['tipo'] == 2:
                         return homeG(requisicao=requisicao)
-                    else:
+        else:
                         return render_template('ListReq.html')
           
     return homeG(requisicao=requisicao)
@@ -779,9 +781,9 @@ def cadastro():
                         CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo', 'status_contabancaria'],
                         CampoFm=[id_usuario, idAgencia, tipoConta, datetime.today(), numeroCampo, 0, '0'])
         flash(numeroCampo)
-        return render_template('login.html')
+        return render_template('login.html', tituloNavegador='Login | Py.nk')
 
-    return render_template('cadastro.html')
+    return render_template('index.html', tituloNavegador='Cadastro | Py.nk')
 #------------------------------
 #Paginas de Login
 @app.route("/login", methods = ['POST', 'GET'])

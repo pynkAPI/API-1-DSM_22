@@ -1,0 +1,108 @@
+{% extends "template.html" %}
+
+{% block contents %}
+<nav class="navbar">
+    <a href="{{ url_for('paginaInicial') }}"><img src="../static/img/prosa.png" alt="logo"></a>
+    <ul>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="{{ url_for('index') }}">Login</a></li>
+    </ul>
+</nav>
+
+<section class="index">
+    <div class="frase-imagem">
+        <h1>
+            Vem ser
+            <img src="../static/img/pynkpng.png" alt="logo" class="capa">
+        </h1>
+        <img src="../static/img/capaIndex.png" alt="capa">
+    </div>
+    <div class="form_index">
+        <div class="form">
+            <img src="../static/img/logorosa2.png" alt="logo">
+
+            <div class="div_input">
+                <input oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" id="cpf" required>
+                <label for="cpf">Digite seu CPF</label>
+            </div>
+            
+            <button onclick="changeStep(true)" class="comecar ripple">Começar<i class='bx bx-right-arrow-alt bx-sm' style='color:#ffffff'></i></button>
+        </div>
+    </div>
+</section>
+
+<section class="cadastro">
+    <form action="{{ url_for('cadastro') }}" method="POST">
+        <h2>
+            Vem ser
+            <img src="../static/img/logorosa2.png" alt="">
+        </h2>
+        <div class="div_input">
+            <input type="text" name="name" id="nome" required>
+            <label for="nome">Nome completo</label>
+        </div>
+
+        <div class="input-data">
+            <input type="date" name="datanasc" id="dataNasc" required>
+            <label for="dataNasc">Data de Nascimento</label>
+        </div>
+
+        <div class="select">
+            <select id="genero" name="genero" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="F">Feminino</option>
+                <option value="M">Masculino</option>
+                <option value="O">Outros</option>
+            </select>
+            <label for="genero">Gênero</label>
+        </div>
+
+        <div class="div_input">
+            <input oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf" id="CPFId" required>
+            <label for="CPFId">CPF</label>
+        </div>
+
+        <div class="div_input">
+            <input onblur="validateEmail(this)" type="text" name="email" id="IdEmail" required>
+            <label for="IdEemail">Email</label>
+        </div>
+
+        <div class="div_input">
+            <input type="text" name="endereco" id="endereco" required>
+            <label for="endereco">Endereço</label>
+        </div>
+
+        <div class="select">
+            <select id="input_tipoconta" name="tipoconta" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="Conta Corrente">Conta Corrente</option>
+                <option value="Conta Poupança">Conta Poupança</option>
+            </select>
+            <label for="input_tipoconta">Tipo de Conta</label>
+        </div>
+
+        <div class="div_input">
+            <input type="password" id="SenhaId" name="senha" required>
+            <label for="SenhaId">Senha</label>
+        </div>
+
+        <div class="div_input">
+            <input type="password" id="RepetirsenhaId" name="Repetirsenha" required>
+            <label for="RepetirsenhaId">Confirme sua Senha</label>
+        </div>
+
+        <div class="checkbox">
+            <input type="checkbox" id="chkconCordoCadstro" name="concordoCadstro" required>
+            <p>Concordo que meus dados sejam cadastrados</p>
+        </div>
+
+        <button type="submit" class="cadastrar ripple">Cadastrar<i class='bx bx-right-arrow-alt bx-sm' style='color:#ffffff'></i></button>
+    </form>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="../static/scripts/mudaStepCadastro.js"></script>
+<script src="../static/scripts/validarCPF.js"></script>
+<script src="../static/scripts/confirmarsenha.js"></script>
+<script src="../static/scripts/ValidarEmail.js"></script>
+{% endblock %}
