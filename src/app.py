@@ -74,6 +74,7 @@ def home():
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
 
+
             if session['tipoConta'] == 'CONTA POUPANÇA':
                 pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
                                                                  CampoBd=['id_conta', 'ativo'],
@@ -155,10 +156,12 @@ def home():
 
             valorDevidoTotal = valorDevido
             if valorDevido < 0:
+
                 valorDevido = valorDevido - float(session['saldo'])    
                 valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=3)
                 valorDevido = valorDevido - 0.005
                 valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=2)
+
 
             caminhoLogin = '/'
             return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
