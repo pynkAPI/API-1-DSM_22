@@ -21,7 +21,7 @@
                 <form action="{{ url_for('cadastro') }}" method="POST" class="form-cadastro">
                     <h2 class="title">ABRA SUA CONTA</h2>
                     <input class="input-field-cad" type="text" placeholder="NOME COMPLETO" name="name" required>
-                    <input class="input-field-cad" type="text" placeholder="E-MAIL" name="email" required>
+                    <input onblur="validateEmail(this)" class="input-field-cad" type="text" placeholder="E-MAIL" name="email" id="IdEmail" required>
                     <input class="input-field-cad" type="text" placeholder="ENDEREÇO" name="endereco" required>
                     <input oninput="mascara(this)" onblur="ValidarCPF(this)" class="input-field-cad" type="text" placeholder="CPF" name="cpf" id="CPFId" required>
                     <input type="password" class="input-field-cad" placeholder="SENHA" id="SenhaId" name="senha"
@@ -47,8 +47,9 @@
             </div>
         </div>
     </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="../static/scripts/confirmarsenha.js"></script>
     <script src="../static/scripts/validarCPF.js"></script>
-</body>
-
+    <script src="../static/scripts/ValidarEmail.js"></script>
 </html>
