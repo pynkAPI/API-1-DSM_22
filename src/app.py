@@ -60,7 +60,7 @@ def home():
         saldo = None
         # Verificando se o tipo do login é cliente
         if session['tipo'] == 1:
-            cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:')
+            cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:','')
             saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
             data = datetime.today()
