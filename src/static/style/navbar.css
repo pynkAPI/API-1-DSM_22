@@ -1,0 +1,41 @@
+.navbar {
+    height: 3.5rem;
+    width: 100%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+}
+
+.navbar img {
+    width: 3rem;
+    margin-left: .8rem;
+}
+
+.navbar ul {
+    display: flex;
+    margin: 0 0 0 auto;
+}
+
+.navbar ul li {
+    list-style: none;
+    margin-right: 2rem;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #FB1C7B;
+    font-weight: 500;
+}
+
+@media (max-width: 620px) {
+    .navbar ul li {
+        margin-right: 1rem;
+    }
+
+    .navbar ul li a {
+        font-size: .8rem;
+    }
+}
