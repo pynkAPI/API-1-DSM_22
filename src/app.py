@@ -511,7 +511,7 @@ def homeG(requisicao=None):
                                    pesquisaSQLTabela=pesquisaSQL,
                                    requisicao=requisicao)
         elif requisicao == '2':
-            cabecalho = ('Nome', 'CPF', 'descricao','')
+            cabecalho = ('Nome', 'CPF', 'Campos Alterados','')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
                                                    CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
                                                    CampoBd=['tb_agencia.id_funcionario','tb_requisicoes.status_alteracao'],
@@ -1399,7 +1399,6 @@ def suaConta():
         #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
         #REQUISIÇÃO EM ESPERA
         dadosUsuario = funcs.dadosU('', session['idFunc'])
-        print(dadosUsuario['cpf'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
         if dadosUsuario['genero'] == 'M':
             return render_template ("suaConta.html",pagina=session['tipo'],
@@ -1492,7 +1491,6 @@ def suaConta():
         #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
         #REQUISIÇÃO EM ESPERA
         dadosUsuario = funcs.dadosU('', session['idFunc'])
-        print(dadosUsuario['cpf'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
         if dadosUsuario['genero'] == 'M':
             return render_template ("suaConta.html",pagina=3,
@@ -1537,7 +1535,6 @@ def suaConta():
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
-    # print(request.method)
     if request.method == 'POST':
         if session['tipo'] == 2:
             dadosUsuario = funcs.dadosU('',session['idFunc'])
@@ -1668,8 +1665,7 @@ def AltDadosUsuGG():
     cursor = mysql.connection.cursor()
     IdContaBanc = request.form['IdContaBanc']
     pagina = request.form['pagina']
-        
-    print(IdContaBanc)
+
     SelectGA = f"""SELECT * FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario where TC.id_conta={IdContaBanc};"""
     cursor.execute(SelectGA)
     dados = cursor.fetchall()
@@ -1898,8 +1894,6 @@ def alterarAG():
     left join tb_funcionario as TF on TA.id_funcionario=TF.id_funcionario 
     left join tb_usuario as TU on TF.id_usuario=TU.id_usuario 
     where id_agencia = {id_agencia} order by localidade"""
-    
-    print(textoSQL)
     
     FuncionarioSQL = f"""SELECT id_funcionario,nome FROM tb_funcionario as TF 
     inner join tb_usuario as TU ON TF.id_usuario=TU.id_usuario 
