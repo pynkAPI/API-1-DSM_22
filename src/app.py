@@ -516,6 +516,9 @@ def homeG(requisicao=None):
                                                    CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
                                                    CampoBd=['tb_agencia.id_funcionario','tb_requisicoes.status_alteracao'],
                                                    CampoFm=[session['idFunc'],'0'])
+            
+            
+
             return render_template('homenewg.html',
                                    saldo=saldo,
                                    req=req,
