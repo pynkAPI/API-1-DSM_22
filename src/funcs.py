@@ -267,6 +267,8 @@ def verificaAniversarioDeposito(data1, data2):
             contadora += 1    
     retorna = [aniversario, contadora]
     return retorna
+
+
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
 '401': 'Antes de fazer essa requisição se autentifique. Credenciais inválidas.',
