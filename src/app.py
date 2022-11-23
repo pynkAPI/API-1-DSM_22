@@ -882,8 +882,6 @@ def ConferenciaDeposito():
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
-                
-
                 #Verifica se ele conseguiu sair da dívida
                 if valorDevido > 0:
                     funcs.upMySQL('tb_contabancaria',
@@ -929,8 +927,6 @@ def ConferenciaDeposito():
                       CampoFm=[1, datetime.today(), datetime.today()],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
-            
-    
 
             funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],

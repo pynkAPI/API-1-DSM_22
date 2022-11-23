@@ -207,7 +207,51 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
     InsMySQL('tb_transacao',
             CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor', 'status_transacao'],
             CampoFm = [conta_origem, conta_destino, data, tipo, valor, status])
-
+            
+def criaComprovante (dicionario, numero_conta):
+    nome_comp = f"{dicionario['id']}{numero_conta}.pdf"
+    c = canvas.Canvas(nome_comp)
+    c.setFont("Helvetica", 12)
+    if dicionario ['tipo'] == 'Depósito':
+        c.drawString(80,750,"Py.NK Internet Banking")
+        c.drawString(80,720,"Comprovante de Depósito")
+        c.drawString(80,690,f"+R${dicionario['valor']} depositado.")
+        c.line(80,675,510,675)
+        c.drawString(80,650,f"Data do Depósito: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
+        c.drawString(80,620,f"Horário do Depósito: {dicionario['hora']}")
+        c.drawString(80,590,f"ID da Transação: {dicionario['id']}")
+    elif dicionario ['tipo'] == 'Saque':
+        c.drawString(80,750,"Py.NK Internet Banking")
+        c.drawString(80,720,"Comprovante de Saque")
+        c.drawString(80,690,f"-R${dicionario['valor']} sacado.")
+        c.line(80,675,510,675)
+        c.drawString(80,650,f"Data do Saque: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
+        c.drawString(80,620,f"Horário do Saque: {dicionario['hora']}")
+        c.drawString(80,590,f"ID da Transação: {dicionario['id']}")
+    elif dicionario['tipo'] == 'transferencia':
+        if numero_conta == dicionario['conta_origem']:
+            c.drawString(80,750,"Py.NK Internet Banking")
+            c.drawString(80,720,f"Comprovante de Transferência Realizada")
+            c.drawString(80,690,f"R${dicionario['valor']} transferido para {dicionario['nome_destino']}")
+            c.line(80,675,510,675)
+            c.drawString(80,650,f"Data da Transferência: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
+            c.drawString(80,620,f"Horário da Transferência: {dicionario['hora']}")
+            c.drawString(80,590,f"Enviado para: {dicionario['nome_destino']}")
+            c.drawString(80,560,f"Numero de conta: {dicionario['conta_destino']}")
+            c.drawString(80,530,f"ID da Transação: {dicionario['id']}")
+        elif numero_conta == dicionario['conta_destino']:
+            c.drawString(80,750,"Py.NK Internet Banking")
+            c.drawString(80,720,f"Comprovante de Transferência Recebida")
+            c.drawString(80,690,f"R${dicionario['valor']} recebido de {dicionario['nome_origem']}")
+            c.line(80,675,510,675)
+            c.drawString(80,650,f"Data da Transferência: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
+            c.drawString(80,620,f"Horário da Transferência: {dicionario['hora']}")
+            c.drawString(80,590,f"Enviado por: {dicionario['nome_origem']}")
+            c.drawString(80,560,f"Numero de conta: {dicionario['conta_origem']}")
+            c.drawString(80,530,f"ID da Transação: {dicionario['id']}")
+    c.showPage()
+    c.save()
+    return nome_comp 
 def LoadConfig():
     config = {}
     conf = open("config.conf", "r")
@@ -267,7 +311,6 @@ def verificaAniversarioDeposito(data1, data2):
             contadora += 1    
     retorna = [aniversario, contadora]
     return retorna
-
 
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
