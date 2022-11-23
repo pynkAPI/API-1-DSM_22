@@ -304,8 +304,8 @@ def RequisicaoGerenteAgencia():
                 valorTotalBanco = valor + valorTotalBanco
 
                 funcs.upMySQL(TabelaBd='tb_transacao',
-                          CampoBd=['status_transacao', 'Datatime', 'data_aceite_recusa'],
-                          CampoFm=[1, datetime.today(), datetime.today()],
+                          CampoBd=['status_transacao', 'Datatime'],
+                          CampoFm=[1, datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
 
@@ -359,9 +359,7 @@ def RequisicaoGerenteAgencia():
                                CampoBd=['status_contabancaria'],
                                CampoFm=[1],
                                CampoWr=['id_conta'],
-                               CampoPs=[IdConta])
-                
-                return homeG(requisicao=requisicao)
+                               CampoPs=[IdConta])  
             else:    
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['status_contabancaria'],
@@ -369,8 +367,10 @@ def RequisicaoGerenteAgencia():
                               CampoWr=['id_conta'],
                               CampoPs=[IdConta])
 
-                
+            if session['tipo'] == 2:
                 return homeG(requisicao=requisicao)
+            else:
+                return render_template('ListReq.html',requisicao=requisicao)
                 
         #endregion 
         # Aceitar alteração de dados
@@ -390,7 +390,11 @@ def RequisicaoGerenteAgencia():
                                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
-                return homeG(requisicao=requisicao)
+                
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
 
         elif requisicao == '4':
             idUsuario   =request.form['idUsuario'],
@@ -425,7 +429,10 @@ def RequisicaoGerenteAgencia():
                                 CampoWr=['id_usuario'],
                                 CampoPs=[idUsuario[0]])
              
-                return homeG(requisicao=requisicao)
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
             else:
                 botao = request.form.to_dict()
                 IdConta = request.form['Id']
@@ -458,9 +465,9 @@ def RequisicaoGerenteAgencia():
                                 CampoPs=[IdConta])
             
         if session['tipo'] == 2:
-                        return homeG(requisicao=requisicao)
+            return homeG(requisicao=requisicao)
         else:
-                        return render_template('ListReq.html')
+            return render_template('ListReq.html')
           
     return homeG(requisicao=requisicao)
      
