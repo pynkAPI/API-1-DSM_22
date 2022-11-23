@@ -26,8 +26,8 @@
 
 .navbar ul li a {
     text-decoration: none;
-    color: #FB1C7B;
-    font-weight: 500;
+    color: black;
+    font-weight: 600;
 }
 
 @media (max-width: 620px) {

@@ -19,7 +19,6 @@ app.config['MYSQL_PASSWORD'] = config['password']
 app.config['MYSQL_DB'] = config['db']
 
 mysql = MySQL(app)
-# Bloco de Paginas.
 
 #Pagina inicial
 @app.route("/")
