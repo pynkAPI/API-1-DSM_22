@@ -662,6 +662,11 @@ def SaqueConta():
                                                     CampoBd=['id_capitaltotal'],
                                                     CampoFm=['1'],
                                                     CampoEs=['capitalinicial'])
+
+            if session['tipoConta']=='CONTA POUPANÇA'and float(session['saldo']) < valor:
+                flash ("Não é possivel realizar o saque!")
+                return redirect(url_for('saque'))
+
             if valor <= capital_total[0][0]:
                 valor = float(session['saldo']) - valor
                 NewCapTot = capital_total[0][0] - float(request.form['valor'])
@@ -687,12 +692,34 @@ def SaqueConta():
                                                             CampoBd=['numeroconta'],
                                                             CampoFm=[session['conta']],
                                                             CampoEs=['id_conta'])
-                if session['tipoConta'] == 'CONTA POUPANÇA' and valor ==0:
-                    funcs.upMySQL(TabelaBd='tb_poupanca',
-                                  CampoBd=['valor_poupanca', 'ativo', 'data_final'],
-                                  CampoFm=[valor, 0, date.today()],
-                                  CampoWr=['id_conta'],
-                                  CampoPs=[idConta])
+                if session['tipoConta'] == 'CONTA POUPANÇA':
+                    pesquisaSQLPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
+                                                                   CampoBd=['id_conta', 'ativo'],
+                                                                   CampoFm=[idConta, 1],
+                                                                   CampoEs=['valor_poupanca', 'data_atualizacao', 'ativo'])
+                    dataAtualizacaoPoupanca = pesquisaSQLPoupanca[0][1]
+                    valorPoupanca = pesquisaSQLPoupanca[0][0]
+                    periododoRendimento = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
+                    if periododoRendimento > 0:
+                        pesquisaSQLRegraPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                          CampoBd=['id_regra_operacoes'],
+                                                                          CampoFm=[2],
+                                                                          CampoEs=['porcentagem', 'valor_fixo'])
+                        porcentagem = pesquisaSQLRegraPoupanca[0][0]
+                        valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagem, tempo=periododoRendimento)
+                    valorPoupanca = valorPoupanca - valor
+                    if valorPoupanca == 0:
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                  CampoBd=['data_atualizacao', 'data_final', 'ativo', 'valor_poupanca'],
+                                  CampoFm=[date.today(), date.today(), 0, valorPoupanca],
+                                  CampoWr=['id_conta', 'ativo'],
+                                  CampoPs=[idConta, 1])
+                    else:
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                  CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                  CampoFm=[date.today(), valorPoupanca],
+                                  CampoWr=['id_conta', 'ativo'],
+                                  CampoPs=[idConta, 1])
                 
                 if valor < 0:
                     pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
@@ -893,6 +920,48 @@ def ConferenciaDeposito():
             IdContaOrigem = pesquisaSQLTransacao[0][1]
             valorTransacao = float(pesquisaSQLTransacao[0][0])
 
+            pesquisaSQLTipoConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria', 
+                                                            CampoEs=['tipo'],
+                                                            CampoBd=['id_conta'], 
+                                                            CampoFm=[IdContaOrigem])
+            #region Conta Poupança
+            if pesquisaSQLTipoConta[0][0] == 'CONTA POUPANÇA': 
+                pesquisaSQLAtivoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca', 
+                                                                    CampoEs=['ativo', 'valor_poupanca', 'data_atualizacao'],                                                   
+                                                                    CampoBd=['id_conta','ativo'], 
+                                                                    CampoFm=[IdContaOrigem,1])
+                if pesquisaSQLAtivoPoupanca: 
+
+                    valorPoupanca = pesquisaSQLAtivoPoupanca[0][1]
+                    dataAtualizacaoPoupanca = pesquisaSQLAtivoPoupanca[0][2]
+                    dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
+                    if dataPeriodoPoupanca > 0:
+                        pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                             CampoFm=[2],
+                                                                             CampoBd=['id_regra_operacoes'],
+                                                                             CampoEs=['porcentagem'])
+                        porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                        valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                        valorPoupanca = valorPoupanca + valorTransacao
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupanca],
+                                      CampoPs=[IdContaOrigem],
+                                      CampoWr=['id_conta'])
+                    else:
+                        valorPoupanca = valorPoupanca + valorTransacao
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupanca],
+                                      CampoPs=[IdContaOrigem], 
+                                      CampoWr=['id_conta'])
+
+                else: 
+                    funcs.InsMySQL(TabelaBd='tb_poupanca',
+                                    CampoBd=['id_conta', 'data_inicio', 'data_atualizacao', 'valor_poupanca', 'ativo'],
+                                    CampoFm=[IdContaOrigem, date.today(), date.today(), valorTransacao, 1])
+            #endregion
+
             pesquisaSQLCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                          CampoBd=['id_conta'],
                                                          CampoFm=[IdContaOrigem],
@@ -1057,6 +1126,9 @@ def TransacaoConta():
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
 
+            if session['tipoConta']=='CONTA POUPANÇA'and float(session['saldo']) < valor:
+                return Transacao(mensagem='Não foi possível realizar a operação')
+
             pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                 CampoBd=['numeroconta'],
                                                 CampoFm=[numeroConta],
@@ -1099,8 +1171,9 @@ def TransacaoConta():
                                                                      CampoEs=['valor_devido', 'data_atualizacao'])
             #verifica se o usuário da conta Destino está na situação de cheque especial da conta 
 
-            #region Verifica Cheque Especial Conta Destino
+           
             if pesquisaSQLContaDestinoCheque:
+                #region Verifica Cheque Especial Conta Destino
                 DestinoSaiuCheque = False
                 #pega o valor de quanto a conta Destino está devendo ao banco
                 valorDevido = pesquisaSQLContaDestinoCheque[0][0]
@@ -1138,7 +1211,9 @@ def TransacaoConta():
                                       CampoFm=[valorDevido, date.today(), '0'],
                                       CampoPs=[IdContaDestino],
                                       CampoWr=['id_conta'])
+                #endregion
             else:
+                #region CONTA POUPANCA2
                 pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
                                                                  CampoBd=['id_conta', 'ativo'],
                                                                  CampoFm=[IdContaDestino, 1],
@@ -1175,8 +1250,8 @@ def TransacaoConta():
                       CampoPs=[IdContaDestino],
                       CampoWr=['id_conta'])
                     DestinoSaiuCheque = False
-
-                    
+                #endregion
+     
             if valorContaOrigem < 0:
                 pesquisaContaOrigemCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                                      CampoBd=['id_conta', 'ativo'],
