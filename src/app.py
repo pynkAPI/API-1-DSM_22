@@ -591,52 +591,133 @@ def homeGG(requisicao=None):
 @app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
 def FiltroExtrato():
     if request.method == "POST":
-        cabecalho   = ('Tipo', 'Valor','Data e hora', 'De:', 'Para:')
-        saldo       = funcs.ValEmReal(session['saldo'])
-        VarContador = 0
-        DataDe      = request.form['DataExtratoDe']
-        DateAte     = request.form['DataExtratoAte']
-        cursor = mysql.connection.cursor()
-        
-        textoSQL = f"""SELECT tipo, valor, Datatime FROM tb_transacao 
-        WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59' 
-        and ( id_conta_origem = "{session['idContaBK']}"or id_conta_destino = "{session['idContaBK']}")"""
-        
-        cursor.execute(textoSQL)
-        pesquisaSQL = cursor.fetchall()
-        mysql.connection.commit()     
-        
-        textoSQL2 = f"""SELECT id_conta_origem, id_conta_destino FROM tb_transacao 
-        WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59'
-        and ( id_conta_origem = "{session['idContaBK']}" or id_conta_destino = "{session['idContaBK']}" )"""
-        
-        cursor.execute(textoSQL2)
-        pesquisaContas = cursor.fetchall()
-        mysql.connection.commit()  
-        
-        
-        cursor.close()   
+        if session['tipo'] == 1:
+            cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:','')
+            saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
+            VarContador=0
+            data = datetime.today()
+
+            DataDe      = request.form['DataExtratoDe']
+            DateAte     = request.form['DataExtratoAte']
+            cursor = mysql.connection.cursor()
+
+
+            textoSQL = f"""SELECT id_transacao, tipo, valor, Datatime, status_transacao FROM tb_transacao 
+            WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59' 
+            and ( id_conta_origem = "{session['idContaBK']}"or id_conta_destino = "{session['idContaBK']}")"""
             
-        pesquisaSQL = [list(row) for row in pesquisaSQL]
-        for row in pesquisaContas:
-            nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+            cursor.execute(textoSQL)
+            pesquisaSQL = cursor.fetchall()
+            mysql.connection.commit() 
+            
+            textoSQL2 = f"""SELECT id_conta_origem, id_conta_destino FROM tb_transacao 
+            WHERE status_transacao = "1" and Datatime >= '{DataDe} 00:00:00' and Datatime < '{DateAte} 23:59:59'
+            and ( id_conta_origem = "{session['idContaBK']}" or id_conta_destino = "{session['idContaBK']}" )"""
+            
+            cursor.execute(textoSQL2)
+            pesquisaContas = cursor.fetchall()
+            mysql.connection.commit()  
+            
+            
+            cursor.close() 
+
+            if session['tipoConta'] == 'CONTA POUPANÇA':
+                pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
+                                                                 CampoBd=['id_conta', 'ativo'],
+                                                                 CampoFm=[session['idContaBK'], 1],
+                                                                 CampoEs=['valor_poupanca', 'data_atualizacao'])
+
+                if pesquisaContaPoupanca:
+                    valorPoupanca = pesquisaContaPoupanca[0][0]
+                    dataAtualizacaoPoupanca = pesquisaContaPoupanca[0][1]
+                    dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
+                    if dataPeriodoPoupanca > 0:
+                        pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                                 CampoFm=[2],
+                                                                                 CampoBd=['id_regra_operacoes'],
+                                                                                 CampoEs=['porcentagem'])
+                        porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                        valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupanca],
+                                      CampoWr=['ativo', 'id_conta'],
+                                      CampoPs=[1, session['idContaBK']])
+                        funcs.upMySQL(TabelaBd='tb_contabancaria',
+                                      CampoBd=['saldo'],
+                                      CampoFm=[valorPoupanca],
+                                      CampoWr=['id_conta'],
+                                      CampoPs=[session['idContaBK']])
+
+
+            pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
+                                                             CampoBd=['id_conta', 'ativo'],
+                                                             CampoFm=[session['idContaBK'], '1'],
+                                                             CampoEs=['valor_devido', 'data_atualizacao'])
+            if pesquisaChequeEspecial:
+                valorDevido = pesquisaChequeEspecial[0][0]
+                dataAtualizacao = pesquisaChequeEspecial[0][1]
+                dataPeriodo = funcs.periodoEntreDatas(data1=str(dataAtualizacao), data2=str(date.today()))
+                if dataPeriodo > 0:
+                    pesquisaRegraOperacao = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                 CampoBd=['id_regra_operacoes'],
+                                                                 CampoFm=[1],
+                                                                 CampoEs=['porcentagem'])
+                    porcentagem = pesquisaRegraOperacao[0][0]
+                    valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
+                    funcs.upMySQL(TabelaBd='tb_cheque_especial',
+                                  CampoBd=['valor_devido', 'data_atualizacao'],
+                                  CampoFm=[valorDevido, date.today()],
+                                  CampoWr=['id_conta', 'ativo'],
+                                  CampoPs=[session['idContaBK'], '1'])
+            else:
+                valorDevido = 0
+            pesquisaSQL = [list(row) for row in pesquisaSQL]
+            for row in pesquisaContas:
+                
+                # Pegando o nome do usuario que é a conta de origem
+                nomes1 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[0]],
-                                                        CampoEs=['nome'])  
-            nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
+                                                        CampoEs=['nome'])
+
+                # Pegando o nome do usuario que é a conta de destino                            
+                nomes2 = funcs.SlcEspecificoMySQL('tb_contabancaria inner join tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
                                                         CampoBd=['tb_contabancaria.id_conta'],
                                                         CampoFm=[row[1]],
                                                         CampoEs=['nome'])
-            nomes1 = [list(row) for row in nomes1]   
-            nomes2 = [list(row) for row in nomes2]
+
+                # Convertendo tupla para array
+                nomes1 = [list(row) for row in nomes1]
+                nomes2 = [list(row) for row in nomes2]
                 
-            pesquisaSQL[VarContador].append(nomes1[0][0])
-            pesquisaSQL[VarContador].append(nomes2[0][0])
-            pesquisaSQL[VarContador][1] = funcs.ValEmReal(pesquisaSQL[VarContador][1])
-            VarContador+=1
-            
-        return render_template('home.html',saldo=saldo,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL)
-    return render_template('home.html')
+                # Juntando os nomes pesquisados para a variavel de geração do extrato
+                pesquisaSQL[VarContador].append(nomes1[0][0])
+                pesquisaSQL[VarContador].append(nomes2[0][0])
+
+                pesquisaSQL[VarContador][2] = funcs.ValEmReal(pesquisaSQL[VarContador][2])
+                
+                # Tratando o Status da transação
+                if pesquisaSQL[VarContador][4] == '1':
+                    pesquisaSQL[VarContador][4] = "Efetuado"
+                else:
+                    if pesquisaSQL[VarContador][4] == '2':
+                        pesquisaSQL[VarContador][4] = "Rejeitado"
+                    else:
+                        pesquisaSQL[VarContador][4] = "Aguardando"
+
+                VarContador+=1
+
+            valorDevidoTotal = valorDevido
+            if valorDevido < 0:
+                valorDevido = valorDevido - float(session['saldo'])    
+                valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=3)
+                valorDevido = valorDevido - 0.005
+                valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=2)
+
+            caminhoLogin = '/'
+            return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
+    return home()
 #------------------------------
 #Pagina Deposito
 @app.route("/deposito")
