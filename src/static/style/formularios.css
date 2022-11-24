@@ -187,6 +187,22 @@ select:valid ~ label {
 }
 
 /* formulário de login administrativo */
+.cadastroSaldo form {
+    width:  30rem;
+    height: 30rem;
+}
+
+.cadastroSaldo form h2{
+    color: #FB1C7B;
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.cadastroSaldo .div_input label {
+    right: 5px;
+}
+
 .login-adm form {
     width: 25rem;
     height: 27rem;
