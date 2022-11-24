@@ -34,8 +34,8 @@
                     </thead>
                     <tbody>
                         {% for row in pesquisaSQL %}
-                        <form action="{{ url_for('RequisicaoGerenteAgencia') }}" method="POST">
-                            <tr class="linhaTabela">
+                        <tr class="linhaTabela">
+                            <form action="{{ url_for('RequisicaoGerenteAgencia') }}" method="POST">
                                 <!-- Forma as linhas da tabela -->
                                 <input type="hidden" value="{{ requisicao }}" name="requisicao">
                                 {% for cell in row %}
@@ -77,8 +77,8 @@
                                         id="btnRecusar">
                                 </td>
                                 {% endif %}
-                            </tr>
-                        </form>
+                            </form>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>

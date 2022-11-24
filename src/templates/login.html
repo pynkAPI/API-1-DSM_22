@@ -10,6 +10,17 @@
 </nav>
 
 <main class="login">
+    <div class="message">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <img src="../static/img/alert-icon.png" alt="alert">
+        <p> Seu número de conta é {{ message }}.</p>
+        <p> Guarde este número em um lugar seguro!</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
     <form action="{{ url_for('login') }}" method="POST" class="form">
         <img src="../static/img/logorosa2.png" alt="logo">
         <div class="div_input">
@@ -22,15 +33,6 @@
         </div>
         <button type="submit" value="ENTRAR" class="entrar ripple">Entrar<i class='bx bx-right-arrow-alt bx-sm'
                 style='color:#ffffff'></i></button>
-
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <label> Seu número da conta é {{ message }}</label>
-        <label> GUARDE O NÚMERO DA CONTA EM UM LUGAR SEGURO</label>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
     </form>
 </main>
 <!-- /login -->
