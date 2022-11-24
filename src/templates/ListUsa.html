@@ -21,33 +21,58 @@
     <hr>
     <div class="elemento-u">
         <div class="scroll-div-tabela">
-        <div class="scroll-object-tabela">
-            <table class="tabelaRequisicao">
-                <tr class="linhaTabela">
-                    {% for header in cabecalhoTabela %}
-                    <th>{{ header }}</th>
-                    {% endfor %}
-                </tr>
-                    {% set p = namespace(value=0) %}
-                    {% for row in pesquisaSQL %}
-                <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
-                <tr class="linhaTabela">
-                    {% for cell in row %}
-                    {% if cell == row[0] %}
-                    <input type="hidden" value="{{ cell }}" name="IdContaBanc">
-                    {% else %}
-                    <td class="celula">{{ cell }}</td>
-                    {% endif %}
-                    {% endfor %}
-                        <input type="hidden" value="{{ pagina }}" name="pagina">
-                        <td class="celula">
-                        <input type="submit" name="botao" value="Alterar" class="btnd solid" id="btnConfirmar">
-                    </td>
-                </tr>
-                </form>
-                {% set p.value = p.value + 1 %}
-                {% endfor %}
-        </table>
-    </div>
-</div>
-{% endblock %}
+            <div class="scroll-object-tabela">
+                <table id="TabelaUsa" class="tabelaRequisicao">
+                    <thead>
+                        <tr class="linhaTabela">
+                            {% for header in cabecalhoTabela %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set p = namespace(value=0) %}
+                        {% for row in pesquisaSQL %}
+
+                        <tr class="linhaTabela">
+                            <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
+                                {% for cell in row %}
+                                {% if cell == row[0] %}
+                                <input type="hidden" value="{{ cell }}" name="IdContaBanc">
+                                {% else %}
+                                <td class="celula">{{ cell }}</td>
+                                {% endif %}
+                                {% endfor %}
+                                <input type="hidden" value="{{ pagina }}" name="pagina">
+                                <td class="celula">
+                                    <input type="submit" name="botao" value="Alterar" class="btnd solid"
+                                        id="btnConfirmar">
+                                </td>
+                            </form>
+                        </tr>
+
+                        {% set p.value = p.value + 1 %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#TabelaUsa').DataTable({
+                    "language": {
+                        "lengthMenu": "Mostrando _MENU_ registros por página",
+                        "zeroRecords": "Nada encontrado",
+                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "infoEmpty": "Nenhum registro disponível",
+                        "infoFiltered": "(filtrado de _MAX_ registros no total)"
+                    }
+                });
+            });
+        </script>
+        {% endblock %}
