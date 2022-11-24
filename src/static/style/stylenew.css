@@ -48,12 +48,18 @@ body{
     overflow-x:hidden;
     color: var(--color-dark);
 }
+
+.pageContent {
+    width: 90vw;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
 .container{
-    display: grid;
+    display: flex;
     width: 100%;
     margin: 0 auto;
-    gap: 1.8rem;
-    grid-template-columns: 14rem auto 23rem;
 }
 a{
     color: var(--color-dark);
@@ -100,6 +106,7 @@ aside h3{
 
 main{
     margin-top: 1.4rem;
+    width: 90%;
 }
 main .bloco-info{
     display: grid;
@@ -450,16 +457,14 @@ th, td {
     align-items: center;
     padding: 6vh 20vw;
     background-color: var(--color-background);
-    width: 90vw;
+    width: 90%;
     min-height: 100vh;
 }
 .elemento{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    width: 60%;
     gap: 2vh;
-    padding: 2vh 4vw;
 }
 .btn_elemento{
     display: flex;
@@ -478,7 +483,7 @@ th, td {
 
 #tituloElemento{
     color: var(--color-dark);
-    font-size: 2vw;
+    font-size: 2rem;
 }
 
 #mensagemErro{
@@ -489,12 +494,13 @@ th, td {
 .blocoElemento{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    width: 20vw;
+    width: 100%;
+    margin-top: 2rem;
     height: auto;
     gap: 2vw;
-    padding: 3vh 4vw 4vh 4vw;
+    padding: 2.5rem 2rem;
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;    
@@ -521,6 +527,7 @@ th, td {
     align-items: left;
     height: auto;
     text-align: left;
+    width: 50%;
 }
 
 #textoInputElemento{
@@ -545,30 +552,27 @@ th, td {
 .botaoElemento{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-content: center;
     text-align: center;
 }
 
-#botaoSubmit{
-    height: 4vh;
-    width: 7vw;
+#botaoVoltar,
+#botaoSubmit {
+    height: 2.5rem;
+    width: 10rem;
     background: var(--color-primary);
-    border-radius: 8px;
+    border-radius: 5px;
     color: var(--color-white);
-    font-size: 1.5rem;
-    font-weight: 300;
+    font-size: 1rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 1rem;
 }
 
-#botaoVoltar{
-    height: 4vh;
-    width: 7vw;
-    background: var(--color-white);
-    border-radius: 8px;
-    color: var(--color-primary);
-    font-size: 1.5rem;
-    font-weight: 400;
-    cursor: pointer;
+#botaoSubmit {
+    margin-right: .5rem;
 }
 
 .saldo-dep{
@@ -633,4 +637,27 @@ input[type=number] {
   height: 5vh;
   font-size: 2vh;
   font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+    .elemento {
+        width: 80%;
+    }
+}
+
+@media (max-width: 850px) {
+    .inputElemento {
+        width: 80%;
+    }
+}
+
+@media (max-width: 430px) {
+    .elemento {
+        width: 95%;
+        margin-top: 2rem;
+    }
+
+    .inputElemento {
+        width: 90%;
+    }
 }

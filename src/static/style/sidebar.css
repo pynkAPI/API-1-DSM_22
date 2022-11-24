@@ -1,12 +1,13 @@
 #btn_menu {
     position: absolute;
     top: 2rem;
-    left: 11rem;
+    left: 160px;
     cursor: pointer;
 }
 
 .topo-sidebar {
     height: 100vh;
+    width: 200px;
     background-color: var(--color-white);
     transition: all 0.5s ease;
 }
@@ -92,13 +93,29 @@
     display: none;
 }
 
+.pageContent.active {
+    width: 100%;
+}
+
+@media (max-width: 1270px) {
+    #btn_menu {
+        left: 155px;
+    }
+}
+
+@media (max-width: 1024px) {
+    #btn_menu {
+        left: 150px;
+    }
+}
+
 @media (max-width: 900px) {
     #btn_menu {
         left: 1rem;
     }
 
     #btn_menu.active {
-        left: 11rem;
+        left: 160px;
     }
 
     .topo-sidebar {
@@ -115,7 +132,7 @@
 
     .topo-sidebar.active {
         display: block;
-        width: 15rem;
+        width: 260px;
     }
 
     .topo-sidebar.active .topo {
