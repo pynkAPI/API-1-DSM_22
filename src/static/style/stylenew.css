@@ -150,36 +150,18 @@ main .data input[type="date"]{
     padding: 0.5vh;
 } 
 .btnd{
-    font-size: 1.1vh;
-    padding: 0.5vh;
-    color: #EBEBEB;
-    background-color: #b71258;
-    border: 1px solid #b71258;
-    border-radius: 1vh;
+    font-size: 0.7vw;
+    font-weight: 600;
+    padding: 0.5vw;
+    color: var(--color-white);
+    background-color: #FB1C7B;
+    border-radius: var(--border-radius-2);
 }
 .btnd:hover{
     background-color: #CC5587;
     border-color: #CC5587;
     box-shadow: 0 0 0 0.05rem #DDA0DD;
 }
-/* .form-date{
-    font-size: 1.5vh;
-    line-height: 2.4vh;
-    padding: 0.5vh;
-    margin-top: 1rem;
-    margin-left: 2rem;
-} */
-/* .input-date{
-    padding: 0.5vh;
-    appearance: none;
-    color: #b71258;
-    font-size: 1vh;
-    border: 1px solid #b71258;
-    border-radius: 1vh;
-    background: #e7e7e7;
-    display: inline-block;
-    visibility: visible;
-} */
 
 main .Extrato{
     margin-top:0.8rem ;
@@ -197,6 +179,13 @@ main .Extrato .tabelaRequisicao{
     text-align: center;
     box-shadow: var(--box-shadow) ;
     transition: all 300ms ease;
+}
+main .Tb .tabelaRequisicao{
+    background-color: var(--color-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
 }
 main .Extrato .tabelaRequisicao:hover{
     box-shadow: none;
@@ -485,7 +474,10 @@ th, td {
     color: var(--color-dark);
     font-size: 1.5vw;
 }
-
+.chequeesp{
+    display: flex;
+    align-items: center;
+}
 .blocoElemento{
     display: flex;
     flex-direction: column;
@@ -505,8 +497,8 @@ th, td {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 40vw;
-    height: auto;
+    width: 30vw;
+    height: 50vh;
     gap: 2vw;
     padding: 3vh 4vw 4vh 4vw;
     background: var(--color-white);
@@ -514,6 +506,49 @@ th, td {
     border-radius: 10px;    
 }
 
+.AltSaldo{
+    padding: 4vw;
+}
+.valorsaldo{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+ .voltar{
+    font-size: 1vw;
+ }
+ select {
+    background-color: none;
+    height: 2rem;
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none;
+    font-size: 1rem;
+}
+
+select:valid {
+    border-color: #FB1C7B;
+}
+
+select:focus ~ label,
+select:valid ~ label {
+    font-size: 12px;
+    color: #FB1C7B;
+}
+
+ .btn-altsaldo{
+    font-size: 1vw;
+    color: var(--color-white);
+    background-color: #FB1C7B;
+    border-radius: var(--border-radius-1);
+    padding: 0.3vw;
+ }
+.input-button-altvalor{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5vh;
+}
 .inputElemento{
     display: flex;
     flex-direction: column;
