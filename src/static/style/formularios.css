@@ -211,6 +211,18 @@ select:valid ~ label {
     }
 }
 
+@media (max-width: 1150px) {
+    .cadastro form {
+        width: 70%;
+    }
+}
+
+@media (max-width: 810px) {
+    .cadastro form {
+        width: 90%;
+    }
+}
+
 @media (max-width: 620px),
 (max-height: 620px) {
     .login,

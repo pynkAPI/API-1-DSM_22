@@ -18,55 +18,76 @@
     <div class="elemento-a">
         <div class="scroll-div-tabela">
             <div class="scroll-object-tabela">
-                <table class="tabelaAgencias">
+                <table id="TabelaAge" class="tabelaAgencias">
                     <!-- Inicio da Tabela -->
-                    <tr class="linhaTabela">
-                        <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->
-                        {% for header in cabecalhoTabela %}
-                        <th>{{ header }}</th>
-                        {% endfor %}
-                    </tr>
-                    {% for row in pesquisaSQLTabela %}
-                    <form action="alterarAG" method="POST">
+                    <thead>
                         <tr class="linhaTabela">
-                            {% for cell in row %}
-                            {% if row[0] == cell %}
-                            <input type="hidden" value="{{ cell }}" name="Id_agencia">
-                            {% else %}
-                            <td class="celula">{{ cell }}</td>
-                            {% endif %}
+                            <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->
+                            {% for header in cabecalhoTabela %}
+                            <th>{{ header }}</th>
                             {% endfor %}
-                            <td>
-                                <input type="submit" name="alt" value="Alterar" class="btn_alterar">
-                            </td>
-                    </form>
-                    <form action="UpdateAG" method="GET">
-                    <td>
-                        {% for cell in row %}
-                            {% if row[0] == cell %}
-                            <input type="hidden" value="{{ cell }}" name="Id_agencia">
-                            {% endif %}
-                        {% endfor %}
-                        <input type="hidden" value="" id="NewAgencia{{row[0]}}" name="IdNewAgencia">
-                        <input type="submit" name="alt" id="{{row[0]}}" onclick="return pergunta(this.id);" value="Deletar" class="btn_alterar">
-                    </td>
-                    </form>
                         </tr>
-                    {% endfor %}
+                    </thead>
+                    <tbody>
+                        {% for row in pesquisaSQLTabela %}
+                        <tr class="linhaTabela">
+                            <form action="alterarAG" method="POST">
+                                {% for cell in row %}
+                                {% if row[0] == cell %}
+                                <input type="hidden" value="{{ cell }}" name="Id_agencia">
+                                {% else %}
+                                <td class="celula">{{ cell }}</td>
+                                {% endif %}
+                                {% endfor %}
+                                <td>
+                                    <input type="submit" name="alt" value="Alterar" class="btn_alterar">
+                                </td>
+                            </form>
+                            <form action="UpdateAG" method="GET">
+                                <td>
+                                    {% for cell in row %}
+                                    {% if row[0] == cell %}
+                                    <input type="hidden" value="{{ cell }}" name="Id_agencia">
+                                    {% endif %}
+                                    {% endfor %}
+                                    <input type="hidden" value="" id="NewAgencia{{row[0]}}" name="IdNewAgencia">
+                                    <input type="submit" name="alt" id="{{row[0]}}" onclick="return pergunta(this.id);"
+                                        value="Deletar" class="btn_alterar">
+                                </td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script>
-    function pergunta(id){ 
+    function pergunta(id) {
         // retorna true se confirmado, ou false se cancelado
-        texto = 'NewAgencia'+id
-        if(confirm('Tem certeza que quer deseja excluir essa agencia?') == true){
+        texto = 'NewAgencia' + id
+        if (confirm('Tem certeza que quer deseja excluir essa agencia?') == true) {
             idFunc = prompt("Digite o id da agencia para mover as contas dos usuarios: ");
             document.getElementById(texto).value = idFunc;
             // alert(idFunc)
         }
     }
+
+    $(document).ready(function () {
+        $('#TabelaAge').DataTable({
+            "language": {
+                "lengthMenu": "Mostrando _MENU_ registros por página",
+                "zeroRecords": "Nada encontrado",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(filtrado de _MAX_ registros no total)"
+            }
+        });
+    });
+
 </script>
 {% endblock %}
