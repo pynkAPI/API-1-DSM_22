@@ -83,7 +83,7 @@ body, html, main {
 }
 
 .login-adm .logo-imagem .capa {
-    width: 50rem;
+    width: 80%;
 }
 
 .login-adm .form-login-adm {
@@ -425,7 +425,6 @@ margin-left: 100%;
 
     .index .form_index {
         width: 30%;
-        padding-right: 3rem;
     }
 }
 
@@ -458,6 +457,7 @@ margin-left: 100%;
 
 @media (max-height: 620px) {
     .index .frase-imagem {
-        display: none;
+        width: 50%;
+
     }
 }

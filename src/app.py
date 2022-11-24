@@ -730,14 +730,14 @@ def FiltroExtrato():
 def deposito():
     if session['saldo'] != None:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
-    return render_template('depositonew.html',saldo=saldo)
+    return render_template('deposito.html',saldo=saldo)
 
 #------------------------------
 #Pagina Saque
 @app.route("/saque")
 def saque():
     saldo = f"{session['saldo']:.2f}".replace(".",",")
-    return render_template('saquenew.html',saldo=saldo)
+    return render_template('saque.html',saldo=saldo)
 #------------------------------
 #Saque Conta
 @app.route("/SaqueConta",  methods = ['POST', 'GET'])
@@ -1201,7 +1201,7 @@ def AceiteConta():
 def Transacao(mensagem=''):
     if session['saldo'] != None:
         saldo = f"{session['saldo']:.2f}".replace(".",",")
-    return render_template('transferencianew.html',saldo=saldo, mensagemTransacao=mensagem)
+    return render_template('transferencia.html',saldo=saldo, mensagemTransacao=mensagem)
 
 #------------------------------
 #Bloco de transação entre contas
