@@ -213,6 +213,48 @@ def RequisicaoGerenteAgencia():
                 IdContaOrigem = pesquisaSQLTransacao[0][1]
                 valorTransacao = float(pesquisaSQLTransacao[0][0])
 
+                pesquisaSQLTipoConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria', 
+                                                            CampoEs=['tipo'],
+                                                            CampoBd=['id_conta'], 
+                                                            CampoFm=[IdContaOrigem])
+            #region Conta Poupança
+            if pesquisaSQLTipoConta[0][0] == 'CONTA POUPANÇA': 
+                pesquisaSQLAtivoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca', 
+                                                                    CampoEs=['ativo', 'valor_poupanca', 'data_atualizacao'],                                                   
+                                                                    CampoBd=['id_conta','ativo'], 
+                                                                    CampoFm=[IdContaOrigem,1])
+                if pesquisaSQLAtivoPoupanca: 
+
+                    valorPoupanca = pesquisaSQLAtivoPoupanca[0][1]
+                    dataAtualizacaoPoupanca = pesquisaSQLAtivoPoupanca[0][2]
+                    dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=date.today())
+                    if dataPeriodoPoupanca > 0:
+                        pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                                                             CampoFm=[2],
+                                                                             CampoBd=['id_regra_operacoes'],
+                                                                             CampoEs=['porcentagem'])
+                        porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
+                        valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
+                        valorPoupanca = valorPoupanca + valorTransacao
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupanca],
+                                      CampoPs=[IdContaOrigem],
+                                      CampoWr=['id_conta'])
+                    else:
+                        valorPoupanca = valorPoupanca + valorTransacao
+                        funcs.upMySQL(TabelaBd='tb_poupanca',
+                                      CampoBd=['data_atualizacao', 'valor_poupanca'],
+                                      CampoFm=[date.today(), valorPoupanca],
+                                      CampoPs=[IdContaOrigem], 
+                                      CampoWr=['id_conta'])
+
+                else: 
+                    funcs.InsMySQL(TabelaBd='tb_poupanca',
+                                    CampoBd=['id_conta', 'data_inicio', 'data_atualizacao', 'valor_poupanca', 'ativo'],
+                                    CampoFm=[IdContaOrigem, date.today(), date.today(), valorTransacao, 1])
+            #endregion
+
                 pesquisaSQLCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta'],
                                                              CampoFm=[IdContaOrigem],

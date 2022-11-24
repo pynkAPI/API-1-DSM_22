@@ -615,7 +615,7 @@ def geraValor(qtdCaracteres, tipo):
 def verificaQuantidadeRendimento(data1, data2):
     contadora = 0
     dataSoma = data1
-    while dataSoma <= data2:
+    while dataSoma < data2:
         contadora += 1
         dataSoma = data1 + relativedelta(months=contadora)
     return contadora
