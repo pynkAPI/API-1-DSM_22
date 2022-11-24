@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "templateCliente.html" %}
 {% block conteudo %}
 <main>
     <div class="bloco-info">
@@ -29,6 +29,15 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="data">
+        <form action="FiltroExtrato" method="POST">
+            <label class="form-date" for="input-date">De:</label>
+            <input required type="date" class="input-date" name="DataExtratoDe">
+            <label class="form-date" for="input-date">Até:</label>
+            <input required type="date" class="input-date" name="DataExtratoAte">
+            <input type="submit" class="btnd" value="Pesquisar">
+        </form>
     </div>
     {% block Tabela %}
     <div class="Extrato">

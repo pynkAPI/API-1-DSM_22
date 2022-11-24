@@ -2,7 +2,7 @@
 /* variaveis */
 :root{
     /* paleta de cores */
-    --color-primary: #B71258;
+    --color-primary: #FB1C7B;
     --color-sucess:#41f1b6;
     --color-warning:#ffbb55;
     --color-white:#fff;
@@ -93,73 +93,11 @@ b{
 .warning{
     color: var(--color-warning);
 }
-aside{
-    height: 100vh;
-    background-color: var(--color-white);
-}
-aside .topo{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.8rem;
-    margin-left: 1.25vw;
-}
-aside .logo img{
-    width: 70%;
-}
-aside .fechar{
-    display: none;
-}
-aside .sidebar{
-    display: flex;
-    flex-direction: column;
-    height: 86vh;
-    position: relative;
-    top: 1rem;
-}
+
 aside h3{
     font-weight: 70vh;
 }
-aside .sidebar a{
-    display: flex;
-    color: var(--color-dark);
-    margin-left: 2rem;
-    gap: 1rem;
-    align-items: center;
-    position: relative;
-    height: 3.7rem;
-    transition:all 300ms ease;
-}
-aside .sidebar a span{
-    font-size: 1.8rem;
-    transition: all 200ms ease;
-}
-aside  .sidebar a:last-child{
-    position: absolute;
-    bottom: 2rem;
-    width: 100%;
-}
-aside .sidebar a.active{
-    background: var(--color-light);
-    color: var(--color-primary);
-    margin-left: 0;
-}
-aside .sidebar a.active:before{
-    content: "";
-    width: 6px;
-    height: 100%;
-    background: var(--color-primary);
-}
-aside .sidebar a.active span{
-    color: var(--color-primary);
-    margin-left: calc(1rem - 3px);
-}
-aside .sidebar a:hover{
-    color: var(--color-primary);
-}
-aside .sidebar a:hover span{
-    margin-left: 1rem;
-}
+
 main{
     margin-top: 1.4rem;
 }
