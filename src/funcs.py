@@ -565,6 +565,18 @@ def verificaAgencia():
     idAgencia = pesquisaSQL[0][0]
     return idAgencia
 
+def verificaAgenciaGerente(idGerente):
+    cursor = mysql.connection.cursor()
+    
+    Select = f'''SELECT id_agencia FROM tb_agencia where id_funcionario = {idGerente};'''
+
+    cursor.execute(Select)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit() 
+    cursor.close()
+    idAgencia = pesquisaSQL[0][0]
+    return idAgencia
+
 def alteraU(novosDados,tipo):
     #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
     #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
