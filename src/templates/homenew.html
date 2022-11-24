@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "templateCliente.html" %}
 {% block conteudo %}
 <main>
     <div class="bloco-info">
@@ -31,11 +31,11 @@
         </div>
     </div>
     <div class="data">
-        <form action="FiltroData" method="POST">
+        <form action="FiltroExtrato" method="POST">
             <label class="form-date" for="input-date">De:</label>
-            <input type="date" class="input-date" name="DataExtratoDe">
+            <input required type="date" class="input-date" name="DataExtratoDe">
             <label class="form-date" for="input-date">Até:</label>
-            <input type="date" class="input-date" name="DataExtratoAte">
+            <input required type="date" class="input-date" name="DataExtratoAte">
             <input type="submit" class="btnd" value="Pesquisar">
         </form>
     </div>
@@ -46,7 +46,6 @@
         </div>
         <div class="scroll-div">
             <div class="scroll-object">
-                <form action="{{ url_for('verMais') }} " method="POST">
                 <table id="TabelaExt" class="tabelaRequisicao">
                     <thead>
                         <!-- Inicio da Tabela -->
@@ -59,28 +58,33 @@
                     </thead>
                     <tbody>
                         {% for row in pesquisaSQLTabela %}
-                        <tr class="linhaTabela">
-                            <!-- Forma as linhas da tabela -->
-                            {% for cell in row %}
-                            <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
-                            <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                            {% if cell == row[0] %}
-                            <input type="hidden" value="{{ cell }}" name="IdTransacao">
-                            {% else %}
-                            <a href="#">
-                                <td class="celula">{{ cell }}</td>
-                            </a>
-                            {% endif %}
-                            {% endfor %}
-                            <td>
-                                <input type="submit" name="verMais" value="Ver Mais" class="btnd solid">
-                            </td>
-                        </tr>
+                            <tr class="linhaTabela">
+                                <form action="{{ url_for('verMais') }}" method="POST">
+                                <!-- Forma as linhas da tabela -->
+                                {% for cell in row %}
+                                <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                                <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                                {% if cell == row[0] %}
+                                <input type="hidden" value="{{ cell }}" name="IdTransacao">
+                                <input type="hidden" value="{{ cell }}" name="IdUsuario">
+                                {% else %}
+                                <a href="#">
+                                    <td class="celula">{{ cell }}</td>
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+                                <td>
+                                    <input type="submit" name="verMais" value="Ver Mais" class="btnd solid">
+                                </td>
+                                </form>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                </form>
             </div>
+            <a href="http://127.0.0.1:5000/download/ext{{pesquisaSQLTabela}}/{{IdUsuario}}">
+                <input type="button" value="Download Extrato" id="botaoSubmit">
+            </a>
         </div>
         {% endblock %}
     </div>

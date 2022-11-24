@@ -97,7 +97,8 @@ select:valid ~ label {
     display: none;
     justify-content: center;
     align-items: center;
-    min-height: 115vh;
+    height: 100%;
+    min-height: 160vh;
 }
 
 .cadastro form {
@@ -160,8 +161,7 @@ select:valid ~ label {
 .cadastro .checkbox {
     width: 80%;
     display: flex;
-    justify-content: center;
-    margin: 0 auto 0 -.8rem;
+    justify-content: left;
     font-size: .9rem;
 }
 
@@ -183,7 +183,7 @@ select:valid ~ label {
 
 .login .div_input label,
 .login-adm .div_input label {
-    left: 5rem;
+    left: 5.5rem;
 }
 
 /* formulário de login administrativo */
@@ -196,6 +196,31 @@ select:valid ~ label {
     color: #FB1C7B;
     font-size: 3rem;
     font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 1150px) {
+    .cadastro form {
+        width: 70%;
+    }
+}
+
+@media (max-width: 810px) {
+    .cadastro form {
+        width: 90%;
+    }
+}
+
+@media (max-width: 1150px) {
+    .cadastro form {
+        width: 70%;
+    }
+}
+
+@media (max-width: 810px) {
+    .cadastro form {
+        width: 90%;
+    }
 }
 
 @media (max-width: 620px),
@@ -236,6 +261,7 @@ select:valid ~ label {
 
     .login form img {
         width: 10rem;
+        margin-bottom: 1rem;
     }
 
     .login-adm form h2 {
@@ -256,5 +282,25 @@ select:valid ~ label {
     .login form .div_input input
     .login-adm form .div_input input {
         height: 1.5rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .cadastro form {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .cadastro form h2 {
+        font-size: 2rem;
+    }
+
+    .cadastro form h2 img {
+        width: 5.5rem;
+        margin-bottom: -.5rem;
+    }
+
+    .cadastro form .div_input label {
+        margin-left: -1.5rem;
     }
 }

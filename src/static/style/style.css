@@ -24,6 +24,10 @@ body, html, main {
     height: 100%;
 }
 
+.login {
+    flex-direction: column;
+}
+
 /* Tela Inicial */
 .index .frase-imagem {
     position: relative;
@@ -52,7 +56,7 @@ body, html, main {
 
 .index .frase-imagem img {
     position: absolute;
-    width: 80rem;
+    height: 90%;
     margin: 0 -7rem 0 auto;
     bottom: 0;
 }
@@ -79,13 +83,27 @@ body, html, main {
 }
 
 .login-adm .logo-imagem .capa {
-    width: 50rem;
+    width: 80%;
 }
 
 .login-adm .form-login-adm {
     width: 40%;
     display: flex;
     justify-content: center;
+}
+
+/* Mensagem com número da conta, tela de login */
+.message {
+    position: relative;
+    text-align: center;
+    width: 25rem;
+    background-color: #FFF;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.message img {
+    width: 3rem;
 }
 
 .container {
@@ -407,7 +425,6 @@ margin-left: 100%;
 
     .index .form_index {
         width: 30%;
-        padding-right: 3rem;
     }
 }
 
@@ -424,5 +441,23 @@ margin-left: 100%;
 @media (max-width: 1200px) {
     .index .frase-imagem {
         display: none;
+    }
+}
+
+@media (max-height: 750px) {
+    .index .frase-imagem h1 {
+        font-size: 3rem;
+    }
+
+    .index .frase-imagem h1 img {
+        width: 10rem;
+        margin-bottom: -.7rem;
+    }
+}
+
+@media (max-height: 620px) {
+    .index .frase-imagem {
+        width: 50%;
+
     }
 }
