@@ -163,6 +163,6 @@ INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agenci
 VALUES('RJ',1,'0002', 1);
 
 INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
-VALUES ('0',1,'desejo alterar meu cpf para ...');
+VALUES ('0',4,'desejo alterar meu cpf para ...');
 
 INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_atualizacao,data_final, valor_devido, ativo) VALUES(1, '2022-10-01','2022-10-01', NULL, 0, 0);

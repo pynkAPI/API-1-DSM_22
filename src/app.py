@@ -473,8 +473,9 @@ def RequisicaoGerenteAgencia():
 
 @app.route("/homeG", methods = ['POST', 'GET'])
 def homeG(requisicao=None):
-    req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
-    ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=['1'], CampoEs=['count(*)'])
+    idAgencia = funcs.verificaAgenciaGerente(session['idFunc'])
+    req=funcs.SlcEspecificoMySQL('tb_requisicoes as TR inner join tb_contabancaria as TC on TR.id_usuario=TC.id_usuario INNER JOIN tb_agencia AS TA ON TA.id_agencia = TC.id_agencia', CampoBd=['status_alteracao','TA.id_agencia', 'id_funcionario'], CampoFm=['0',idAgencia, session['idFunc']], CampoEs=['count(*)'])
+    ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=[idAgencia], CampoEs=['count(*)'])
     saldo = f"{session['saldo']:.2f}".replace(".",",")
     caminhoLogin = 'loginG'
     if request.method == "POST":
