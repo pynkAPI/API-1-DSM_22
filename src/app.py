@@ -34,7 +34,7 @@ def index():
     session['conta'] = None
     session['tipo']  = None
     session['tipoConta'] = None
-    session['idContabk'] = None
+    session['idContaBK'] = None
     return render_template('login.html', tituloNavegador='Login | Py.nk')
 #------------------------------
 #Pagina inicial Gerentes
@@ -170,7 +170,7 @@ def home():
                 valorDevido = funcs.truncar(numero=valorDevido,casaDecimal=2)
 
             caminhoLogin = '/'
-            return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin)
+            return render_template('homenew.html',saldo=saldo, chequeEspcial=valorDevido, valorDevidoTotal=valorDevidoTotal,cabecalhoTabela=cabecalho,pesquisaSQLTabela=pesquisaSQL,caminhoLogin=caminhoLogin,IdUsuario=session['idContaBK'])
         else: # Caso seja um gerente
             # Contando a quantidade de requisições
             req=funcs.SlcEspecificoMySQL('tb_requisicoes',CampoBd=['status_alteracao'], CampoFm=['0'], CampoEs=['count(*)'])
@@ -1229,7 +1229,7 @@ def TransacaoConta():
             valorContaOrigem = valorContaOrigem - valor       
 
             IdContaDestino = pesquisaContaDestino[0][0]
-            tipoContaDestino = pesquisaContaDestino[0][3]
+            tipoContaDestino = pesquisaContaDestino[0][2]
             IdContaOrigem = pesquisaContaOrigem[0][0]
 
             if IdContaDestino == IdContaOrigem:
@@ -1864,7 +1864,7 @@ def alteraU():
 @app.route("/reqaltUsuario", methods = ['POST', 'GET'])
 def reqaltUsuario():
     if request.method == 'POST':
-        IdUsu = session['idContabk']
+        IdUsu = session['idContaBK']
         nome= request.form['nome']
         email= request.form['email']
         cpf= request.form['cpf']
@@ -2255,53 +2255,109 @@ def verMais():
                                 numeroContaOrigem=numeroContaOrigem,
                                 ID=idTransacao)
 
-@app.route("/download/<ID>", methods = ['GET'])
-def download(ID):
-    idTransacao = ID
-    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
-                                            CampoBd=['id_transacao'],
-                                            CampoFm=[idTransacao],
-                                            CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
-    idContaOrigem = pesquisaSQL[0][4]
-    idContaDestino = pesquisaSQL[0][5]
-    tipo = pesquisaSQL[0][0]
-    dateTime = pesquisaSQL[0][1]
-    valor = pesquisaSQL[0][2]
-    statusTransacao = pesquisaSQL[0][3]
+@app.route("/download/<id>/<idusuario>", methods = ['GET'])
+def download(id, idusuario):
+    if id[0:3] == 'ext':
+        #preparando os parametros enviados em uma lista
+        stringSplit = id[3:].replace('], [','#')
+        stringSplit = stringSplit.replace('[[', '')
+        stringSplit = stringSplit.replace(']]', '')
+        stringSplit = stringSplit.replace('datetime.datetime(', '')
+        stringSplit = stringSplit.replace(')','')
+        stringSplit = stringSplit.split("#")
 
-    idContaRequisitanteComprovante = int(session['idContaBK'])
+        lineSplit = []
+        for row in stringSplit:
+            lineSplit.append(row.split('", "'))
+        
+        dados = []
 
-    pesquisaSQLContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                        CampoBd=['id_conta'],
-                                                        CampoFm=[idContaDestino],
-                                                        CampoEs=['numeroconta','nome'])
-    
-    nomeContaDestino = pesquisaSQLContaDestino[0][1]
-    numeroContaDestino = pesquisaSQLContaDestino[0][0]
+        for cont in range(len(lineSplit)):
+            dados.append(lineSplit[cont][0].split(', '))
 
-    pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
-                                                        CampoBd=['id_conta'],
-                                                        CampoFm=[idContaOrigem],
-                                                        CampoEs=['numeroconta','nome'])
-    nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
-    numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
+        for cont in range(len(dados)):
+            dados[cont][0] = int(dados[cont][0])
+            dados[cont][1] = dados[cont][1].replace("'","")
+            dados[cont][2] = dados[cont][2].replace("'","")
+            dados[cont][2] = dados[cont][2].replace(",",".")
+            dados[cont][2] = float(dados[cont][2])
+            dados[cont][9] = dados[cont][9].replace("'","")
+            dados[cont][10] = dados[cont][10].replace("'","")
+            dados[cont][11] = dados[cont][11].replace("'","")
+            if len(dados[cont][6]) < 2:
+                dados[cont][6] = '0' + dados[cont][6]
+            elif len(dados[cont][7]) < 2:
+                dados[cont][7] = '0' + dados[cont][7]
+            elif len(dados[cont][8]) < 2:
+                dados[cont][8] = '0' + dados[cont][8]
+            dados[cont][3] = f'{dados[cont][5]}/{dados[cont][4]}/{dados[cont][3]}'
+            dados[cont][4] = f'{dados[cont][6]}:{dados[cont][7]}:{dados[cont][8]}'
+            dados[cont].pop(5)
+            dados[cont].pop(5)
+            dados[cont].pop(5)
+            dados[cont].pop(5)
 
-    if statusTransacao == '0':
-        statusEscrito = 'Em Aprovação'
-    elif statusTransacao == '1':
-        statusEscrito = 'Aprovado'
+            if dados[cont][1] == 'Transferência':
+                pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                                        CampoBd=['id_transacao'],
+                                                        CampoFm=[dados[cont][0]],
+                                                        CampoEs=['id_conta_origem'])
+                
+                if str(pesquisaSQL[0][0]) == idusuario:
+                    dados[cont].append('Origem')
+                else:
+                    dados[cont].append('Destino')
+        
+        print(dados)
+        nomeArq = funcs.geraExtrato(dados,idusuario)
+        return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
+
     else:
-        statusEscrito = 'Recusado'
-    data = str(dateTime.strftime('%x'))
-    hora = str(dateTime.strftime('%X'))
+        idTransacao = id
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao',
+                                                CampoBd=['id_transacao'],
+                                                CampoFm=[idTransacao],
+                                                CampoEs=['tipo', 'Datatime', 'valor', 'status_transacao', 'id_conta_origem', 'id_conta_destino'])
+        idContaOrigem = pesquisaSQL[0][4]
+        idContaDestino = pesquisaSQL[0][5]
+        tipo = pesquisaSQL[0][0]
+        dateTime = pesquisaSQL[0][1]
+        valor = pesquisaSQL[0][2]
+        statusTransacao = pesquisaSQL[0][3]
 
-    dados = ((tipo, hora, data, valor, statusEscrito, idContaOrigem, idContaDestino,
-            idContaRequisitanteComprovante, nomeContaDestino, numeroContaDestino,
-            nomeContaOrigem, numeroContaOrigem, idTransacao),)
+        idContaRequisitanteComprovante = int(session['idContaBK'])
 
-    nomeArq = funcs.geraComprovante(dados)
-    send_file(nomeArq, as_attachment=True)
-    return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
+        pesquisaSQLContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                            CampoBd=['id_conta'],
+                                                            CampoFm=[idContaDestino],
+                                                            CampoEs=['numeroconta','nome'])
+        
+        nomeContaDestino = pesquisaSQLContaDestino[0][1]
+        numeroContaDestino = pesquisaSQLContaDestino[0][0]
+
+        pesquisaSQLContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_usuario on tb_contabancaria.id_usuario = tb_usuario.id_usuario',
+                                                            CampoBd=['id_conta'],
+                                                            CampoFm=[idContaOrigem],
+                                                            CampoEs=['numeroconta','nome'])
+        nomeContaOrigem = pesquisaSQLContaOrigem[0][1]
+        numeroContaOrigem = pesquisaSQLContaOrigem[0][0]
+
+        if statusTransacao == '0':
+            statusEscrito = 'Em Aprovação'
+        elif statusTransacao == '1':
+            statusEscrito = 'Aprovado'
+        else:
+            statusEscrito = 'Recusado'
+        data = str(dateTime.strftime('%x'))
+        hora = str(dateTime.strftime('%X'))
+
+        dados = ((tipo, hora, data, valor, statusEscrito, idContaOrigem, idContaDestino,
+                idContaRequisitanteComprovante, nomeContaDestino, numeroContaDestino,
+                nomeContaOrigem, numeroContaOrigem, idTransacao),)
+
+        nomeArq = funcs.geraComprovante(dados)
+        print (dados)
+        return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
 
 #Bloco para subir o site.
 if __name__ == "__main__":

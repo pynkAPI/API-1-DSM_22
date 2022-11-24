@@ -720,8 +720,96 @@ def geraComprovante(dados):
         c.save()
         return nomeArq
 
-def geraExtrato():
-    return 1
+def geraExtrato(dados, id):
+    nomeArq = f"extrato_{dados[0][3]}_{dados[0][4]}.pdf"
+    nomeArq = nomeArq.replace(":","")
+    nomeArq = nomeArq.replace("/","_")
+    c = canvas.Canvas(nomeArq, pagesize=A4)
+    c.setFont('Courier', 11)
+    width, height = A4
+    line = 0.9
+    c.drawCentredString(width*0.5, height*line,'PYNKSYS - SISTEMA DE EMISSÃO DE COMPROVANTES DIGITAIS')
+    line-=0.02
+    c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE EXTRATO')
+    line-=0.04  
+    c.drawCentredString(width*0.5, height*0.1, 'PY.NK, o seu banco em qualquer lugar a qualquer hora.')
+    c.drawCentredString(width*0.18, height*line, 'DATA/HORA')
+    c.drawCentredString(width*0.5, height*line, 'DESCRIÇÃO')
+    c.drawCentredString(width*0.82, height*line, 'VALOR')
+    line-=0.012
+    c.setFont('Courier', 9)
+
+    for row in dados:
+        if line < 0.148:
+            c.line(width*0.1, height*line, width*0.9, height*line)
+            c.showPage()
+            c.setFont('Courier', 11)
+            line = 0.9
+            c.drawCentredString(width*0.18, height*line, 'DATA/HORA')
+            c.drawCentredString(width*0.5, height*line, 'DESCRIÇÃO')
+            c.drawCentredString(width*0.82, height*line, 'VALOR')
+            c.drawCentredString(width*0.5, height*0.1, 'PY.NK, o seu banco em qualquer lugar a qualquer hora.')
+            line-=0.012
+            c.setFont('Courier', 9)
+        else:
+            if row[1] == 'Depósito':
+                c.line(width*0.1, height*line, width*0.9, height*line)
+                c.line(width*0.26, height*line, width*0.26, height*(line-0.036))
+                c.line(width*0.74, height*line, width*0.74, height*(line-0.036))
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.001), f'{row[3]}')
+                c.drawString(width*0.27, height*(line-0.001), f'{row[1]}({row[5]})')
+                if row[5]== 'Aguardando':
+                    c.drawString(width*0.75, height*(line-0.001), f'[#]R${row[2]}')
+                else:
+                    c.drawString(width*0.75, height*(line-0.001), f'[+]R${row[2]}')
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                c.drawString(width*0.27, height*(line-0.001), f'Depósito em conta')
+                line-=0.012
+            elif row[1] == 'Saque':
+                c.line(width*0.1, height*line, width*0.9, height*line)
+                c.line(width*0.26, height*line, width*0.26, height*(line-0.036))
+                c.line(width*0.74, height*line, width*0.74, height*(line-0.036))
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.003), f'{row[3]}')
+                c.drawString(width*0.27, height*(line-0.003), f'{row[1]}')
+                c.drawString(width*0.75, height*(line-0.003), f'[-]R${row[2]}')
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                c.drawString(width*0.27, height*(line-0.003), f'Saque em conta')
+                line-=0.012
+            else:
+                c.line(width*0.1, height*line, width*0.9, height*line)
+                c.line(width*0.26, height*line, width*0.26, height*(line-0.048))
+                c.line(width*0.74, height*line, width*0.74, height*(line-0.048))
+                line-=0.012
+                if row[8] == 'Origem':
+                    c.drawString(width*0.11, height*(line-0.003), f'{row[3]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'{row[1]} Realizada')
+                    c.drawString(width*0.75, height*(line-0.003), f'[-]R${row[2]}')
+                    line-=0.012
+                    c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'Origem: {row[6]}')
+                    line-=0.012
+                    c.drawString(width*0.27, height*(line-0.003), f'Destino: {row[7]}')
+                    line-=0.012
+                else:
+                    c.drawString(width*0.11, height*(line-0.003), f'{row[3]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'{row[1]} Recebida')
+                    c.drawString(width*0.75, height*(line-0.003), f'[+]R${row[2]}')
+                    line-=0.012
+                    c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'Origem: {row[6]}')
+                    line-=0.012
+                    c.drawString(width*0.27, height*(line-0.003), f'Destino: {row[7]}')
+                    line-=0.012
+    c.line(width*0.1, height*line, width*0.9, height*line)
+
+    c.showPage()
+    c.save() 
+
+    return nomeArq
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
