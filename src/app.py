@@ -423,21 +423,16 @@ def RequisicaoGerenteAgencia():
                 
         #endregion 
         #region Aceitar alteração de dados
-        elif requisicao == '3':
+        elif requisicao == '2':
+
             botao = request.form.to_dict()
             if botao['botao'] == 'Confirmar':
+                IdConta = request.form['Id']
                 Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
                 DescSeparada = []
                 for row in Desc:
                     doispontos = row.find(':')+1
                     DescSeparada.append(row[doispontos:])
-                    
-                # funcs.upMySQL('tb_usuario',
-                #                 CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
-
-                #                 CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
-                #                 CampoWr=['id_usuario'],
-                #                 CampoPs=[idUsuario[0]])
              
             if session['tipo'] == 2:
                 return homeG(requisicao=requisicao)
