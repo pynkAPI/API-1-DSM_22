@@ -77,6 +77,7 @@ def home(pesquisaSQL = []):
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
                                             CampoWrAO=[0,1])
 
+            #region CONTA POUPANÇA
             if session['tipoConta'] == 'CONTA POUPANÇA':
                 pesquisaContaPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
                                                                  CampoBd=['id_conta', 'ativo'],
@@ -104,11 +105,13 @@ def home(pesquisaSQL = []):
                                       CampoFm=[valorPoupanca],
                                       CampoWr=['id_conta'],
                                       CampoPs=[session['idContaBK']])
+            #endregion
 
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
                                                              CampoFm=[session['idContaBK'], '1'],
                                                              CampoEs=['valor_devido', 'data_atualizacao'])
+            #region CHEQUE ESPECIAL
             if pesquisaChequeEspecial:
                 valorDevido = pesquisaChequeEspecial[0][0]
                 dataAtualizacao = pesquisaChequeEspecial[0][1]
@@ -124,9 +127,10 @@ def home(pesquisaSQL = []):
                                   CampoBd=['valor_devido', 'data_atualizacao'],
                                   CampoFm=[valorDevido, date.today()],
                                   CampoWr=['id_conta', 'ativo'],
-                                  CampoPs=[session['idContaBK'], '1'])
+                                  CampoPs=[session['idContaBK'], 1])
             else:
                 valorDevido = 0
+            #endregion
             pesquisaSQL = [list(row) for row in pesquisaSQL]
             for row in pesquisaContas:
                 
