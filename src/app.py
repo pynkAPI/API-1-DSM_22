@@ -51,7 +51,7 @@ def loginG():
 
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
-def home():
+def home(pesquisaSQL = []):
     # Verificando se ocorreu o login
     if session['login'] == False:
         abort(401)
@@ -64,7 +64,8 @@ def home():
             saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
             data = datetime.today()
-            pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
+            if not pesquisaSQL:
+                pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
                                             CampoEs=['id_transacao','tipo','valor','Datatime','status_transacao'],
                                             CampoBd=['id_conta_origem','id_conta_destino'],
                                             CampoFm=[session['idContaBK'],session['idContaBK']],
@@ -103,7 +104,6 @@ def home():
                                       CampoFm=[valorPoupanca],
                                       CampoWr=['id_conta'],
                                       CampoPs=[session['idContaBK']])
-
 
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
@@ -424,66 +424,56 @@ def RequisicaoGerenteAgencia():
         #endregion 
         #region Aceitar alteração de dados
         elif requisicao == '2':
-
             botao = request.form.to_dict()
             if botao['botao'] == 'Confirmar':
+                #region CONFIRMAR ALTERACAO
                 IdConta = request.form['Id']
                 Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
                 DescSeparada = []
                 for row in Desc:
                     doispontos = row.find(':')+1
                     DescSeparada.append(row[doispontos:])
-             
+                funcs.upMySQL('tb_usuario',
+                               CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                               CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
+                               CampoWr=['id_usuario'],
+                               CampoPs=[DescSeparada[0]])
+                funcs.upMySQL('tb_requisicoes',
+                               CampoBd=['status_alteracao'],
+                               CampoFm=[1],
+                               CampoWr=['id_requisicao'],
+                               CampoPs=[IdConta])
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
+                #endregion
+                
+            elif botao['botao'] == 'Recusar':
+                #region RECUSAR ALTERACAO
+                funcs.upMySQL('tb_requisicoes',
+                               CampoBd=['status_alteracao'],
+                               CampoFm=[2],
+                               CampoWr=['id_requisicao'],
+                               CampoPs=[IdConta])
+                if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
+                #endregion
+            else:
+                #region VERMAIS
+                 if session['tipo'] == 2:
+                    return homeG(requisicao=requisicao)
+                else:
+                    return render_template('ListReq.html',requisicao=requisicao)
+                #endregion
             if session['tipo'] == 2:
                 return homeG(requisicao=requisicao)
             else:
                 return render_template('ListReq.html',requisicao=requisicao)
         #endregion
-        #ISSO DAQUI ESTÁ ESTRANHO POR ISSO TA COMENTADO
-        # else:
-        #     botao = request.form.to_dict()
-        #     IdConta = request.form['Id']
-        #     if botao['botao'] == 'Confirmar':
-        #         Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
-        #         DescSeparada = []
-        #         for row in Desc:
-        #             doispontos = row.find(':')+1
-        #             DescSeparada.append(row[doispontos:])
-        #         funcs.upMySQL('tb_usuario',
-        #                         CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
-
-        #                         CampoFm=[nome, email,cpf,genero,endereco,datanasc,senha.replace(' ','')],
-        #                         CampoWr=['id_usuario'],
-        #                         CampoPs=[idUsuario[0]])
-             
-        #         if session['tipo'] == 2:
-        #             return homeG(requisicao=requisicao)
-        #         else:
-        #             return render_template('ListReq.html',requisicao=requisicao)
-        #     else:
-        #         botao = request.form.to_dict()
-        #         IdConta = request.form['Id']
-        #         if botao['botao'] == 'Confirmar':
-        #             Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
-        #             DescSeparada = []
-        #             for row in Desc:
-        #                 doispontos = row.find(':')+1
-        #                 DescSeparada.append(row[doispontos:])
-        #             funcs.upMySQL('tb_usuario',
-        #                         CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
-        #                         CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
-        #                         CampoWr=['id_usuario'],
-        #                         CampoPs=[DescSeparada[0]])
-        #             funcs.upMySQL('tb_requisicoes',
-        #                         CampoBd=['status_alteracao'],
-        #                         CampoFm=[1],
-        #                         CampoWr=['id_requisicao'],
-        #                         CampoPs=[IdConta])
-                    
-        #         if session['tipo'] == 2:
-        #                 return homeG(requisicao=requisicao)
-        #         else:
-        #                 return render_template('ListReq.html')
+       
     else:    
         funcs.upMySQL('tb_requisicoes',
                                 CampoBd=['status_alteracao'],
