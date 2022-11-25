@@ -59,7 +59,7 @@ def home(pesquisaSQL = []):
         saldo = None
         #verificando o tipo de usuário
         if session['tipo'] == 1:
-        #region Verificando se o tipo do login é cliente
+        #region Verificando se o tipo do login 
             cabecalho = ('Tipo', 'Valor', 'Data e hora','Status', 'De:', 'Para:','')
             saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
@@ -476,14 +476,7 @@ def RequisicaoGerenteAgencia():
                 return homeG(requisicao=requisicao)
             else:
                 return render_template('ListReq.html',requisicao=requisicao)
-        #endregion
-       
-    else:    
-        funcs.upMySQL('tb_requisicoes',
-                                CampoBd=['status_alteracao'],
-                                CampoFm=[2],
-                                CampoWr=['id_requisicao'],
-                                CampoPs=[IdConta])            
+        #endregion        
         if session['tipo'] == 2:
             return homeG(requisicao=requisicao)
         else:
