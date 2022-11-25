@@ -145,6 +145,13 @@ INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abe
 VALUES(6, 1, 'CONTA CORRENTE', 0002, curdate(), 0, '1');
 
 INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
+VALUES(6, 1, 'CONTA POUPANÇA', 4, curdate(), 0, '1');
+
+INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
+VALUES(6, 1, 'CONTA POUPANÇA', 5, curdate(), 0, '1');
+
+
+INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
 VALUES(7, 1, 'CONTA CORRENTE', 0001, curdate(), 0, '1');
 
 INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
