@@ -18,40 +18,44 @@
     <div class="elemento-g">
         <div class="scroll-div-tabela">
             <div class="scroll-object-tabela">
-                <table id="TabelaGer" class="tabelaAgencias">
-                    <thead>
-                        <tr class="linhaTabela">
-                            {% for header in cabecalhoTabela %}
-                            <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% set p = namespace(value=0) %}
-                        {% for row in pesquisaSQL %}
-                        <tr class="linhaTabela">
-                            <form action="{{ url_for('alterarDesligar') }}" method="POST">
-                                {% for cell in row %}
-                                {% if cell == row[0] %}
-                                <input type="hidden" value="{{ cell }}" name="IdFuncionario">
-                                {% else %}
-                                <td class="celula">{{ cell }}</td>
-                                {% endif %}
+                <main>
+                    <div class="Tb">
+                        <table id="TabelaGer" class="tabelaRequisicao">
+                            <thead>
+                                <tr class="linhaTabela">
+                                    {% for header in cabecalhoTabela %}
+                                    <th>{{ header }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set p = namespace(value=0) %}
+                                {% for row in pesquisaSQL %}
+                                <tr class="linhaTabela">
+                                    <form action="{{ url_for('alterarDesligar') }}" method="POST">
+                                        {% for cell in row %}
+                                        {% if cell == row[0] %}
+                                        <input type="hidden" value="{{ cell }}" name="IdFuncionario">
+                                        {% else %}
+                                        <td class="celula">{{ cell }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <td class="celula">
+                                            <input type="submit" name="botao" value="Alterar" class="btn_alterar"
+                                                id="btnConfirmar">
+                                        </td>
+                                        <td class="celula">
+                                            <input type="submit" name="botao" value="Desligar" class="btn_alterar"
+                                                id="btnConfirmar">
+                                        </td>
+                                    </form>
+                                </tr>
+                                {% set p.value = p.value + 1 %}
                                 {% endfor %}
-                                <td class="celula">
-                                    <input type="submit" name="botao" value="Alterar" class="btn_alterar"
-                                        id="btnConfirmar">
-                                </td>
-                                <td class="celula">
-                                    <input type="submit" name="botao" value="Desligar" class="btn_alterar"
-                                        id="btnConfirmar">
-                                </td>
-                            </form>
-                        </tr>
-                        {% set p.value = p.value + 1 %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
             </div>
         </div>
     </div>
