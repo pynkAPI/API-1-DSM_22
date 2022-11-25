@@ -609,7 +609,7 @@ def homeGG(requisicao=None):
                                            CampoFm=[0])    
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         elif requisicao == '2':
-            cabecalho = ('Nome', 'CPF', 'descricao')
+            cabecalho = ('Nome', 'CPF', 'Descrição')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
                                                    CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
                                                    CampoBd=['tb_requisicoes.status_alteracao'],
