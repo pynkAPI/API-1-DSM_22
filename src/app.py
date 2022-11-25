@@ -424,6 +424,7 @@ def RequisicaoGerenteAgencia():
         #endregion 
         #region Aceitar alteração de dados
         elif requisicao == '2':
+
             botao = request.form.to_dict()
             if botao['botao'] == 'Confirmar':
                 IdConta = request.form['Id']
