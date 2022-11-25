@@ -62,3 +62,9 @@
         font-size: .8rem;
     }
 }
+
+/* Mostrar e ocultar senha */
+.mostrarOcultar{
+    -ms-flex-item-align: auto;
+    width: 20px;
+}
