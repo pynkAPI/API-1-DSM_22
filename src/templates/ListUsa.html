@@ -22,39 +22,43 @@
     <div class="elemento-u">
         <div class="scroll-div-tabela">
             <div class="scroll-object-tabela">
-                <table id="TabelaUsa" class="tabelaRequisicao">
-                    <thead>
-                        <tr class="linhaTabela">
-                            {% for header in cabecalhoTabela %}
-                            <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% set p = namespace(value=0) %}
-                        {% for row in pesquisaSQL %}
-
-                        <tr class="linhaTabela">
-                            <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
-                                {% for cell in row %}
-                                {% if cell == row[0] %}
-                                <input type="hidden" value="{{ cell }}" name="IdContaBanc">
-                                {% else %}
-                                <td class="celula">{{ cell }}</td>
-                                {% endif %}
+                <main>
+                    <div class="Tb">
+                        <table id="TabelaUsa" class="tabelaRequisicao">
+                            <thead>
+                                <tr class="linhaTabela">
+                                    {% for header in cabecalhoTabela %}
+                                    <th>{{ header }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set p = namespace(value=0) %}
+                                {% for row in pesquisaSQL %}
+        
+                                <tr class="linhaTabela">
+                                    <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
+                                        {% for cell in row %}
+                                        {% if cell == row[0] %}
+                                        <input type="hidden" value="{{ cell }}" name="IdContaBanc">
+                                        {% else %}
+                                        <td class="celula">{{ cell }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" value="{{ pagina }}" name="pagina">
+                                        <td class="celula">
+                                            <input type="submit" name="botao" value="Alterar" class="btnd solid"
+                                                id="btnConfirmar">
+                                        </td>
+                                    </form>
+                                </tr>
+        
+                                {% set p.value = p.value + 1 %}
                                 {% endfor %}
-                                <input type="hidden" value="{{ pagina }}" name="pagina">
-                                <td class="celula">
-                                    <input type="submit" name="botao" value="Alterar" class="btnd solid"
-                                        id="btnConfirmar">
-                                </td>
-                            </form>
-                        </tr>
-
-                        {% set p.value = p.value + 1 %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
             </div>
         </div>
         <script type="text/javascript" charset="utf8"
