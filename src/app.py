@@ -324,7 +324,7 @@ def RequisicaoGerenteAgencia():
                 valorTotalBanco = float(pesquisaTotalBanco[0][0])
                 saldoConta = float(pesquisaSQLConta[0][1])
                 valor = valorTransacao + saldoConta
-                valorTotalBanco = valor + valorTotalBanco
+                valorTotalBanco = valorTransacao + valorTotalBanco
                 funcs.upMySQL(TabelaBd='tb_transacao',
                               CampoBd=['status_transacao', 'Datatime'],
                               CampoFm=[1, datetime.today()],
@@ -1275,7 +1275,7 @@ def TransacaoConta():
                                                                      CampoEs=['valor_devido', 'data_atualizacao'])
                 if pesquisaContaOrigemCheque:
                     OrigemSaiuCheque = False
-                    valorDevidoContaOrigem = pesquisaContaOrigemCheque[0][0] + valorContaOrigem
+                    valorDevidoContaOrigem = pesquisaContaOrigemCheque[0][0] - valor
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                   CampoBd=['valor_devido', 'data_atualizacao'],
                                   CampoFm=[valorDevidoContaOrigem, date.today()],
@@ -1381,8 +1381,8 @@ def CancelamentoConta():
 #Bloco de requisição de Abertura de Conta
 
 @app.route("/RequisicaoAberturaConta")
-def RequisicaoAberturaConta():
-    return render_template('RequisicaoAberturaConta.html')
+def RequisicaoAberturaConta(mensagem = ''):
+    return render_template('RequisicaoAberturaConta.html', mensagemAberturaConta = mensagem)
 
 @app.route("/AberturaConta", methods = ['POST', 'GET'])
 def AberturaConta():
@@ -1406,8 +1406,8 @@ def AberturaConta():
         funcs.InsMySQL(TabelaBd='tb_contabancaria',
                         CampoBd=['tipo', 'id_usuario', 'id_agencia', 'numeroconta', 'data_abertura', 'saldo', 'status_contabancaria'],
                         CampoFm=[tipoConta, idUsuario, idAgencia, numeroConta, datetime.today(), 0, '0'])    
-
-        return RequisicaoAberturaConta()
+        
+        return RequisicaoAberturaConta(mensagem = f'O número da conta Aberta é {numeroConta}')
 
 #------------------------------
 
