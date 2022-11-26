@@ -5,9 +5,9 @@
         <span id="tituloElemento">CANCELE SUA CONTA</span>
         <div class="inputElemento">
             <form action="{{ url_for('CancelamentoConta') }}" method="POST">
-                <input type="password" class="textoInputElemento" placeholder="SENHA" id="SenhaId" name="senha" required>
+                <input type="{{senha}}" class="textoInputElemento" placeholder="SENHA" id="SenhaId" name="senha" required>
                 <div class="input-button">
-                    <input type="submit" value="CANCELAR CONTA" class="btnd solid"><br>
+                    <input type="{{botao}}" value="CANCELAR CONTA" class="btnd solid"><br>
                 </div>
             </form>
         </div>
@@ -17,7 +17,7 @@
             </a>
         </div>
     </div>
-    <span id="mensagemErro"> {{ mensagemSaque }}</span>
+    <span id="mensagemErro"> {{ mensagem }}</span>
 </div>
 
 {% endblock %}
