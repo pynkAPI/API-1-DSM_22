@@ -415,6 +415,7 @@ def RequisicaoGerenteAgencia():
         #region Aceitar alteração de dados
         elif requisicao == '2':
             botao = request.form.to_dict()
+            IdConta = request.form['Id']
             if botao['botao'] == 'Confirmar':
                 #region CONFIRMAR ALTERACAO
                 IdConta = request.form['Id']
@@ -966,7 +967,7 @@ def ConferenciaDeposito():
                                                         CampoFm=[IdTransacao])
 
             IdContaOrigem = pesquisaSQLTransacao[0][1]
-            valorTransacao = float(pesquisaSQLTransacao[0][0])
+            valorTransacao = funcs.truncar(numero=float(pesquisaSQLTransacao[0][0]), casaDecimal=2)
 
             pesquisaSQLTipoConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria', 
                                                             CampoEs=['tipo'],
@@ -980,7 +981,7 @@ def ConferenciaDeposito():
                                                                     CampoFm=[IdContaOrigem,1])
                 if pesquisaSQLAtivoPoupanca: 
 
-                    valorPoupanca = pesquisaSQLAtivoPoupanca[0][1]
+                    valorPoupanca = funcs.truncar(numero= pesquisaSQLAtivoPoupanca[0][1], casaDecimal=2)
                     dataAtualizacaoPoupanca = pesquisaSQLAtivoPoupanca[0][2]
                     dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
                     if dataPeriodoPoupanca > 0:
@@ -1186,8 +1187,8 @@ def TransacaoConta():
                                                 CampoEs=['id_conta', 'saldo'])
             valorContaOrigem = pesquisaContaOrigem[0][1]
             valorContaOrigem = valorContaOrigem - valor       
-
-            valorContaDestino = pesquisaContaDestino[0][1]
+            valorContaOrigem = funcs.truncar(numero=valorContaOrigem, casaDecimal=2)
+            valorContaDestino = funcs.truncar(numero=pesquisaContaDestino[0][1], casaDecimal=2)
 
             IdContaDestino = pesquisaContaDestino[0][0]
             tipoContaDestino = pesquisaContaDestino[0][2]
@@ -1212,12 +1213,11 @@ def TransacaoConta():
                                                                      CampoEs=['valor_devido', 'data_atualizacao'])
             #verifica se o usuário da conta Destino está na situação de cheque especial da conta 
 
-           
             if pesquisaSQLContaDestinoCheque:
                 #region Verifica Cheque Especial Conta Destino
                 DestinoSaiuCheque = False
                 #pega o valor de quanto a conta Destino está devendo ao banco
-                valorDevido = pesquisaSQLContaDestinoCheque[0][0]
+                valorDevido = funcs.truncar(numero=pesquisaSQLContaDestinoCheque[0][0], casaDecimal=2)
                 #pega o dia da ultima atualização da conta destino
                 dataAtualizacao = pesquisaSQLContaDestinoCheque[0][1]
                 
@@ -1232,7 +1232,7 @@ def TransacaoConta():
                     valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
                 valorContaOrigem = valorContaOrigem - valor
                 valorDevido = valorDevido + valor
-                
+                valorDevido = funcs.truncar(numero=valorDevido, casaDecimal=2)
                 funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoBd=['valor_devido', 'data_atualizacao'],
                                       CampoFm=[valorDevido, date.today()],
@@ -1291,7 +1291,6 @@ def TransacaoConta():
                   CampoWr=['id_conta'])
                 DestinoSaiuCheque = False
           
-
             pesquisaSQLContaOrigemPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
                                                                        CampoBd=['id_conta', 'ativo'],
                                                                        CampoFm=[session['idContaBK'],1],
@@ -1405,7 +1404,7 @@ def Cancelamento():
                                              CampoBd=['id_conta'],
                                              CampoFm=[session['idContaBK']],
                                              CampoEs=['saldo'])
-    saldo = pesquisaConta[0][0]
+    saldo = funcs.truncar(numero=pesquisaConta[0][0],casaDecimal=2)
     if saldo > 0:
         botao = 'hidden'
         senha = 'hidden'
@@ -1415,7 +1414,7 @@ def Cancelamento():
         senha = 'hidden'
         mensagem = 'Quite sua divida antes de cancelar sua conta'
     else:
-        botao = 'button'
+        botao = 'submit'
         senha = 'password'
     return render_template('cancelamento.html', botao=botao, mensagem=mensagem, senha=senha)
 
@@ -1428,6 +1427,7 @@ def CancelamentoConta():
                                              CampoEs=['tb_usuario.id_usuario'])
         senha = request.form['senha']
         funcs.cancelMySQL(id_usuario = id_usuario[0][0], senha= senha, numeroconta= session['conta'])
+        return index()
         
 
 #------------------------------
