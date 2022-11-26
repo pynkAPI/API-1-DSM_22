@@ -214,7 +214,7 @@ def RequisicaoGerenteAgencia():
     if request.method == "POST":
         requisicao = request.form['requisicao']
      
-        #region Conferencia Deposito
+       
         if requisicao == '0':
             botao = request.form.to_dict()
             IdTransacao =   request.form['Id']
@@ -295,11 +295,22 @@ def RequisicaoGerenteAgencia():
                         valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
                     valorDevido = valorDevido + valorTransacao
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                  CampoPs=[IdContaOrigem, '1'],
+                                  CampoPs=[IdContaOrigem, 1],
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoBd=['valor_devido','data_atualizacao'],
                                  CampoFm=[ valorDevido, datetime.today()])
                     #Verifica se ele conseguiu sair da dívida
+                    pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                        CampoEs=['capitalinicial'],
+                                                        CampoBd=['id_capitaltotal'],
+                                                        CampoFm=[1])
+                    valorTotalBanco = float(pesquisaTotalBanco[0][0])
+                    valorTotalBanco = valorTransacao + valorTotalBanco
+                    funcs.upMySQL(TabelaBd='tb_capitaltotal',
+                          CampoBd=['capitalinicial'],
+                          CampoFm=[valorTotalBanco],
+                          CampoWr=['id_capitaltotal'],
+                          CampoPs=[1]) 
                     if valorDevido >= 0:
                         funcs.upMySQL('tb_contabancaria',
                                   CampoBd=['saldo'],
@@ -307,10 +318,20 @@ def RequisicaoGerenteAgencia():
                                   CampoWr=['id_conta'],
                                   CampoPs=[IdContaOrigem])
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                  CampoPs=[IdContaOrigem, '0'],
+                                  CampoPs=[IdContaOrigem, 1],
                                   CampoWr=['id_conta', 'ativo'],
-                                  CampoBd=['valor_devido', 'data_final'],
-                                  CampoFm=[ 0, date.today()])
+                                  CampoBd=['valor_devido', 'data_final', 'ativo'],
+                                  CampoFm=[ 0, date.today(), 0])
+                    funcs.upMySQL(TabelaBd='tb_transacao',
+                              CampoBd=['status_transacao', 'Datatime'],
+                              CampoFm=[1, datetime.today()],
+                              CampoPs=[IdTransacao],
+                              CampoWr=['id_transacao'])
+                    if session['tipo'] == 2:
+                        return homeG()
+                    else:
+                        return render_template('ListReq.html',requisicao=requisicao)
+                    
                 #endregion        
                 
                 pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
@@ -342,7 +363,7 @@ def RequisicaoGerenteAgencia():
                           CampoPs=[1]) 
                 session['saldo'] = valorTotalBanco
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
             else:
@@ -353,7 +374,7 @@ def RequisicaoGerenteAgencia():
                           CampoWr=['id_transacao'])
 
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
         #endregion 
@@ -386,7 +407,7 @@ def RequisicaoGerenteAgencia():
                               CampoPs=[IdConta])
 
             if session['tipo'] == 2:
-                return homeG(requisicao=requisicao)
+                return homeG()
             else:
                 return render_template('ListReq.html',requisicao=requisicao)
                 
@@ -394,6 +415,7 @@ def RequisicaoGerenteAgencia():
         #region Aceitar alteração de dados
         elif requisicao == '2':
             botao = request.form.to_dict()
+            IdConta = request.form['Id']
             if botao['botao'] == 'Confirmar':
                 #region CONFIRMAR ALTERACAO
                 IdConta = request.form['Id']
@@ -414,7 +436,7 @@ def RequisicaoGerenteAgencia():
                                CampoWr=['id_requisicao'],
                                CampoPs=[IdConta])
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
                 #endregion
@@ -427,14 +449,14 @@ def RequisicaoGerenteAgencia():
                                CampoWr=['id_requisicao'],
                                CampoPs=[IdConta])
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
                 #endregion
             else:
                 #region VERMAIS
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
                 #endregion
@@ -444,7 +466,7 @@ def RequisicaoGerenteAgencia():
         else:
             return render_template('ListReq.html')
           
-    return homeG(requisicao=requisicao)
+    return homeG()
      
 
 @app.route("/homeG", methods = ['POST', 'GET'])
@@ -530,7 +552,7 @@ def homeG():
     return render_template('homenewg.html',
                                 saldo=saldo,
                                 req=req,
-                                requisicao=requisicao,
+                                requisicao='0',
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
     
@@ -945,7 +967,7 @@ def ConferenciaDeposito():
                                                         CampoFm=[IdTransacao])
 
             IdContaOrigem = pesquisaSQLTransacao[0][1]
-            valorTransacao = float(pesquisaSQLTransacao[0][0])
+            valorTransacao = funcs.truncar(numero=float(pesquisaSQLTransacao[0][0]), casaDecimal=2)
 
             pesquisaSQLTipoConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria', 
                                                             CampoEs=['tipo'],
@@ -959,7 +981,7 @@ def ConferenciaDeposito():
                                                                     CampoFm=[IdContaOrigem,1])
                 if pesquisaSQLAtivoPoupanca: 
 
-                    valorPoupanca = pesquisaSQLAtivoPoupanca[0][1]
+                    valorPoupanca = funcs.truncar(numero= pesquisaSQLAtivoPoupanca[0][1], casaDecimal=2)
                     dataAtualizacaoPoupanca = pesquisaSQLAtivoPoupanca[0][2]
                     dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=datetime.today())
                     if dataPeriodoPoupanca > 0:
@@ -1165,8 +1187,8 @@ def TransacaoConta():
                                                 CampoEs=['id_conta', 'saldo'])
             valorContaOrigem = pesquisaContaOrigem[0][1]
             valorContaOrigem = valorContaOrigem - valor       
-
-            valorContaDestino = pesquisaContaDestino[0][1]
+            valorContaOrigem = funcs.truncar(numero=valorContaOrigem, casaDecimal=2)
+            valorContaDestino = funcs.truncar(numero=pesquisaContaDestino[0][1], casaDecimal=2)
 
             IdContaDestino = pesquisaContaDestino[0][0]
             tipoContaDestino = pesquisaContaDestino[0][2]
@@ -1191,12 +1213,11 @@ def TransacaoConta():
                                                                      CampoEs=['valor_devido', 'data_atualizacao'])
             #verifica se o usuário da conta Destino está na situação de cheque especial da conta 
 
-           
             if pesquisaSQLContaDestinoCheque:
                 #region Verifica Cheque Especial Conta Destino
                 DestinoSaiuCheque = False
                 #pega o valor de quanto a conta Destino está devendo ao banco
-                valorDevido = pesquisaSQLContaDestinoCheque[0][0]
+                valorDevido = funcs.truncar(numero=pesquisaSQLContaDestinoCheque[0][0], casaDecimal=2)
                 #pega o dia da ultima atualização da conta destino
                 dataAtualizacao = pesquisaSQLContaDestinoCheque[0][1]
                 
@@ -1211,7 +1232,7 @@ def TransacaoConta():
                     valorDevido = funcs.calculaChequeEspecial(valorDevido=valorDevido, porecentagem=porcentagem, tempo=dataPeriodo)
                 valorContaOrigem = valorContaOrigem - valor
                 valorDevido = valorDevido + valor
-                
+                valorDevido = funcs.truncar(numero=valorDevido, casaDecimal=2)
                 funcs.upMySQL(TabelaBd='tb_cheque_especial',
                                       CampoBd=['valor_devido', 'data_atualizacao'],
                                       CampoFm=[valorDevido, date.today()],
@@ -1270,7 +1291,6 @@ def TransacaoConta():
                   CampoWr=['id_conta'])
                 DestinoSaiuCheque = False
           
-
             pesquisaSQLContaOrigemPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca',
                                                                        CampoBd=['id_conta', 'ativo'],
                                                                        CampoFm=[session['idContaBK'],1],
@@ -1384,7 +1404,7 @@ def Cancelamento():
                                              CampoBd=['id_conta'],
                                              CampoFm=[session['idContaBK']],
                                              CampoEs=['saldo'])
-    saldo = pesquisaConta[0][0]
+    saldo = funcs.truncar(numero=pesquisaConta[0][0],casaDecimal=2)
     if saldo > 0:
         botao = 'hidden'
         senha = 'hidden'
@@ -1394,7 +1414,7 @@ def Cancelamento():
         senha = 'hidden'
         mensagem = 'Quite sua divida antes de cancelar sua conta'
     else:
-        botao = 'button'
+        botao = 'submit'
         senha = 'password'
     return render_template('cancelamento.html', botao=botao, mensagem=mensagem, senha=senha)
 
@@ -1407,6 +1427,7 @@ def CancelamentoConta():
                                              CampoEs=['tb_usuario.id_usuario'])
         senha = request.form['senha']
         funcs.cancelMySQL(id_usuario = id_usuario[0][0], senha= senha, numeroconta= session['conta'])
+        return index()
         
 
 #------------------------------

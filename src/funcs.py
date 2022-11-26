@@ -234,18 +234,11 @@ def cancelMySQL(id_usuario, senha, numeroconta):
     saldo = pesquisa[0][0]
     senhaUsuario = pesquisa[0][1]
     if senha == senhaUsuario:
-        if saldo > 0: 
-            raise Exception('601')
-        elif saldo < 0:
-            raise Exception('602')
-        else:
             upMySQL(TabelaBd='tb_contabancaria',
                 CampoBd=['status_contabancaria'],
                 CampoFm=[2],
                 CampoWr=['id_usuario', 'numeroconta'],
                 CampoPs=[id_usuario, numeroconta])
-            raise Exception('603')
-
     else:
         raise Exception('401')
 
