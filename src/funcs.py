@@ -825,6 +825,9 @@ def geraExtrato(dados, id):
 
     return nomeArq
 
+def erase(nomeArq):
+    return os.remove(nomeArq)
+
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
 #                                 CampoBd= ['id_agencia'],

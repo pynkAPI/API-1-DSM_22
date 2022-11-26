@@ -3,7 +3,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 from select import select
 from tokenize import Double
-from flask import Flask, render_template,request, url_for, redirect, session, flash, abort, send_file
+from flask import Flask, render_template,request, url_for, redirect, session, flash, abort, send_from_directory
 from flask_mysqldb import MySQL
 import funcs
 import random
@@ -2071,18 +2071,6 @@ def criaGA():
         return render_template ('dadosGA.html',login=acesso['matricula'],senha=acesso['senha'])
     return render_template ('criaGA.html')
 
-#Tratamento de Erros
-#@app.errorhandler(Exception)
-#def excecao(e):
-#    cod_excecao = str(e)
-#    cod_excecao = cod_excecao[:3]
-#    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-#    if session['tipoLog'] == 0:
-#        caminhoLogin = '/'
-#    else:
-#        caminhoLogin = 'loginG'
-#    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
-#------------------------------
 
 @app.route("/alterarAG", methods = ['POST', 'GET'])
 def alterarAG():
@@ -2250,8 +2238,9 @@ def verMais():
             statusEscrito = 'Aprovado'
         else:
             statusEscrito = 'Recusado'
-        data = str(dateTime.strftime('%x'))
-        hora = str(dateTime.strftime('%X'))
+        data = str(dateTime.strftime("%d/%m/%Y"))
+        hora = str(dateTime.strftime("%X"))
+        print (data)
 
         return render_template('verMais.html', 
                                 Tipo=tipo,
@@ -2321,9 +2310,9 @@ def download(id, idusuario):
                 else:
                     dados[cont].append('Destino')
         
-        print(dados)
         nomeArq = funcs.geraExtrato(dados,idusuario)
-        return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
+        uploads = os.path.join(app.root_path)
+        return send_from_directory(uploads, nomeArq, as_attachment=True)
 
     else:
         idTransacao = id
@@ -2361,7 +2350,7 @@ def download(id, idusuario):
             statusEscrito = 'Aprovado'
         else:
             statusEscrito = 'Recusado'
-        data = str(dateTime.strftime('%x'))
+        data = str(dateTime.strftime("%d/%m/%Y"))
         hora = str(dateTime.strftime('%X'))
 
         dados = ((tipo, hora, data, valor, statusEscrito, idContaOrigem, idContaDestino,
@@ -2369,20 +2358,20 @@ def download(id, idusuario):
                 nomeContaOrigem, numeroContaOrigem, idTransacao),)
 
         nomeArq = funcs.geraComprovante(dados)
-        print (dados)
-        return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
+        uploads = os.path.join(app.root_path)
 
+        return send_from_directory(uploads, nomeArq, as_attachment=True)
 
-@app.errorhandler(Exception)
-def excecao(e):
-   cod_excecao = str(e)
-   cod_excecao = cod_excecao[:3]
-   print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
-   if session['tipoLog'] == 0:
-       caminhoLogin = '/'
-   else:
-       caminhoLogin = 'loginG'
-   return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
+# @app.errorhandler(Exception)
+# def excecao(e):
+#    cod_excecao = str(e)
+#    cod_excecao = cod_excecao[:3]
+#    print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+#    if session['tipoLog'] == 0:
+#        caminhoLogin = '/'
+#    else:
+#        caminhoLogin = 'loginG'
+#    return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 
 
 
