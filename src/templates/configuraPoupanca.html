@@ -1,0 +1,25 @@
+{% extends "homenewgg.html" %}
+{% block conteudo %}
+
+<div class="conteudo">
+    <div class="elemento">
+        <span id="tituloElemento">Configuração Juros Poupança</span>
+        <div class="blocoElemento">
+            <div class="inputElemento">
+                <form action="altaraConfig" method="POST">
+                        <span id="textoInputElemento">Porcentagem:</span>
+                        <input required type="number" step="0.01" name="porcentagem" value="{{ porcentagem }}">    
+                    <div class="botaoElemento">
+                        <div class="chequeesp">
+                            <input type="submit" id="botaoSubmit" value="Alterar">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="home">
+   <input type="button" id="botaoVoltar" value="Voltar">
+
+{% endblock %}

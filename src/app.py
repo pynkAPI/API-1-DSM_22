@@ -1401,9 +1401,11 @@ def AberturaConta():
         nome = pesquisaUsario[0][2]
         numeroConta = funcs.geraId(str(nome),str(1),str(cpf))
         
+        idAgencia = funcs.verificaAgencia()
+
         funcs.InsMySQL(TabelaBd='tb_contabancaria',
                         CampoBd=['tipo', 'id_usuario', 'id_agencia', 'numeroconta', 'data_abertura', 'saldo', 'status_contabancaria'],
-                        CampoFm=[tipoConta, idUsuario, 1, numeroConta, datetime.today(), 0, '0'])    
+                        CampoFm=[tipoConta, idUsuario, idAgencia, numeroConta, datetime.today(), 0, '0'])    
 
         return RequisicaoAberturaConta()
 
@@ -2131,6 +2133,31 @@ def altaraConfigCheque():
         return configuraCheque()
 
 
+@app.route("/configuraPoupanca")
+def configuraPoupanca():
+
+    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
+                                           CampoBd=['id_regra_operacoes'],
+                                           CampoFm=[2],
+                                           CampoEs=['porcentagem'])
+    porcentagem = pesquisaSQL[0][0]
+    porcentagem = porcentagem*100
+    return render_template('configuraPoupanca.html', porcentagem=porcentagem)
+
+@app.route("/altaraConfigPoupanca", methods = ['POST', 'GET'])
+def altaraConfigPoupanca():
+    if request.method == 'POST':
+        porcentagem = request.form.get('porcentagem')
+        porcentagem = float(porcentagem)/100
+        funcs.upMySQL(TabelaBd='tb_regra_operacoes',
+                      CampoBd=['porcentagem'],
+                      CampoFm=[porcentagem],
+                      CampoPs=[2],
+                      CampoWr=['id_regra_operacoes'])
+
+        return configuraPoupanca()
+    
+
 #-----------------------------------
 
 @app.route("/cadastroTotalBanco")
@@ -2309,6 +2336,17 @@ def download(id, idusuario):
         print (dados)
         return send_file(nomeArq, as_attachment=True), os.remove(f'{nomeArq}')
 
+
+@app.errorhandler(Exception)
+def excecao(e):
+   cod_excecao = str(e)
+   cod_excecao = cod_excecao[:3]
+   print(f'{cod_excecao} - {funcs.erro[cod_excecao]}')
+   if session['tipoLog'] == 0:
+       caminhoLogin = '/'
+   else:
+       caminhoLogin = 'loginG'
+   return render_template("erro.html", cod_erro=cod_excecao, desc_erro=funcs.erro[cod_excecao],caminhoLogin=caminhoLogin)
 
 
 
