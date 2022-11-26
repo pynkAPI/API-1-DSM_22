@@ -9,10 +9,20 @@
             <form action="{{ url_for('homeGG') }}" method="POST">
                 <div class="select">
                     <select name="requisicao1" required>
-                        <option value="" disabled selected>Selecione</option>
-                        <option value="0">Depósitos</option>
+                        {% if requisicao == '0' %}
+                        <option value="0" selected>Depósitos</option>
                         <option value="1">Abertura de Contas</option>
                         <option value="2">Alteração de Dados</option>
+                        {% elif requisicao == '1' %}
+                        <option value="0">Depósitos</option>
+                        <option value="1" selected>Abertura de Contas</option>
+                        <option value="2">Alteração de Dados</option>
+                        {% else %}
+                        <option value="0">Depósitos</option>
+                        <option value="1">Abertura de Contas</option>
+                        <option value="2" selected>Alteração de Dados</option>
+                        {% endif %}
+                        
                     </select>
                     <input type="submit" class="btnFiltro" value="Pesquisar">
                 </div>

@@ -275,8 +275,8 @@ def RequisicaoGerenteAgencia():
                 #endregion
 
                 pesquisaSQLCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
-                                                             CampoBd=['id_conta'],
-                                                             CampoFm=[IdContaOrigem],
+                                                             CampoBd=['id_conta', 'ativo'],
+                                                             CampoFm=[IdContaOrigem, 1],
                                                              CampoEs=['valor_devido', 'data_atualizacao'])
                 #verifica se quem está depositando está devendo ao banco, caso sim será realizado uma processo especial.       
                 #region CHEQUE ESPECIAL
@@ -532,10 +532,9 @@ def homeG(requisicao=None):
                                 caminhoLogin=caminhoLogin)
     
 @app.route("/homeGG", methods = ['POST', 'GET'])
-def homeGG(requisicao=None):
+def homeGG(requisicao='0'):
     if request.method == "POST":
-        if requisicao == None:
-            requisicao = request.form.get('requisicao1')
+        requisicao = request.form.get('requisicao1')
         #Tabela de Conferencia de Deposito
         #region
         if requisicao == '0':
@@ -573,7 +572,23 @@ def homeGG(requisicao=None):
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         else:
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
-    return render_template('ListReq.html')
+    
+    else:    
+        cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
+
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+                                                               INNER JOIN tb_contabancaria 
+                                                               ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem 
+                                                               AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino 
+                                                               INNER JOIN tb_agencia 
+                                                               ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                                                               INNER JOIN tb_usuario 
+                                                               ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
+                                                               CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
+                                                               CampoBd=['status_transacao'],
+                                                               CampoFm=[0])
+                                                                       
+        return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
 
 #Aplicar filtro no extrato
 @app.route("/FiltroExtrato",  methods = ['POST', 'GET'])
@@ -1363,7 +1378,24 @@ def ReqAlt():
 
 @app.route("/Cancelamento")
 def Cancelamento():
-    return render_template('cancelamento.html')
+    mensagem = ''
+    pesquisaConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                             CampoBd=['id_conta'],
+                                             CampoFm=[session['idContaBK']],
+                                             CampoEs=['saldo'])
+    saldo = pesquisaConta[0][0]
+    if saldo > 0:
+        botao = 'hidden'
+        senha = 'hidden'
+        mensagem = 'Saque seu dinheiro antes de cancelar sua conta'
+    elif saldo < 0:
+        botao = 'hidden'
+        senha = 'hidden'
+        mensagem = 'Quite sua divida antes de cancelar sua conta'
+    else:
+        botao = 'button'
+        senha = 'password'
+    return render_template('cancelamento.html', botao=botao, mensagem=mensagem, senha=senha)
 
 @app.route("/CancelamentoConta",  methods = ['POST', 'GET'])
 def CancelamentoConta():
@@ -1431,8 +1463,9 @@ def ListUsa():
 
     cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Tipo conta","Status","Alterar dados")
     
-    SelectGA = f"""SELECT TC.id_conta,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TC.tipo,IF(TC.status_contabancaria='1', "ativo", "desativado")
-    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia;"""
+    SelectGA = f"""SELECT TU.id_usuario,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TC.tipo,IF(TC.status_contabancaria='1', "ativo", "desativado")
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia group by id_usuario;"""
+
 
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
@@ -1824,12 +1857,12 @@ def reqaltUsuario():
 @app.route("/AltDadosUsuGG", methods = ['POST', 'GET'])
 def AltDadosUsuGG():  
     cursor = mysql.connection.cursor()
-    IdContaUsu = request.form['IdContaUsu']
+    IdUsu = request.form['IdUsu']
     pagina = request.form['pagina']
 
     SelectGA = f"""SELECT TU.id_usuario, TU.email, TU.nome, TU.endereco, TU.datanascimento, TU.senha, TU.cpf, TU.genero 
                    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario 
-                   WHERE TU.id_usuario={IdContaUsu} group by TU.id_usuario;"""
+                   WHERE TU.id_usuario={IdUsu} group by TU.id_usuario;"""
                 
     cursor.execute(SelectGA)
     dados = cursor.fetchall()
@@ -1857,10 +1890,15 @@ def updateUsuGG():
         funcs.upMySQL('tb_usuario',CampoBd=["nome","email", "cpf", "genero", "endereco", "datanascimento",'senha'],CampoFm=[nome, email, cpf, genero, endereco, dataNasc, senha],CampoWr=['id_usuario'],CampoPs=[IdUsu])
         
     if pagina == '0':    
-        print('entra aq porra')
-        return ListUsa()
+       if session['tipo'] == 2:
+        return ListUsaGA()
+       else:
+           return ListUsa()
     else:
-        return ListUsa()
+        if session['tipo'] == 2:
+            return ListUsaGA()
+        else:
+           return ListUsa()
 #------------------------------
 
 #Funcao gerentes do Gerente Geral
@@ -1871,7 +1909,7 @@ def gerentes():
     cabecalho = ('Nome', 'Papel','Matricula',"Agência")
     
     SelectGA = f"""SELECT TF.id_funcionario, TU.nome, TF.papel, TF.num_matricula , TA.localidade 
-                   FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario INNER JOIN tb_agencia as TA on TA.id_funcionario=TF.id_funcionario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
+                   FROM tb_funcionario as TF inner join tb_usuario as TU on TU.id_usuario=TF.id_usuario LEFT JOIN tb_agencia as TA on TA.id_funcionario=TF.id_funcionario where papel = 'GERENTE DE AGÊNCIA' order by id_funcionario"""
 
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
