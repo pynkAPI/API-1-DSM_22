@@ -214,7 +214,7 @@ def RequisicaoGerenteAgencia():
     if request.method == "POST":
         requisicao = request.form['requisicao']
      
-        #region Conferencia Deposito
+       
         if requisicao == '0':
             botao = request.form.to_dict()
             IdTransacao =   request.form['Id']
@@ -295,11 +295,22 @@ def RequisicaoGerenteAgencia():
                         valorDevido = funcs.calculaChequeEspecial(tempo=dataPeriodo, porecentagem=porcentagem, valorDevido=valorDevido)
                     valorDevido = valorDevido + valorTransacao
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                  CampoPs=[IdContaOrigem, '1'],
+                                  CampoPs=[IdContaOrigem, 1],
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoBd=['valor_devido','data_atualizacao'],
                                  CampoFm=[ valorDevido, datetime.today()])
                     #Verifica se ele conseguiu sair da dívida
+                    pesquisaTotalBanco = funcs.SlcEspecificoMySQL(TabelaBd='tb_capitaltotal',
+                                                        CampoEs=['capitalinicial'],
+                                                        CampoBd=['id_capitaltotal'],
+                                                        CampoFm=[1])
+                    valorTotalBanco = float(pesquisaTotalBanco[0][0])
+                    valorTotalBanco = valorTransacao + valorTotalBanco
+                    funcs.upMySQL(TabelaBd='tb_capitaltotal',
+                          CampoBd=['capitalinicial'],
+                          CampoFm=[valorTotalBanco],
+                          CampoWr=['id_capitaltotal'],
+                          CampoPs=[1]) 
                     if valorDevido >= 0:
                         funcs.upMySQL('tb_contabancaria',
                                   CampoBd=['saldo'],
@@ -307,10 +318,20 @@ def RequisicaoGerenteAgencia():
                                   CampoWr=['id_conta'],
                                   CampoPs=[IdContaOrigem])
                         funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                  CampoPs=[IdContaOrigem, '0'],
+                                  CampoPs=[IdContaOrigem, 1],
                                   CampoWr=['id_conta', 'ativo'],
-                                  CampoBd=['valor_devido', 'data_final'],
-                                  CampoFm=[ 0, date.today()])
+                                  CampoBd=['valor_devido', 'data_final', 'ativo'],
+                                  CampoFm=[ 0, date.today(), 0])
+                    funcs.upMySQL(TabelaBd='tb_transacao',
+                              CampoBd=['status_transacao', 'Datatime'],
+                              CampoFm=[1, datetime.today()],
+                              CampoPs=[IdTransacao],
+                              CampoWr=['id_transacao'])
+                    if session['tipo'] == 2:
+                        return homeG()
+                    else:
+                        return render_template('ListReq.html',requisicao=requisicao)
+                    
                 #endregion        
                 
                 pesquisaSQLConta = funcs.SlcEspecificoMySQL(TabelaBd='tb_transacao INNER JOIN tb_contabancaria ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino INNER JOIN tb_usuario ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario',
@@ -342,7 +363,7 @@ def RequisicaoGerenteAgencia():
                           CampoPs=[1]) 
                 session['saldo'] = valorTotalBanco
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
             else:
@@ -353,7 +374,7 @@ def RequisicaoGerenteAgencia():
                           CampoWr=['id_transacao'])
 
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
         #endregion 
@@ -386,7 +407,7 @@ def RequisicaoGerenteAgencia():
                               CampoPs=[IdConta])
 
             if session['tipo'] == 2:
-                return homeG(requisicao=requisicao)
+                return homeG()
             else:
                 return render_template('ListReq.html',requisicao=requisicao)
                 
@@ -414,7 +435,7 @@ def RequisicaoGerenteAgencia():
                                CampoWr=['id_requisicao'],
                                CampoPs=[IdConta])
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
                 #endregion
@@ -427,14 +448,14 @@ def RequisicaoGerenteAgencia():
                                CampoWr=['id_requisicao'],
                                CampoPs=[IdConta])
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
                 #endregion
             else:
                 #region VERMAIS
                 if session['tipo'] == 2:
-                    return homeG(requisicao=requisicao)
+                    return homeG()
                 else:
                     return render_template('ListReq.html',requisicao=requisicao)
                 #endregion
@@ -444,7 +465,7 @@ def RequisicaoGerenteAgencia():
         else:
             return render_template('ListReq.html')
           
-    return homeG(requisicao=requisicao)
+    return homeG()
      
 
 @app.route("/homeG", methods = ['POST', 'GET'])
@@ -530,7 +551,7 @@ def homeG():
     return render_template('homenewg.html',
                                 saldo=saldo,
                                 req=req,
-                                requisicao=requisicao,
+                                requisicao='0',
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
     
