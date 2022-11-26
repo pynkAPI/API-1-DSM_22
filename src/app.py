@@ -448,15 +448,16 @@ def RequisicaoGerenteAgencia():
      
 
 @app.route("/homeG", methods = ['POST', 'GET'])
-def homeG(requisicao=None):
+def homeG():
     idAgencia = funcs.verificaAgenciaGerente(session['idFunc'])
     req=funcs.SlcEspecificoMySQL('tb_requisicoes as TR inner join tb_contabancaria as TC on TR.id_usuario=TC.id_usuario INNER JOIN tb_agencia AS TA ON TA.id_agencia = TC.id_agencia', CampoBd=['status_alteracao','TA.id_agencia', 'id_funcionario'], CampoFm=['0',idAgencia, session['idFunc']], CampoEs=['count(*)'])
     ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=[idAgencia], CampoEs=['count(*)'])
     saldo = f"{session['saldo']:.2f}".replace(".",",")
     caminhoLogin = 'loginG'
     if request.method == "POST":
+        requisicao = request.form.get('requisicao1')
         if requisicao == None:
-            requisicao = request.form.get('requisicao1')
+            requisicao = '0'
         #Tabela de Conferencia de Deposito
         #region
         if requisicao == '0':
@@ -523,11 +524,13 @@ def homeG(requisicao=None):
             return render_template('homenewg.html',
                                 saldo=saldo,
                                 req=req,
+                                requisicao=requisicao,
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
     return render_template('homenewg.html',
                                 saldo=saldo,
                                 req=req,
+                                requisicao=requisicao,
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
     
