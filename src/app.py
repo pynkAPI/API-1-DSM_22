@@ -234,6 +234,7 @@ def RequisicaoGerenteAgencia():
                                                             CampoFm=[IdContaOrigem])
                 #region Conta Poupança
                 if str(pesquisaSQLTipoConta[0][0]).upper() == 'CONTA POUPANÇA': 
+
                     pesquisaSQLAtivoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca', 
                                                                         CampoEs=['ativo', 'valor_poupanca', 'data_atualizacao'],                                                   
                                                                         CampoBd=['id_conta','ativo'], 
@@ -245,9 +246,10 @@ def RequisicaoGerenteAgencia():
                         dataPeriodoPoupanca = funcs.verificaQuantidadeRendimento(data1=dataAtualizacaoPoupanca, data2=date.today())
                         if dataPeriodoPoupanca > 0:
                             pesquisaRegraOperacaoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_regra_operacoes',
-                                                                             CampoFm=[2],
-                                                                             CampoBd=['id_regra_operacoes'],
-                                                                             CampoEs=['porcentagem'])
+                                                                                CampoFm=[2],
+                                                                                CampoBd=['id_regra_operacoes'],
+                                                                                CampoEs=['porcentagem'])
+                                                                                
                             porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
                             valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
                             valorPoupanca = valorPoupanca + valorTransacao
@@ -255,6 +257,7 @@ def RequisicaoGerenteAgencia():
                                           CampoBd=['data_atualizacao', 'valor_poupanca'],
                                           CampoFm=[date.today(), valorPoupanca],
                                           CampoPs=[IdContaOrigem],
+
                                         CampoWr=['id_conta'])
                         else:
                             valorPoupanca = valorPoupanca + valorTransacao
@@ -263,6 +266,7 @@ def RequisicaoGerenteAgencia():
                                           CampoFm=[date.today(), valorPoupanca],
                                           CampoPs=[IdContaOrigem], 
                                           CampoWr=['id_conta'])
+
 
                     else: 
                         funcs.InsMySQL(TabelaBd='tb_poupanca',
@@ -398,6 +402,7 @@ def RequisicaoGerenteAgencia():
                 for row in Desc:
                     doispontos = row.find(':')+1
                     DescSeparada.append(row[doispontos:])
+                print(DescSeparada)
                 funcs.upMySQL('tb_usuario',
                                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
                                CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
