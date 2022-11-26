@@ -551,11 +551,13 @@ def desligaGA(IdFuncionario, novoResp):
 def verificaAgencia():
     cursor = mysql.connection.cursor()
     
-    Select = f'''SELECT id_agencia,
-                 count(id_agencia)
-                 FROM tb_contabancaria  
-                 group by id_agencia  
-                 order by count(id_agencia) asc
+    Select = f'''SELECT tb_agencia.id_agencia,
+                 CASE WHEN count(tb_contabancaria.id_agencia) IS NOT NULL THEN count(tb_contabancaria.id_agencia)  ELSE 0 END as conta
+                 FROM tb_agencia  
+                 left JOIN  tb_contabancaria
+                 ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                 group by tb_agencia.id_agencia  
+                 order by count(tb_contabancaria.id_agencia) asc
                  LIMIT 1;'''
 
     cursor.execute(Select)
