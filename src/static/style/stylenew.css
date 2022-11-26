@@ -541,9 +541,8 @@ td {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 6vh 20vw;
     background-color: var(--color-background);
-    width: 90%;
+    width: 100%;
     min-height: 100vh;
 }
 
@@ -573,6 +572,7 @@ td {
 #tituloElemento {
     color: var(--color-dark);
     font-size: 2rem;
+    margin-top: 2rem;
 }
 
 #mensagemErro {
@@ -605,27 +605,30 @@ td {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 30vw;
+    width: 100%;
     height: 50vh;
-    gap: 2vw;
-    padding: 3vh 4vw 4vh 4vw;
+    padding: 2rem;
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
 }
 
-.AltSaldo {
-    padding: 4vw;
-}
-
 .valorsaldo {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 .voltar {
-    font-size: 1vw;
+    font-size: 1rem;
+    background-color: #FB1C7B;
+    color: #fff;
+    padding: .9rem;
+    border-radius: 5px;
+    width: 50%;
+    text-transform: uppercase;
 }
 
 select {
@@ -648,28 +651,30 @@ select:valid~label {
 }
 
 .btn-altsaldo {
-    font-size: 1vw;
+    font-size: 1rem;
     color: var(--color-white);
     background-color: #FB1C7B;
     border-radius: var(--border-radius-1);
-    padding: 0.3vw;
+    padding: 1rem;
+    width: 47%;
+    text-transform: uppercase;
 }
 
 .input-button-altvalor {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 5vh;
+    margin-top: 2rem;
+    width: 100%;
 }
 
 .inputElemento {
     display: flex;
     flex-direction: column;
     justify-items: center;
-    align-items: left;
-    height: auto;
-    text-align: left;
-    width: 50%;
+    align-items: center;
+    width: 90%;
+    margin: auto 0;
 }
 
 #textoInputElemento {
