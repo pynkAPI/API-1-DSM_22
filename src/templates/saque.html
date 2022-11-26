@@ -11,7 +11,7 @@
             <form action="{{ url_for('SaqueConta') }}" method="POST">
                 <div class="inputValor">
                     <span id="textoInputElemento">Insira o valor:</span>
-                    <input required type="number" placeholder="00,00" name="valor">
+                    <input required type="number" placeholder="00,00" step="0.01" name="valor">
                 </div>
         </div>
         <div class="botaoElemento">
