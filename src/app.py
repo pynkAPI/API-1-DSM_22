@@ -51,7 +51,7 @@ def loginG():
 
 #Pagina Home
 @app.route("/home", methods = ['POST', 'GET'])
-def home(pesquisaSQL = []):
+def home(pesquisaSQL = [], pesquisa = 0):
     # Verificando se ocorreu o login
     if session['login'] == False:
         abort(401)
@@ -64,7 +64,7 @@ def home(pesquisaSQL = []):
             saldo = funcs.ValEmReal(session['saldo']) # Convertendo saldo para o real
             VarContador=0
             data = datetime.today()
-            if not pesquisaSQL:
+            if not pesquisaSQL and pesquisa == 0:
                 pesquisaSQL = funcs.SlcEspecificoComORMySQL(TabelaBd='tb_transacao',
                                             CampoEs=['id_transacao','tipo','valor','Datatime','status_transacao'],
                                             CampoBd=['id_conta_origem','id_conta_destino'],
@@ -146,7 +146,7 @@ def home(pesquisaSQL = []):
 
             pesquisaChequeEspecial = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
                                                              CampoBd=['id_conta', 'ativo'],
-                                                             CampoFm=[session['idContaBK'], '1'],
+                                                             CampoFm=[session['idContaBK'], 1],
                                                              CampoEs=['valor_devido', 'data_atualizacao'])
             #region CHEQUE ESPECIAL
             if pesquisaChequeEspecial:
@@ -659,7 +659,7 @@ def FiltroExtrato():
 
                 VarContador+=1
                 
-            return home(pesquisaSQL)
+            return home(pesquisaSQL=pesquisaSQL, pesquisa=1)
 #------------------------------
 #Pagina Deposito
 @app.route("/deposito")
@@ -987,8 +987,8 @@ def ConferenciaDeposito():
             #endregion
 
             pesquisaSQLCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
-                                                         CampoBd=['id_conta'],
-                                                         CampoFm=[IdContaOrigem],
+                                                         CampoBd=['id_conta', 'ativo'],
+                                                         CampoFm=[IdContaOrigem, 1],
                                                          CampoEs=['valor_devido', 'data_atualizacao'])
             #verifica se quem está depositando está devendo ao banco, caso sim será realizado uma processo especial.       
             if pesquisaSQLCheque:
@@ -1008,7 +1008,7 @@ def ConferenciaDeposito():
                 valorDevido = valorDevido + valorTransacao
                 
                 funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                              CampoPs=[IdContaOrigem, '1'],
+                              CampoPs=[IdContaOrigem, 1],
                               CampoWr=['id_conta', 'ativo'],
                               CampoBd=['valor_devido','data_atualizacao'],
                               CampoFm=[ valorDevido, datetime.today()])
@@ -1031,9 +1031,7 @@ def ConferenciaDeposito():
                           CampoFm=[1, datetime.today(), datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
-
                 
-
                 #Verifica se ele conseguiu sair da dívida
                 if valorDevido > 0:
                     funcs.upMySQL('tb_contabancaria',
@@ -1042,7 +1040,7 @@ def ConferenciaDeposito():
                                   CampoWr=['id_conta'],
                                   CampoPs=[IdContaOrigem])
                     funcs.upMySQL(TabelaBd='tb_cheque_especial',
-                                  CampoPs=[IdContaOrigem, '0'],
+                                  CampoPs=[IdContaOrigem, 0],
                                   CampoWr=['id_conta', 'ativo'],
                                   CampoBd=['valor_devido', 'data_final'],
                                   CampoFm=[ 0, date.today()])
