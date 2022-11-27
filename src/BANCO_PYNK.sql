@@ -175,8 +175,3 @@ VALUES ('0',4,'desejo alterar meu cpf para ...');
 
 INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_atualizacao,data_final, valor_devido, ativo) VALUES(1, '2022-10-01','2022-10-01', NULL, 0, 0);
 
-select * from tb_requisicoes;
-select * from tb_contabancaria;
-select * from tb_agencia;
-select * from tb_usuario;
-select * from tb_funcionario;

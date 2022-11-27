@@ -829,15 +829,12 @@ def geraExtrato(dados, id):
 
 def temReq(idContaBancaria, tipo):
     # Se for usuario
-    if tipo != 1:
+    if tipo == 1:
         idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                         CampoBd=['id_conta'],
                                         CampoFm=[idContaBancaria],
                                         CampoEs=['id_usuario'])
-    # Se for Gerente
-    else:
-        idUsuario = idContaBancaria
-            
+        
         cursor = mysql.connection.cursor()
         
         Select = f'''SELECT MAX(id_requisicao)
@@ -848,19 +845,34 @@ def temReq(idContaBancaria, tipo):
         ultimaReq = cursor.fetchall()
         mysql.connection.commit() 
         cursor.close()
-        print(ultimaReq)
+        
+    # Se for Gerente
+    else:
+        idUsuario = idContaBancaria
+            
+        cursor = mysql.connection.cursor()
+        
+        Select = f'''SELECT MAX(id_requisicao)
+                    FROM tb_requisicoes
+                    WHERE id_usuario = {idUsuario};'''
 
-        if ultimaReq != []:
-            statusAlteracao = SlcEspecificoMySQL(TabelaBd='tb_requisicoes',
-                                                CampoBd=['id_requisicao'],
-                                                CampoFm=[ultimaReq[0][0]],
-                                                CampoEs=['status_alteracao'])
+        cursor.execute(Select)
+        ultimaReq = cursor.fetchall()
+        mysql.connection.commit() 
+        cursor.close()
 
-            print(statusAlteracao)
-            if statusAlteracao != ():
-                if str(statusAlteracao [0][0]) == '0':
-                    return True
-                else: 
-                    return False
-        else:
-            return False
+
+    if ultimaReq != []:
+        statusAlteracao = SlcEspecificoMySQL(TabelaBd='tb_requisicoes',
+                                            CampoBd=['id_requisicao'],
+                                            CampoFm=[ultimaReq[0][0]],
+                                            CampoEs=['status_alteracao'])
+
+        print(statusAlteracao)
+        if statusAlteracao != ():
+            if str(statusAlteracao [0][0]) == '0':
+                return True
+            else: 
+                return False
+    else:
+        return False
