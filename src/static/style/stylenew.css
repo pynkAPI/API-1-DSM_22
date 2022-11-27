@@ -10,6 +10,7 @@
     --color-info-dark: #7d8da1;
     --color-info-light: #dce1eb;
     --color-dark: #362949;
+    --color-black: rgb(0,0,0);
     --color-light: rgba(132, 139, 200, 0.18);
     --color-primary-variant: #677483;
     --color-dark-variant: #677483;
@@ -215,6 +216,7 @@ main .Extrato {
 
 main .Extrato .texto-extrato {
     margin: 1rem 0 1rem 1rem;
+
 }
 
 main .Extrato .tabelaRequisicao {
@@ -235,6 +237,7 @@ main .Tb .tabelaRequisicao {
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
     text-align: center;
+    
 }
 
 main .Extrato .tabelaRequisicao:hover {
@@ -245,7 +248,7 @@ main .tabelaRequisicao .linhaTabela td {
     height: 3rem;
     font-weight: 550;
     border-bottom: 1px solid var(--color-light);
-    color: var(--color-dark);
+    color: var(--color-black);
 }
 
 main .tabelaRequisicao .linhaTabela th {
