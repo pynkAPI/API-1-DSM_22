@@ -714,6 +714,7 @@ select:valid~label {
 }
 
 .botaoElemento {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -724,7 +725,6 @@ select:valid~label {
 #botaoVoltar,
 #botaoSubmit {
     height: 2.5rem;
-    width: 10rem;
     background: var(--color-primary);
     border-radius: 5px;
     color: var(--color-white);

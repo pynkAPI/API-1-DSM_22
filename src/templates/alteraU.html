@@ -11,62 +11,60 @@
         <span id="tituloElemento">Alterar Dados</span>
         <div class="inputElemento">
             {% if pagina == 3 %}
-            <form action="{{ url_for('alterarGerenteGeral') }}" method="POST">
-                {% elif pagina == 2%}
-                <form action="{{ url_for('RequisicaoGerenteAgencia') }}" method="POST">
-                    <input type="hidden" value="2" name="requisicao">
-                    {% else %}
-                    <form action="{{ url_for('alteraU') }}" method="POST">
-                        {% endif %}
-                        <input type="hidden" value="{{idUsuario}}" name="idUsuario">
-                        <input type="hidden" value="{{idFuncionario}}" name="idFuncionario">
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Nome completo:</span>
-                            <input required type="text" name="nome" value="{{nome}}">
-                        </div>
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Email:</span>
-                            <input required type="text" name="email" value="{{email}}">
-                        </div>
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Endereço:</span>
-                            <input required type="text" name="endereco" value="{{endereco}}">
-                        </div>
-                        <div class="inputValor">
-                            <span id="textoInputElemento">CPF:</span>
-                            <input required oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf"
-                                value="{{cpf}}">
-                        </div>
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Sexo:</span>
-                            <select class="input-selects" id="genero" name="genero" required>
-                                <option value="F" {{selF}}>FEMININO</option>
-                                <option value="M" {{selM}}>MASCULINO</option>
-                                <option value="O" {{selO}}>OUTROS</option>
-                            </select>
-                        </div>
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Data de Nascimento:</span>
-                            <input class="input-date" type="date" name="datanasc" required value={{dataNasc}}>
-                        </div>
-                        {% if loginVisivel == False %}
-                        <input type="hidden" value="{{login}}" name="login">
-                        {% else %}
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Login:</span>
-                            <input required type="text" name="login" value="{{login}}">
-                        </div>
-                        {% endif %}
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Senha:</span>
-                            <img src="/static/img/ocultar.png" class="olhinho" alt="" onclick="mostrarOcultarid()" id="mostrarid"> 
-                            <input required type="password" id="SenhaId" name="senha" required value="{{senha}}">
-                        </div>
-                        <div class="inputValor">
-                            <span id="textoInputElemento">Confirmar senha:</span>
-                            <img src="/static/img/ocultar.png" class="olhinho" alt="" onclick="mostrarOcultaridconf()" id="mostraridconf"> 
-                            <input type="password" value="{{senha}}" id="RepetirsenhaId" name="Repetirsenha" required>
-                        </div>
+                <form action="{{ url_for('alterarGerenteGeral') }}" method="POST">
+            {% else %}
+                <form action="{{ url_for('alteraU') }}" method="POST">
+                <input type="hidden" value="2" name="requisicao">
+            {% endif %}
+                <input type="hidden" value="{{idUsuario}}" name="idUsuario">
+                <input type="hidden" value="{{idFuncionario}}" name="idFuncionario">
+                <div class="inputValor">
+                    <span id="textoInputElemento">Nome completo:</span>
+                    <input required type="text" name="nome" value="{{nome}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Email:</span>
+                    <input required type="text" name="email" value="{{email}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Endereço:</span>
+                    <input required type="text" name="endereco" value="{{endereco}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">CPF:</span>
+                    <input required oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf"
+                        value="{{cpf}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Sexo:</span>
+                    <select class="input-selects" id="genero" name="genero" required>
+                        <option value="F" {{selF}}>FEMININO</option>
+                        <option value="M" {{selM}}>MASCULINO</option>
+                        <option value="O" {{selO}}>OUTROS</option>
+                    </select>
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Data de Nascimento:</span>
+                    <input class="input-date" type="date" name="datanasc" required value={{dataNasc}}>
+                </div>
+                {% if loginVisivel == False %}
+                <input type="hidden" value="{{login}}" name="login">
+                {% else %}
+                <div class="inputValor">
+                    <span id="textoInputElemento">Login:</span>
+                    <input required type="text" name="login" value="{{login}}">
+                </div>
+                {% endif %}
+                <div class="inputValor">
+                    <span id="textoInputElemento">Senha:</span>
+                    <img src="/static/img/ocultar.png" class="olhinho" alt="" onclick="mostrarOcultarid()" id="mostrarid"> 
+                    <input required type="password" id="SenhaId" name="senha" required value="{{senha}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Confirmar senha:</span>
+                    <img src="/static/img/ocultar.png" class="olhinho" alt="" onclick="mostrarOcultaridconf()" id="mostraridconf"> 
+                    <input type="password" value="{{senha}}" id="RepetirsenhaId" name="Repetirsenha" required>
+                </div>
         </div>
         <div class="botaoElemento">
             <input type="submit" id="botaoSubmit" value="Alterar">
