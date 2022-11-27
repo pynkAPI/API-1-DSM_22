@@ -81,11 +81,11 @@
 
 /* sidebar active */
 .topo-sidebar.active {
-    width: 4rem;
+    width: 50px;
 }
 
 #btn_menu.active {
-    left: 1rem;
+    left: 10px
 }
 
 .topo-sidebar.active .topo,
@@ -94,32 +94,24 @@
 }
 
 .pageContent.active {
-    width: 100%;
-}
-
-@media (max-width: 1270px) {
-    #btn_menu {
-        left: 155px;
-    }
-}
-
-@media (max-width: 1024px) {
-    #btn_menu {
-        left: 150px;
-    }
+    width: calc(100% - 50px);
 }
 
 @media (max-width: 900px) {
     #btn_menu {
-        left: 1rem;
+        left: 10px;
     }
-
     #btn_menu.active {
         left: 160px;
+        z-index: 2;
+    }
+
+    .pageContent {
+        width: calc(100% - 50px);
     }
 
     .topo-sidebar {
-        width: 4rem;
+        width: 50px;
     }
 
     .topo-sidebar .topo {
@@ -132,7 +124,9 @@
 
     .topo-sidebar.active {
         display: block;
-        width: 260px;
+        position: absolute;
+        width: 200px;
+        z-index: 1;
     }
 
     .topo-sidebar.active .topo {
@@ -141,5 +135,17 @@
 
     .topo-sidebar.active .sidebar {
         display: block;
+    }
+}
+
+@media (max-width: 430px) {
+    .topo-sidebar {
+        box-shadow: var(--box-shadow);
+        z-index: 10;
+    }
+
+    #btn_menu,
+    #btn_menu.active {
+        z-index: 11;
     }
 }

@@ -233,6 +233,7 @@ def RequisicaoGerenteAgencia():
                                                             CampoBd=['id_conta'], 
                                                             CampoFm=[IdContaOrigem])
                 #region Conta Poupança
+
                 if str(pesquisaSQLTipoConta[0][0]).upper() == 'CONTA POUPANÇA': 
 
                     pesquisaSQLAtivoPoupanca = funcs.SlcEspecificoMySQL(TabelaBd='tb_poupanca', 
@@ -249,16 +250,16 @@ def RequisicaoGerenteAgencia():
                                                                                 CampoFm=[2],
                                                                                 CampoBd=['id_regra_operacoes'],
                                                                                 CampoEs=['porcentagem'])
-                                                                                
+
                             porcentagemPoupanca = pesquisaRegraOperacaoPoupanca[0][0]
                             valorPoupanca = funcs.calculaPoupanca(valorPoupanca=valorPoupanca, porecentagem=porcentagemPoupanca, tempo=dataPeriodoPoupanca)
                             valorPoupanca = valorPoupanca + valorTransacao
                             funcs.upMySQL(TabelaBd='tb_poupanca',
+
                                           CampoBd=['data_atualizacao', 'valor_poupanca'],
                                           CampoFm=[date.today(), valorPoupanca],
                                           CampoPs=[IdContaOrigem],
-
-                                        CampoWr=['id_conta'])
+                                          CampoWr=['id_conta'])
                         else:
                             valorPoupanca = valorPoupanca + valorTransacao
                             funcs.upMySQL(TabelaBd='tb_poupanca',
@@ -266,6 +267,7 @@ def RequisicaoGerenteAgencia():
                                           CampoFm=[date.today(), valorPoupanca],
                                           CampoPs=[IdContaOrigem], 
                                           CampoWr=['id_conta'])
+
 
 
                     else: 

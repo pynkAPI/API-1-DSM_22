@@ -6,6 +6,8 @@
         <div class="inputElemento">
             <form action="{{ url_for('CancelamentoConta') }}" method="POST">
                 <input type="{{senha}}" class="textoInputElemento" placeholder="SENHA" id="SenhaId" name="senha" required>
+                <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultarid()" id="mostrarid">
+
                 <div class="input-button">
                     <input type="{{botao}}" value="CANCELAR CONTA" class="btnd solid"><br>
                 </div>
@@ -19,5 +21,6 @@
     </div>
     <span id="mensagemErro"> {{ mensagem }}</span>
 </div>
+<script src="/static/scripts/mostrarOcultarSenha.js"></script>
 
 {% endblock %}
