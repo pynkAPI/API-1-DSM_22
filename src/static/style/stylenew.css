@@ -688,6 +688,7 @@ select:valid~label {
 }
 
 .inputValor {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-items: center;

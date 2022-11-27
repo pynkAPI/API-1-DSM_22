@@ -68,6 +68,7 @@ CREATE TABLE tb_requisicoes(
 id_requisicao int AUTO_INCREMENT PRIMARY KEY,
 status_alteracao varchar(1) NOT NULL,
 id_usuario INT NOT NULL,
+id_funcionario INT,
 FOREIGN KEY(id_usuario) REFERENCES tb_usuario (id_usuario),
 descricao VARCHAR(255)
 );
@@ -173,3 +174,9 @@ INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
 VALUES ('0',4,'desejo alterar meu cpf para ...');
 
 INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_atualizacao,data_final, valor_devido, ativo) VALUES(1, '2022-10-01','2022-10-01', NULL, 0, 0);
+
+select * from tb_requisicoes;
+select * from tb_contabancaria;
+select * from tb_agencia;
+select * from tb_usuario;
+select * from tb_funcionario;
