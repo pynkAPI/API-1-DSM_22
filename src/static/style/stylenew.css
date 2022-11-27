@@ -609,12 +609,13 @@ td {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 50vh;
     padding: 2rem;
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
+    position: relative;
 }
+
 
 .valorsaldo {
     display: flex;
@@ -676,8 +677,9 @@ select:valid~label {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    width: 90%;
+    width: 100%;
     margin: auto 0;
+    position: relative;
 }
 
 #textoInputElemento {
@@ -686,6 +688,7 @@ select:valid~label {
     font-size: 2vh;
     color: var(--color-dark-variant);
 }
+
 
 .inputValor {
     display: flex;
@@ -697,6 +700,7 @@ select:valid~label {
     height: auto;
     text-align: left;
     border-bottom: 0.01vh solid black;
+    position: relative;
 }
 
 .botaoElemento {
@@ -779,6 +783,22 @@ hr {
     justify-items: center;
     gap: 1vh;
 }
+
+.olhinho{
+
+    position: absolute;
+    width: 18px;
+    bottom: 0.25rem;
+    z-index: 10;
+    right: 0;
+
+    }
+
+
+    
+        
+    
+    
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
