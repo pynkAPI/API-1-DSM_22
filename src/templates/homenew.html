@@ -32,11 +32,15 @@
     </div>
     <div class="data">
         <form action="FiltroExtrato" method="POST">
-            <label class="form-date" for="input-date">De:</label>
-            <input required type="date" class="input-date" name="DataExtratoDe">
-            <label class="form-date" for="input-date">Até:</label>
-            <input required type="date" class="input-date" name="DataExtratoAte">
-            <input type="submit" class="btnd" value="Pesquisar">
+            <fieldset>
+                <label class="form-date" for="input-date">De:</label><br>
+                <input required type="date" class="input-date" name="DataExtratoDe">
+            </fieldset>
+            <fieldset>
+                <label class="form-date" for="input-date">Até:</label><br>
+                <input required type="date" class="input-date" name="DataExtratoAte">
+            </fieldset>
+            <button type="submit" class="btnd"><i class='bx bx-search-alt-2 bx-sm' style='color:#ffffff'  ></i></button>
         </form>
     </div>
     {% block Tabela %}

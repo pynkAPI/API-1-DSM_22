@@ -1,35 +1,26 @@
-{% extends "home.html" %}
-{% block head %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABERTURA DE CONTA</title>
-    <link rel="stylesheet" href="../static/style/stylehome.css">
-    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/stylehome.css') }}"> -->
-{% endblock %}
-{% block nav %}
-<div class="logo">
-    <a href="{{ url_for('home') }}"><img src="../static/img/pynkpng2.png" alt="logo"></a>
+{% extends "templateCliente.html" %}
+{% block conteudo %}
+<div class="elemento">
+    <div class="blocoElemento">
+        <span id="tituloElemento">Abrir Nova Conta</span>
+        <div class="inputElemento">
+            <form action="{{ url_for('AberturaConta') }}"  method="POST">
+                <div>
+                    <select id="input_tipoconta" class="input-selects" name="tipoconta" required>
+                        <option value="Conta Corrente">CONTA CORRENTE</option>
+                        <option value="Conta Poupança">CONTA POUPANÇA</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="CRIAR NOVA CONTA" class="btnd solid"> 
+                </div>
+            </form>
+            <a href="home">
+                <input type="button" id="botaoVoltar" value="Voltar">
+            </a>
+        </div>
+    </div>
+    <span id="mensagemErro"> {{ mensagemAberturaConta }}</span>
 </div>
-<ul class="navbar">
-    <li><a href="{{ url_for('home') }}" class="nav-link">Menu</a></li>
-    <li><a href="{{ url_for('index') }}" class="nav-link"><i class='bx bx-log-out'></i></a></li>
-</ul>
-{% endblock %}
-{% block saldo %}
-<!--  -->
-{% endblock %}
-{% block func %}
-<div class="func">
-    <form action="{{ url_for('AberturaConta') }}"  method="POST">
-        <select id="input_tipoconta" class="input-selects" name="tipoconta" required>
-            <option value="Conta Corrente">CONTA CORRENTE</option>
-            <option value="Conta Poupança">CONTA POUPANÇA</option>
-        </select>
-        <input type="submit" value="CRIAR NOVA CONTA" class="btnd solid"> 
-    </form>
-   
-    <a href="{{ url_for('home') }}">Voltar ao Menu</a>
-</div>
+
 {% endblock %}

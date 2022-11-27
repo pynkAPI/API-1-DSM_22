@@ -1,4 +1,4 @@
- {% extends "layout.html" %} 
+{% extends "templateCliente.html" %}
  {% block conteudo %}
  <main>
       {% block Tabela %}    
@@ -57,7 +57,7 @@
         </tr>
         <tr>
           <td class="celula">
-            <a href="http://127.0.0.1:5000/download/{{ID}}">
+            <a href="http://127.0.0.1:5000/download/{{ID}}/mov">
               <input type="button" value="Download">
             </a>
           </td>

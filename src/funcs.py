@@ -234,18 +234,11 @@ def cancelMySQL(id_usuario, senha, numeroconta):
     saldo = pesquisa[0][0]
     senhaUsuario = pesquisa[0][1]
     if senha == senhaUsuario:
-        if saldo > 0: 
-            raise Exception('601')
-        elif saldo < 0:
-            raise Exception('602')
-        else:
             upMySQL(TabelaBd='tb_contabancaria',
                 CampoBd=['status_contabancaria'],
                 CampoFm=[2],
                 CampoWr=['id_usuario', 'numeroconta'],
                 CampoPs=[id_usuario, numeroconta])
-            raise Exception('603')
-
     else:
         raise Exception('401')
 
@@ -551,11 +544,13 @@ def desligaGA(IdFuncionario, novoResp):
 def verificaAgencia():
     cursor = mysql.connection.cursor()
     
-    Select = f'''SELECT id_agencia,
-                 count(id_agencia)
-                 FROM tb_contabancaria  
-                 group by id_agencia  
-                 order by count(id_agencia) asc
+    Select = f'''SELECT tb_agencia.id_agencia,
+                 CASE WHEN count(tb_contabancaria.id_agencia) IS NOT NULL THEN count(tb_contabancaria.id_agencia)  ELSE 0 END as conta
+                 FROM tb_agencia  
+                 left JOIN  tb_contabancaria
+                 ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                 group by tb_agencia.id_agencia  
+                 order by count(tb_contabancaria.id_agencia) asc
                  LIMIT 1;'''
 
     cursor.execute(Select)
@@ -822,6 +817,9 @@ def geraExtrato(dados, id):
     c.save() 
 
     return nomeArq
+
+def erase(nomeArq):
+    return os.remove(nomeArq)
 
 # def DelAG(id_agencia):
 #    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',

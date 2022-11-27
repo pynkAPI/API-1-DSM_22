@@ -40,7 +40,7 @@
                                     <form action="AltDadosUsuGG" method="POST" name="ConferenciaDeposito">
                                         {% for cell in row %}
                                         {% if cell == row[0] %}
-                                        <input type="hidden" value="{{ cell }}" name="IdContaBanc">
+                                        <input type="hidden" value="{{ cell }}" name="IdUsu">
                                         {% else %}
                                         <td class="celula">{{ cell }}</td>
                                         {% endif %}

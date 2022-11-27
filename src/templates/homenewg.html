@@ -4,15 +4,6 @@
 <main>
     <div class="bloco-info">
         <div class="saldo">
-            <span class="material-symbols-outlined">attach_money</span>
-            <div class="conteudo-saldo">
-                <div class="text-saldo">
-                    <h3>Saldo do Banco</h3>
-                    <h1>R$ {{saldo}}</h1>
-                </div>
-            </div>
-        </div>
-        <div class="saldo">
             <span class="material-symbols-outlined">group</span>
             <div class="conteudo-saldo">
                 <div class="text-saldo">
@@ -41,9 +32,19 @@
         <form action="{{ url_for('homeG') }}" method="POST">
             <div class="custom-select">
                 <select name="requisicao1" required>
-                    <option value="0">Depósitos</option>
+                    {% if requisicao == '0' %}
+                    <option value="0" selected>Depósitos</option>
                     <option value="1">Abertura de Contas</option>
                     <option value="2">Alteração de Dados</option>
+                    {% elif requisicao == '1' %}
+                    <option value="0">Depósitos</option>
+                    <option value="1" selected>Abertura de Contas</option>
+                    <option value="2">Alteração de Dados</option>
+                    {% else %}
+                    <option value="0">Depósitos</option>
+                    <option value="1">Abertura de Contas</option>
+                    <option value="2" selected>Alteração de Dados</option>
+                    {% endif %}
                 </select>
                 <input type="submit" class="btnFiltro" value="Pesquisar">
             </div>
@@ -90,7 +91,7 @@
                             </td>
                             {% else %}
                             <td>
-                                <input type="hidden" value="{{pesquisaSQLTabela[0][3]}}" name="Desc">
+                                <input type="hidden" value="{{ row[3] }}" name="Desc">
                                 <input type="submit" name="botao" value="Confirmar" class="btnd solid"
                                     id="btnConfirmar">
                                 <input type="submit" name="botao" value="Recusar" class="btnd solid" id="btnRecusar">
