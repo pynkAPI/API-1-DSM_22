@@ -424,7 +424,6 @@ def RequisicaoGerenteAgencia():
                 for row in Desc:
                     doispontos = row.find(':')+1
                     DescSeparada.append(row[doispontos:])
-                print(DescSeparada)
                 funcs.upMySQL('tb_usuario',
                                CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
                                CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
@@ -462,7 +461,7 @@ def RequisicaoGerenteAgencia():
                 #endregion
         #endregion        
         if session['tipo'] == 2:
-            return homeG(requisicao=requisicao)
+            return homeG()
         else:
             return homeGG(requisicao=requisicao)
           
@@ -472,7 +471,6 @@ def RequisicaoGerenteAgencia():
 @app.route("/homeG", methods = ['POST', 'GET'])
 def homeG():
     idAgencia = funcs.verificaAgenciaGerente(session['idFunc'])
-    req=funcs.SlcEspecificoMySQL('tb_requisicoes as TR inner join tb_contabancaria as TC on TR.id_usuario=TC.id_usuario INNER JOIN tb_agencia AS TA ON TA.id_agencia = TC.id_agencia', CampoBd=['status_alteracao','TA.id_agencia', 'id_funcionario'], CampoFm=['0',idAgencia, session['idFunc']], CampoEs=['count(*)'])
     ausuarios=funcs.SlcEspecificoMySQL('tb_contabancaria',CampoBd=['id_agencia'], CampoFm=[idAgencia], CampoEs=['count(*)'])
     saldo = f"{session['saldo']:.2f}".replace(".",",")
     caminhoLogin = 'loginG'
@@ -498,7 +496,6 @@ def homeG():
                                                                CampoFm=[0, session['idFunc']])
             return render_template('homenewg.html',
                                    saldo=saldo,
-                                   req=req,
                                    usuarios=ausuarios, 
                                    caminhoLogin=caminhoLogin, 
                                    cabecalhoTabela=cabecalho,
@@ -519,7 +516,6 @@ def homeG():
                                            CampoFm=[0, idAgencia[0][0]])    
             return render_template('homenewg.html',
                                    saldo=saldo,
-                                   req=req,
                                    usuarios=ausuarios, 
                                    caminhoLogin=caminhoLogin, 
                                    cabecalhoTabela=cabecalho,
@@ -536,7 +532,6 @@ def homeG():
 
             return render_template('homenewg.html',
                                    saldo=saldo,
-                                   req=req,
                                    usuarios=ausuarios, 
                                    caminhoLogin=caminhoLogin, 
                                    cabecalhoTabela=cabecalho,
@@ -545,13 +540,11 @@ def homeG():
         else:
             return render_template('homenewg.html',
                                 saldo=saldo,
-                                req=req,
                                 requisicao=requisicao,
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
     return render_template('homenewg.html',
                                 saldo=saldo,
-                                req=req,
                                 requisicao='0',
                                 usuarios=ausuarios, 
                                 caminhoLogin=caminhoLogin)
@@ -575,8 +568,7 @@ def homeGG(requisicao='0'):
                                                                ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
                                                                CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
                                                                CampoBd=['status_transacao'],
-                                                               CampoFm=[0])
-            # print(pesquisaSQL);                                                               
+                                                               CampoFm=[0])                                                              
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         #endregion
         elif requisicao == '1':
@@ -593,7 +585,6 @@ def homeGG(requisicao='0'):
                                                    CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
                                                    CampoBd=['tb_requisicoes.status_alteracao'],
                                                    CampoFm=['0'])
-            print(pesquisaSQL)
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         else:
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
@@ -1353,19 +1344,6 @@ def TransacaoConta():
 def Config():
     return render_template("u_config.html")
 
-#------------------------------
-
-# Página Sua Conta Gerente Agencia
-@app.route("/SuaContaG")
-def SuaContaG():
-    return render_template("suaContaG.html",pagina=1)
-
-# Página Sua Conta Gerente Geral
-@app.route("/SuaConta")
-def SuaContaGG():
-    return render_template("suaContaGG.html")
-# ------------------------------
-
 #Bloco de requisição de Abertura de Conta
 
 @app.route("/AceiteContaTabela")
@@ -1611,9 +1589,8 @@ def criaAgencia():
 # Página Sua Conta
 @app.route("/suaConta")
 def suaConta():
+    print(funcs.temReq(session['idFunc'], session['tipo']))
     if session['tipo'] == 2:
-        #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
-        #REQUISIÇÃO EM ESPERA
         dadosUsuario = funcs.dadosU('', session['idFunc'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
         if dadosUsuario['genero'] == 'M':
@@ -1628,7 +1605,10 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idFunc'], session['tipo']),
+                                    numeroConta=session['conta'],
+                                    numeroAgencia=dadosUsuario['numeroAgencia'])
         elif dadosUsuario['genero'] == 'F':
             return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1641,7 +1621,10 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idFunc'], session['tipo']),
+                                    numeroConta=session['conta'],
+                                    numeroAgencia=dadosUsuario['numeroAgencia'])
         else:
             return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1654,7 +1637,10 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idFunc'], session['tipo']),
+                                    numeroConta=session['conta'],
+                                    numeroAgencia=dadosUsuario['numeroAgencia'])
 
     #caso ele seja usuario comum
     elif session['tipo'] == 1:
@@ -1676,7 +1662,10 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel=False,
                                     login='',
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']),
+                                    numeroConta=session['conta'],
+                                    numeroAgencia=dadosUsuario['numeroAgencia'])
         elif dadosUsuario['genero'] == 'F':
             return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1689,7 +1678,10 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel=False,
                                     login='',
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']),
+                                    numeroConta=session['conta'],
+                                    numeroAgencia=dadosUsuario['numeroAgencia'])
         else:
             return render_template ("suaConta.html",pagina=session['tipo'],
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1702,7 +1694,10 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel=False,
                                     login='',
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']),
+                                    numeroConta=session['conta'],
+                                    numeroAgencia=dadosUsuario['numeroAgencia'])
     else:
         #SE TIVER REQUISICAO DE ALTERAÇÃO NO NOME DELE ATIVA, NÃO MOSTRA A OPÇÃO ALTERAR SOMENTE UM SPAN QUE DIZ
         #REQUISIÇÃO EM ESPERA
@@ -1720,7 +1715,8 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']))
         elif dadosUsuario['genero'] == 'F':
             return render_template ("suaConta.html",pagina=3,
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1733,7 +1729,8 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']))
         else:
             return render_template ("suaConta.html",pagina=3,
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1746,7 +1743,8 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],)
+                                    senha=dadosUsuario['senha'],
+                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']))
 
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
@@ -1787,7 +1785,7 @@ def alteraU():
                 'senha': request.form['senha']
             }
 
-            funcs.alteraU(novosDados,session['tipo'])
+            funcs.alteraU(novosDados, session['tipo'])
             return suaConta()
 
     elif request.method == 'GET':
