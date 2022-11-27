@@ -203,7 +203,21 @@ def home(pesquisaSQL = [], pesquisa = 0):
                                                     CampoFm=[1])
                 if pesquisaTotalBanco:
                     saldo = funcs.ValEmReal(session['saldo'])
-                    return render_template('requisicao.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
+                    saldo = f"{session['saldo']:.2f}".replace(".",",")
+                    caminhoLogin = 'loginG'
+                    cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '')
+                    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+                                                               INNER JOIN tb_contabancaria 
+                                                               ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem 
+                                                               AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino 
+                                                               INNER JOIN tb_agencia 
+                                                               ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                                                               INNER JOIN tb_usuario 
+                                                               ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
+                                                               CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
+                                                               CampoBd=['status_transacao'],
+                                                               CampoFm=[0])
+                    return render_template('ListReq.html',requisicao='0', cabecalhoTabela = cabecalho,pesquisaSQL=pesquisaSQL)
                 else:
                     return cadastroTotalBanco()
             #endregion
@@ -429,7 +443,6 @@ def RequisicaoGerenteAgencia():
                 for row in Desc:
                     doispontos = row.find(':')+1
                     DescSeparada.append(row[doispontos:])
-                
                 return render_template('verDados.html', nome=DescSeparada[2],
                                                         email=DescSeparada[3],
                                                         endereco=DescSeparada[6],
@@ -444,7 +457,7 @@ def RequisicaoGerenteAgencia():
                                                         idRequisicao=IdRequisicao,
                                                         pagina = 2)    
 
-                
+               
                 
             elif botao['botao'] == 'Recusar':
                 #region RECUSAR ALTERACAO
@@ -1169,14 +1182,15 @@ def TransacaoConta():
         if float(request.form['valor']) > 0:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
+            numeroAgencia = request.form['numeroAgencia']
 
             if str(session['tipoConta']).upper()=='CONTA POUPANÇA'and float(session['saldo']) < valor:
                 return Transacao(mensagem='Não foi possível realizar a operação')
 
-            pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                                CampoBd=['numeroconta'],
-                                                CampoFm=[numeroConta],
-                                                CampoEs=['id_conta', 'saldo', 'tipo'])
+            pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_agencia ON tb_agencia.id_agencia = tb_contabancaria.id_agencia',
+                                                CampoBd=['tb_contabancaria.numeroconta', 'tb_agencia.numero_agencia'],
+                                                CampoFm=[numeroConta, numeroAgencia],
+                                                CampoEs=['tb_contabancaria.id_conta', 'tb_contabancaria.saldo', 'tb_contabancaria.tipo'])
 
             pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                 CampoBd=['numeroconta'],
@@ -1595,6 +1609,7 @@ def criaAgencia():
 # Página Sua Conta
 @app.route("/suaConta")
 def suaConta():
+    print(funcs.temReq(session['idFunc'], session['tipo']))
     if session['tipo'] == 2:
         dadosUsuario = funcs.dadosU('', session['idFunc'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
@@ -1721,6 +1736,8 @@ def suaConta():
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
                                     senha=dadosUsuario['senha'])
+  
+
         elif dadosUsuario['genero'] == 'F':
             return render_template ("suaConta.html",pagina=3,
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1734,6 +1751,7 @@ def suaConta():
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
                                     senha=dadosUsuario['senha'])
+
         else:
             return render_template ("suaConta.html",pagina=3,
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1747,6 +1765,7 @@ def suaConta():
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
                                     senha=dadosUsuario['senha'])
+
 
 @app.route("/alteraUReq",methods = ['POST', 'GET'])
 def alteraUReq():

@@ -846,6 +846,7 @@ def temReq(idContaBancaria, tipo):
         mysql.connection.commit() 
         cursor.close()
         
+
     # Se for Gerente
     else:
         idUsuario = idContaBancaria
@@ -876,3 +877,4 @@ def temReq(idContaBancaria, tipo):
                 return False
     else:
         return False
+
