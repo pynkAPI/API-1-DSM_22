@@ -201,6 +201,7 @@ main .data input[type="date"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .btnd:hover {
@@ -680,6 +681,10 @@ select:valid~label {
     margin: auto 0;
 }
 
+.inputElemento form {
+    width: 100%;
+}
+
 #textoInputElemento {
     text-align: left;
     font-weight: 600;
@@ -697,6 +702,7 @@ select:valid~label {
     height: auto;
     text-align: left;
     border-bottom: 0.01vh solid black;
+    width: 100%;
 }
 
 .botaoElemento {
@@ -735,6 +741,7 @@ select:valid~label {
 .Extrato .btnd {
     width: 5rem;
     color: #fff;
+    cursor: pointer;
 }
 
 .saldo-dep {
@@ -801,6 +808,26 @@ input[type=number] {
     height: 5vh;
     font-size: 2vh;
     font-weight: 600;
+}
+
+/* Tela Abrir Nova Conta */
+.inputElemento form .select-input {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.inputElemento form .select-input select {
+    margin-right: 1rem;
+}
+
+/* Botão criar conta */
+.solid { 
+    background-color: #FB1C7B;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 @media (max-width: 1024px) {

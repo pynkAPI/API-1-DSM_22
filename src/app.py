@@ -203,7 +203,7 @@ def home(pesquisaSQL = [], pesquisa = 0):
                                                     CampoFm=[1])
                 if pesquisaTotalBanco:
                     saldo = funcs.ValEmReal(session['saldo'])
-                    return render_template('homenewgg.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
+                    return render_template('requisicao.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
                 else:
                     return cadastroTotalBanco()
             #endregion
