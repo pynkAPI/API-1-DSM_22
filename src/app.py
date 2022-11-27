@@ -429,30 +429,35 @@ def RequisicaoGerenteAgencia():
         #region Aceitar alteração de dados
         elif requisicao == '2':
             botao = request.form.to_dict()
-            IdConta = request.form['Id']
-            if botao['botao'] == 'Confirmar':
+            IdRequisicao = request.form['Id']
+            if botao['botao'] == 'Ver Dados':
                 #region CONFIRMAR ALTERACAO
-                IdConta = request.form['Id']
-                Desc = request.form['Desc'].replace('[','').replace(']','').split(',')
+                pesquiaSQLDesc = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes',
+                                                          CampoBd=['id_requisicao'],
+                                                          CampoFm=[IdRequisicao],
+                                                          CampoEs=['descricao', 'id_usuario', 'id_funcionario'])
+                Desc = pesquiaSQLDesc[0][0].replace('[','').replace(']','').split(',')
+                idUsuario = pesquiaSQLDesc[0][1]
+                idFuncionario = pesquiaSQLDesc[0][2]
                 DescSeparada = []
                 for row in Desc:
                     doispontos = row.find(':')+1
                     DescSeparada.append(row[doispontos:])
-                funcs.upMySQL('tb_usuario',
-                               CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
-                               CampoFm=[DescSeparada[2], DescSeparada[3],DescSeparada[4],DescSeparada[5],DescSeparada[6],DescSeparada[7],DescSeparada[9].replace(' ','')],
-                               CampoWr=['id_usuario'],
-                               CampoPs=[DescSeparada[0]])
-                funcs.upMySQL('tb_requisicoes',
-                               CampoBd=['status_alteracao'],
-                               CampoFm=[1],
-                               CampoWr=['id_requisicao'],
-                               CampoPs=[IdConta])
-                if session['tipo'] == 2:
-                    return homeG()
-                else:
-                    return homeGG(requisicao=requisicao)
-                #endregion
+                return render_template('verDados.html', nome=DescSeparada[2],
+                                                        email=DescSeparada[3],
+                                                        endereco=DescSeparada[6],
+                                                        cpf=DescSeparada[4],
+                                                        genero=DescSeparada[5],
+                                                        dataNasc=DescSeparada[7],
+                                                        login=DescSeparada[8],
+                                                        senha=DescSeparada[9],
+                                                        loginVisivel=idFuncionario,
+                                                        idUsuario=idUsuario,
+                                                        idFuncionario=idFuncionario,
+                                                        idRequisicao=IdRequisicao,
+                                                        pagina = 2)    
+
+               
                 
             elif botao['botao'] == 'Recusar':
                 #region RECUSAR ALTERACAO
@@ -536,9 +541,9 @@ def homeG():
                                    pesquisaSQLTabela=pesquisaSQL,
                                    requisicao=requisicao)
         elif requisicao == '2':
-            cabecalho = ('Nome', 'CPF', 'Campos Alterados','')
+            cabecalho = ('Nome', 'CPF', '')
             pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
-                                                   CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
+                                                   CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf'],
                                                    CampoBd=['tb_agencia.id_funcionario','tb_requisicoes.status_alteracao'],
                                                    CampoFm=[session['idFunc'],'0'])
             
@@ -1730,8 +1735,9 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],
-                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']))
+                                    senha=dadosUsuario['senha'])
+  
+
         elif dadosUsuario['genero'] == 'F':
             return render_template ("suaConta.html",pagina=3,
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1744,8 +1750,8 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],
-                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']))
+                                    senha=dadosUsuario['senha'])
+
         else:
             return render_template ("suaConta.html",pagina=3,
                                     idUsuario=dadosUsuario['idUsuario'],
@@ -1758,9 +1764,85 @@ def suaConta():
                                     dataNasc=dadosUsuario['dataNasc'],
                                     loginVisivel='',
                                     login=dadosUsuario['login'],
-                                    senha=dadosUsuario['senha'],
-                                    reqAberta=funcs.temReq(session['idContaBK'], session['tipo']))
+                                    senha=dadosUsuario['senha'])
 
+
+@app.route("/alteraUReq",methods = ['POST', 'GET'])
+def alteraUReq():
+    if request.method == 'POST':
+        if session['tipo'] == 2:
+            botao = request.form.to_dict()
+            if botao['botao'] == 'Confirmar':    
+                novosDados = {
+                'idUsuario': request.form['idUsuario'],
+                'idRequisicao': request.form['idRequisicao'],
+                'nome': request.form['nome'],
+                'email': request.form['email'],
+                'cpf': request.form['cpf'],
+                'genero': request.form['genero'],
+                'endereco': request.form['endereco'],
+                'dataNasc': request.form['datanasc'],
+                'login': request.form['login'],
+                'senha': request.form['senha']
+                }
+                funcs.upMySQL(TabelaBd='tb_usuario',
+                              CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                              CampoFm=[novosDados['nome'], novosDados['email'], novosDados['cpf'], novosDados['genero'], novosDados['endereco'], novosDados['dataNasc'], novosDados['senha']],
+                              CampoWr=['id_usuario'],
+                              CampoPs=[novosDados['idUsuario']])
+                funcs.upMySQL(TabelaBd='tb_requisicoes',
+                              CampoBd=['status_alteracao'],
+                              CampoFm=[1],
+                              CampoWr=['id_requisicao'],
+                              CampoPs=[novosDados['idRequisicao']])
+                return homeG()
+            else:
+                funcs.upMySQL(TabelaBd='tb_requisicoes',
+                              CampoBd=['status_alteracao'],
+                              CampoFm=[2],
+                              CampoWr=['id_requisicao'],
+                              CampoPs=[request.form['idRequisicao']])
+                return homeG()
+        else:
+            botao = request.form.to_dict()
+            if botao['botao'] == 'Confirmar':   
+                novosDados = {
+                    'idUsuario': request.form['idUsuario'],
+                    'idFuncionario': request.form['idFuncionario'],
+                    'idRequisicao': request.form['idRequisicao'],
+                    'nome': request.form['nome'],
+                    'email': request.form['email'],
+                    'cpf': request.form['cpf'],
+                    'genero': request.form['genero'],
+                    'endereco': request.form['endereco'],
+                    'dataNasc': request.form['datanasc'],
+                    'login': request.form['login'],
+                    'senha': request.form['senha']
+                }
+                funcs.upMySQL(TabelaBd='tb_usuario',
+                              CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
+                              CampoFm=[novosDados['nome'], novosDados['email'], novosDados['cpf'], novosDados['genero'], novosDados['endereco'], novosDados['dataNasc'], novosDados['senha']],
+                              CampoWr=['id_usuario'],
+                              CampoPs=[novosDados['idUsuario']])
+
+                funcs.upMySQL(TabelaBd='tb_funcionario',
+                              CampoBd=['login'],
+                              CampoFm=[novosDados['login']],
+                              CampoWr=['id_funcionario'],
+                              CampoPs=[novosDados['idFuncionario']])
+                funcs.upMySQL(TabelaBd='tb_requisicoes',
+                              CampoBd=['status_alteracao'],
+                              CampoFm=[1],
+                              CampoWr=['id_requisicao'],
+                              CampoPs=[novosDados['idRequisicao']])
+                return homeGG(requisicao='2')
+            else:
+                funcs.upMySQL(TabelaBd='tb_requisicoes',
+                              CampoBd=['status_alteracao'],
+                              CampoFm=[2],
+                              CampoWr=['id_requisicao'],
+                              CampoPs=[request.form['idRequisicao']])
+                return homeGG(requisicao='2')
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
