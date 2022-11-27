@@ -201,6 +201,7 @@ main .data input[type="date"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .btnd:hover {
@@ -309,6 +310,7 @@ tr:hover {
     justify-content: center;
     align-items: flex-end;
     padding: 1vh 3vw;
+    position: relative;
 }
 
 .btn_criar {
@@ -601,6 +603,7 @@ td {
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
+    position: relative;
 }
 
 .blocoElementoAltera {
@@ -679,7 +682,10 @@ select:valid~label {
     align-items: center;
     width: 100%;
     margin: auto 0;
-    position: relative;
+}
+
+.inputElemento form {
+    width: 100%;
 }
 
 #textoInputElemento {
@@ -700,6 +706,7 @@ select:valid~label {
     height: auto;
     text-align: left;
     border-bottom: 0.01vh solid black;
+    width: 100%;
     position: relative;
 }
 
@@ -739,6 +746,7 @@ select:valid~label {
 .Extrato .btnd {
     width: 5rem;
     color: #fff;
+    cursor: pointer;
 }
 
 .saldo-dep {
@@ -796,7 +804,17 @@ hr {
 
 .olhinhocancel{
 
-    right: 3rem;
+    position: absolute;
+    width: 15px;
+    bottom: 1rem;
+    z-index: 10;
+    right: 1.2rem;
+
+}
+
+.divolhinho{
+
+position: relative;
 
 }
 
@@ -827,6 +845,48 @@ input[type=number] {
     height: 5vh;
     font-size: 2vh;
     font-weight: 600;
+}
+
+/* Tela Abrir Nova Conta */
+.inputElemento form .select-input {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.inputElemento form .select-input select {
+    margin-right: 1rem;
+}
+
+/* Botão criar conta */
+.solid { 
+    background-color: #FB1C7B;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Tela Cancelar Conta */
+.inputSenha-Btn {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+    position: relative;
+}
+.inputSenha {
+    width: 10rem;
+    border-bottom: 1px solid #FB1C7B;
+    margin-right: 1rem;
+}
+
+.btn_cancelar {
+    width: 10rem;
+    background-color: #FB1C7B;
+    color: #fff;
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 5px;
 }
 
 @media (max-width: 1024px) {
