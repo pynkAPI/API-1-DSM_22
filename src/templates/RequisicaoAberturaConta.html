@@ -5,14 +5,13 @@
         <span id="tituloElemento">Abrir Nova Conta</span>
         <div class="inputElemento">
             <form action="{{ url_for('AberturaConta') }}"  method="POST">
-                <div>
+                <div class="select-input">
                     <select id="input_tipoconta" class="input-selects" name="tipoconta" required>
+                        <option value="Selecione" disabled selected>SELECIONE</option>
                         <option value="Conta Corrente">CONTA CORRENTE</option>
                         <option value="Conta Poupança">CONTA POUPANÇA</option>
                     </select>
-                </div>
-                <div>
-                    <input type="submit" value="CRIAR NOVA CONTA" class="btnd solid"> 
+                    <input type="submit" value="NOVA CONTA" class="solid"> 
                 </div>
             </form>
             <a href="home">

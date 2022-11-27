@@ -3,23 +3,22 @@
 
 <div class="conteudo">
     <div class="elemento">
-        <span id="tituloElemento">Configuração Juros Poupança</span>
         <div class="blocoElemento">
+            <span id="tituloElemento">Configuração Juros Poupança</span>
             <div class="inputElemento">
                 <form action="altaraConfigPoupanca" method="POST">
-                        <span id="textoInputElemento">Porcentagem:</span>
-                        <input required type="number" step="0.01" name="porcentagem" value="{{ porcentagem }}">    
-                    <div class="botaoElemento">
-                        <div class="chequeesp">
-                            <input type="submit" id="botaoSubmit" value="Alterar">
-                        </div>
+                    <div class="texto-input">
+                        <h3>Porcentagem:</h3>
+                        <input required type="number" step="0.01" name="porcentagem" value="{{ porcentagem }}">
+                    </div>
+                    <div class="input-button-altvalor">
+                        <a href="home" class="voltar">Voltar</a>
+                        <input type="submit" class="btn-altsaldo" value="Alterar">
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<a href="home">
-   <input type="button" id="botaoVoltar" value="Voltar">
 
 {% endblock %}
