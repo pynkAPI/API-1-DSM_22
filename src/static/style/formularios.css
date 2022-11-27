@@ -97,14 +97,11 @@ select:valid ~ label {
     display: none;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    min-height: 160vh;
+    height: 120%;
 }
 
 .cadastro form {
     width: 50%;
-    min-height: 80%;
-    margin-top: 4rem;
     max-width: 40rem;
 }
 

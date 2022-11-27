@@ -201,6 +201,7 @@ main .data input[type="date"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .btnd:hover {
@@ -677,9 +678,13 @@ select:valid~label {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    width: 100%;
+    width: 90%;
     margin: auto 0;
     position: relative;
+}
+
+.inputElemento form {
+    width: 100%;
 }
 
 #textoInputElemento {
@@ -700,6 +705,7 @@ select:valid~label {
     height: auto;
     text-align: left;
     border-bottom: 0.01vh solid black;
+    width: 100%;
     position: relative;
 }
 
@@ -739,6 +745,7 @@ select:valid~label {
 .Extrato .btnd {
     width: 5rem;
     color: #fff;
+    cursor: pointer;
 }
 
 .saldo-dep {
@@ -821,6 +828,47 @@ input[type=number] {
     height: 5vh;
     font-size: 2vh;
     font-weight: 600;
+}
+
+/* Tela Abrir Nova Conta */
+.inputElemento form .select-input {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.inputElemento form .select-input select {
+    margin-right: 1rem;
+}
+
+/* Botão criar conta */
+.solid { 
+    background-color: #FB1C7B;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Tela Cancelar Conta */
+.inputSenha-Btn {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.inputSenha {
+    width: 10rem;
+    border-bottom: 1px solid #FB1C7B;
+    margin-right: 1rem;
+}
+
+.btn_cancelar {
+    width: 10rem;
+    background-color: #FB1C7B;
+    color: #fff;
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 5px;
 }
 
 @media (max-width: 1024px) {
