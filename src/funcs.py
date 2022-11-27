@@ -430,13 +430,16 @@ def dadosU(numeroConta, idFuncionario):
         ON tu.id_usuario = tf.id_usuario  
         WHERE tu.id_usuario = {idUsuario[0][0]};'''
         
+
         cursor = mysql.connection.cursor()
         cursor.execute(Select)
         pesquisaSQL = cursor.fetchall()
         mysql.connection.commit() 
         cursor.close()
 
+        
         dados = {
+        'numeroAgencia':'',
         'idUsuario':idUsuario[0][0],
         'idFuncionario':idFuncionario,
         'nome':pesquisaSQL[0][0],
@@ -454,14 +457,20 @@ def dadosU(numeroConta, idFuncionario):
         idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                         CampoBd=['numeroconta'],
                                         CampoFm=[numeroConta],
-                                        CampoEs=['id_usuario'])
+                                        CampoEs=['id_usuario', 'id_agencia'])
 
         pesquisaSQL = SlcEspecificoMySQL(TabelaBd='tb_usuario',
                                         CampoBd=['id_usuario'],
                                         CampoFm=[idUsuario[0][0]],
                                         CampoEs=['nome','email','cpf','genero','endereco','datanascimento','senha'])
         
+        numeroAgencia = SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                            CampoBd=['id_agencia'],
+                                            CampoFm=[idUsuario[0][1]],
+                                            CampoEs=['numero_agencia'])
+        
         dados = {
+        'numeroAgencia':numeroAgencia[0][0],
         'idUsuario':idUsuario[0][0],
         'idFuncionario':idFuncionario,
         'nome':pesquisaSQL[0][0],
@@ -575,28 +584,25 @@ def verificaAgenciaGerente(idGerente):
     idAgencia = pesquisaSQL[0][0]
     return idAgencia
 
-def alteraU(novosDados,tipo):
+def alteraU(novosDados, tipo):
     #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
     #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
     #se a requisicao tem id do usuario e id do funcionario aparece para o GG
     novosDados['cpf'] = novosDados['cpf'].replace('.','')
     novosDados['cpf'] = novosDados['cpf'].replace('-','')
+    text = '['
+    for chave, valor in novosDados.items():
+        text += f'{str(chave)}:{str(valor)} , '
+    text += ']'
+    print(text, tipo)
     if tipo == 2:
-        text = '['
-        for chave, valor in novosDados.items():
-            text += f'{str(chave)}:{str(valor)} , '
-        text += ']'
-        return InsMySQL( TabelaBd='tb_requisicoes',
+        return InsMySQL(TabelaBd='tb_requisicoes',
                 CampoBd=['status_alteracao','id_usuario','id_funcionario','descricao'],
                 CampoFm=[0,novosDados['idUsuario'], novosDados['idFuncionario'],text])
-    elif tipo == 1:
-        text = '['
-        for chave, valor in novosDados.items():
-            text += f'{str(chave)}:{str(valor)} , '
-        text += ']'
+    else: 
         return InsMySQL(TabelaBd='tb_requisicoes',
                 CampoBd=['status_alteracao','id_usuario','descricao'],
-                CampoFm=[0,novosDados['idUsuario'],text])
+                CampoFm=[0,novosDados['idUsuario'], text])
 
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
@@ -821,26 +827,40 @@ def geraExtrato(dados, id):
 
     return nomeArq
 
-def erase(nomeArq):
-    return os.remove(nomeArq)
+def temReq(idContaBancaria, tipo):
+    # Se for usuario
+    if tipo != 1:
+        idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                        CampoBd=['id_conta'],
+                                        CampoFm=[idContaBancaria],
+                                        CampoEs=['id_usuario'])
+    # Se for Gerente
+    else:
+        idUsuario = idContaBancaria
+            
+        cursor = mysql.connection.cursor()
+        
+        Select = f'''SELECT MAX(id_requisicao)
+                    FROM tb_requisicoes
+                    WHERE id_usuario = {idUsuario[0][0]};'''
 
-# def DelAG(id_agencia):
-#    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-#                                 CampoBd= ['id_agencia'],
-#                                 CampoFm= [id_agencia],
-#                                 CampoEs= ['id_conta']) 
-#     for id_conta in pesquisa: 
-#          upMySQL(TabelaBd='tb_contabancaria',
-#             CampoBd=['id_agencia'],
-#             CampoFm=[id_agencia],
-#             CampoWr=['id_conta'],
-#             CampoPs=[id_conta])
+        cursor.execute(Select)
+        ultimaReq = cursor.fetchall()
+        mysql.connection.commit() 
+        cursor.close()
+        print(ultimaReq)
 
-#     upMySQL(TabelaBd='tb_agencia',
-#         CampoBd=['status_agencia'],
-#         CampoFm=[0],
-#         CampoWr=['id_agencia'],
-#         CampoPs=[id_agencia])
-#     return
+        if ultimaReq != []:
+            statusAlteracao = SlcEspecificoMySQL(TabelaBd='tb_requisicoes',
+                                                CampoBd=['id_requisicao'],
+                                                CampoFm=[ultimaReq[0][0]],
+                                                CampoEs=['status_alteracao'])
 
-
+            print(statusAlteracao)
+            if statusAlteracao != ():
+                if str(statusAlteracao [0][0]) == '0':
+                    return True
+                else: 
+                    return False
+        else:
+            return False

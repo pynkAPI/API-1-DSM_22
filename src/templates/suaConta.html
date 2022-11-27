@@ -8,10 +8,21 @@
 {% block conteudo %}
 <div class="elemento">
         <div class="blocoElemento">
-                <span id="tituloElemento">Dados Atuais</span>
+                {% if pagina == 1 %}
+                        <span id="tituloElemento">Dados da Conta</span>
+                        <div class="inputElemento">
+                                <input type="hidden" value="{{idUsuario}}" name="idUsuario">
+                                <input type="hidden" value="{{idFuncionario}}" name="idFuncionario">
+                                        <div class="inputValor">
+                                                <span id="textoInputElemento">Número da Conta: <br>{{numeroConta}}</span>
+                                        </div>
+                                        <div class="inputValor">
+                                                <span id="textoInputElemento">Agência: <br>{{numeroAgencia}}</span>
+                                        </div>
+                        </div>
+                {% endif %}
+                <span id="tituloElemento">Dados Pessoais</span>
                 <div class="inputElemento">
-                        <input type="hidden" value="{{idUsuario}}" name="idUsuario">
-                        <input type="hidden" value="{{idFuncionario}}" name="idFuncionario">
                         <div class="inputValor">
                                 <span id="textoInputElemento">Nome completo: <br>{{nome}}</span>
                         </div>
@@ -45,7 +56,11 @@
                         </div>
                         <div class="botaoElemento">
                                 <a href="alteraU">
-                                        <input type="button" id="botaoVoltar" value="Alterar Dados">
+                                        {% if reqAberta == True %}
+                                                <input type="button" id="botaoVoltar" value="Requisição aberta" disabled>
+                                        {% else %} 
+                                                <input type="button" id="botaoVoltar" value="Alterar dados" >
+                                        {% endif %}
                                 </a>
                         </div>
                 </div>
