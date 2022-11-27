@@ -209,7 +209,39 @@ select:valid ~ label {
     color: #FB1C7B;
     font-size: 3rem;
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 0.7rem;
+}
+
+.olhinho {
+
+position: absolute;
+width: 20px;
+bottom: 0.5rem;
+
+}
+
+.olhinhocadastro{
+
+    right: 4.5rem;
+
+}
+
+.olhilhologing{
+
+    right: 5.2rem;
+
+}
+
+.olhilhologin{
+
+    right: 5.5rem;
+
+}
+
+.div_input{
+
+    position: relative;
+
 }
 
 @media (max-width: 1150px) {
@@ -241,6 +273,22 @@ select:valid ~ label {
     .login,
     .index {
         font-size: .8rem;
+
+    }
+
+    .login form .olhilhologin{
+
+        width: 18px;
+        bottom: -1rem;
+        position: absolute;
+        right: 3.5rem;
+    }
+
+    .olhilhologing{
+
+    width: 20px;
+
+
     }
 
     /* formulário página inicial */
