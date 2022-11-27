@@ -7,11 +7,14 @@
             <span id="tituloElemento">Configuração Cheque Especial</span>
             <div class="inputElemento">
                 <form action="altaraConfigCheque" method="POST">
-                    <span id="textoInputElemento">Porcentagem:</span><br>
-                    <input required type="number" step="0.01" name="porcentagem" value="{{ porcentagem }}">
+                    <div class="texto-input">
+                        <h3>Porcentagem:</h3>
+                        <input required type="number" step="0.01" name="porcentagem" value="{{ porcentagem }}">
+                    </div>
+                      
                     <div class="botaoElemento">
                         <div class="input-button-altvalor">
-                            <a href="home" class="voltar">Voltar ao Menu</a>
+                            <a href="home" class="voltar">Voltar</a>
                             <input type="submit" class="btn-altsaldo" value="Alterar">
                         </div>
                     </div>

@@ -2,8 +2,8 @@
 {% block conteudo %}
 <div class="conteudo">
     <div class="elemento">
-        <span id="tituloElemento">Alterar Dados</span>
         <div class="blocoElemento">
+            <span id="tituloElemento">Alterar Dados</span>
             <div class="inputElemento">
                 <form action="{{ url_for('alteraGA') }}" method="POST">
                     <input type="hidden" value="{{idfuncionario}}" name="IdFuncionario">
