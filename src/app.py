@@ -1172,14 +1172,15 @@ def TransacaoConta():
         if float(request.form['valor']) > 0:
             numeroConta = request.form['numeroConta']
             valor = float(request.form['valor'])
+            numeroAgencia = request.form['numeroAgencia']
 
             if str(session['tipoConta']).upper()=='CONTA POUPANÇA'and float(session['saldo']) < valor:
                 return Transacao(mensagem='Não foi possível realizar a operação')
 
-            pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-                                                CampoBd=['numeroconta'],
-                                                CampoFm=[numeroConta],
-                                                CampoEs=['id_conta', 'saldo', 'tipo'])
+            pesquisaContaDestino = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria INNER JOIN tb_agencia ON tb_agencia.id_agencia = tb_contabancaria.id_agencia',
+                                                CampoBd=['tb_contabancaria.numeroconta', 'tb_agencia.numero_agencia'],
+                                                CampoFm=[numeroConta, numeroAgencia],
+                                                CampoEs=['tb_contabancaria.id_conta', 'tb_contabancaria.saldo', 'tb_contabancaria.tipo'])
 
             pesquisaContaOrigem = funcs.SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                                 CampoBd=['numeroconta'],

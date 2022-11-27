@@ -420,7 +420,7 @@ def dadosU(numeroConta, idFuncionario):
     #bloco funcionario
     if numeroConta == '':
         idUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                        CampoBd=['id_funcionario'],
+                                        CampoBd=['id_usuario'],
                                         CampoFm=[idFuncionario],
                                         CampoEs=['id_usuario'])
 
@@ -563,7 +563,10 @@ def verificaAgencia():
 def verificaAgenciaGerente(idGerente):
     cursor = mysql.connection.cursor()
     
-    Select = f'''SELECT id_agencia FROM tb_agencia where id_funcionario = {idGerente};'''
+    Select = f'''SELECT id_agencia FROM tb_agencia 
+    INNER JOIN tb_funcionario 
+    ON tb_funcionario.id_funcionario = tb_agencia.id_funcionario      
+    where tb_funcionario.id_usuario = {idGerente};'''
 
     cursor.execute(Select)
     pesquisaSQL = cursor.fetchall()
