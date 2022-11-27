@@ -309,6 +309,7 @@ tr:hover {
     justify-content: center;
     align-items: flex-end;
     padding: 1vh 3vw;
+    position: relative;
 }
 
 .btn_criar {
@@ -602,6 +603,7 @@ td {
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
+    position: relative;
 }
 
 .blocoElementoAltera {
@@ -680,9 +682,8 @@ select:valid~label {
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    width: 90%;
+    width: 100%;
     margin: auto 0;
-    position: relative;
 }
 
 .inputElemento form {
@@ -803,6 +804,22 @@ hr {
 
     }
 
+.olhinhocancel{
+
+    position: absolute;
+    width: 15px;
+    bottom: 1rem;
+    z-index: 10;
+    right: 1.2rem;
+
+}
+
+.divolhinho{
+
+position: relative;
+
+}
+
 
     
         
@@ -857,6 +874,7 @@ input[type=number] {
     display: flex;
     justify-content: center;
     margin: 1rem 0;
+    position: relative;
 }
 .inputSenha {
     width: 10rem;
