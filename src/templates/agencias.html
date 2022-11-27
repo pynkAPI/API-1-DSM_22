@@ -18,49 +18,49 @@
     <div class="elemento-a">
         <div class="scroll-div-tabela">
             <div class="scroll-object-tabela">
-            <main class="Tb">
-                <table id="TabelaAge" class="tabelaRequisicao">
-                    <!-- Inicio da Tabela -->
-                    <thead>
-                        <tr class="linhaTabela">
-                            <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->
-                            {% for header in cabecalhoTabela %}
-                            <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in pesquisaSQLTabela %}
-                        <tr class="linhaTabela">
-                            <form action="alterarAG" method="POST">
-                                {% for cell in row %}
-                                {% if row[0] == cell %}
-                                <input type="hidden" value="{{ cell }}" name="Id_agencia">
-                                {% else %}
-                                <td class="celula">{{ cell }}</td>
-                                {% endif %}
+                <main class="Tb">
+                    <table id="TabelaAge" class="tabelaRequisicao display nowrap" style="width:100%">
+                        <!-- Inicio da Tabela -->
+                        <thead>
+                            <tr class="linhaTabela">
+                                <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back) -->
+                                {% for header in cabecalhoTabela %}
+                                <th>{{ header }}</th>
                                 {% endfor %}
-                                <td>
-                                    <input type="submit" name="alt" value="Alterar" class="btn_alterar">
-                                </td>
-                            </form>
-                            <form action="UpdateAG" method="GET">
-                                <td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in pesquisaSQLTabela %}
+                            <tr class="linhaTabela">
+                                <form action="alterarAG" method="POST">
                                     {% for cell in row %}
                                     {% if row[0] == cell %}
                                     <input type="hidden" value="{{ cell }}" name="Id_agencia">
+                                    {% else %}
+                                    <td class="celula">{{ cell }}</td>
                                     {% endif %}
                                     {% endfor %}
-                                    <input type="hidden" value="" id="NewAgencia{{row[0]}}" name="IdNewAgencia">
-                                    <input type="submit" name="alt" id="{{row[0]}}" onclick="return pergunta(this.id);"
-                                        value="Deletar" class="btn_alterar">
-                                </td>
-                            </form>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </main>
+                                    <td>
+                                        <input type="submit" name="alt" value="Alterar" class="btn_alterar">
+                                    </td>
+                                </form>
+                                <form action="UpdateAG" method="GET">
+                                    <td>
+                                        {% for cell in row %}
+                                        {% if row[0] == cell %}
+                                        <input type="hidden" value="{{ cell }}" name="Id_agencia">
+                                        {% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" value="" id="NewAgencia{{row[0]}}" name="IdNewAgencia">
+                                        <input type="submit" name="alt" id="{{row[0]}}"
+                                            onclick="return pergunta(this.id);" value="Deletar" class="btn_alterar">
+                                    </td>
+                                </form>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </main>
             </div>
         </div>
     </div>
@@ -81,12 +81,20 @@
 
     $(document).ready(function () {
         $('#TabelaAge').DataTable({
+            "scrollX": true,
             "language": {
                 "lengthMenu": "Mostrando _MENU_ registros por página",
                 "zeroRecords": "Nada encontrado",
                 "info": "Mostrando página _PAGE_ de _PAGES_",
                 "infoEmpty": "Nenhum registro disponível",
-                "infoFiltered": "(filtrado de _MAX_ registros no total)"
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Pesquisar:",
+                "paginate": {
+                    "first": "Primeira",
+                    "last": "Última",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
             }
         });
     });
