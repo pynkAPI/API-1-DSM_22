@@ -20,7 +20,7 @@
             <div class="scroll-object-tabela">
                 <main>
                     <div class="Tb">
-                        <table id="TabelaGer" class="tabelaRequisicao">
+                        <table id="TabelaGer" class="tabelaRequisicao display nowrap" style="width:100%">
                             <thead>
                                 <tr class="linhaTabela">
                                     {% for header in cabecalhoTabela %}
@@ -67,12 +67,20 @@
 <script>
     $(document).ready(function () {
         $('#TabelaGer').DataTable({
+            "scrollX": true,
             "language": {
                 "lengthMenu": "Mostrando _MENU_ registros por página",
                 "zeroRecords": "Nada encontrado",
                 "info": "Mostrando página _PAGE_ de _PAGES_",
                 "infoEmpty": "Nenhum registro disponível",
-                "infoFiltered": "(filtrado de _MAX_ registros no total)"
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Pesquisar:",
+                "paginate": {
+                    "first": "Primeira",
+                    "last": "Última",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
             }
         });
     });
