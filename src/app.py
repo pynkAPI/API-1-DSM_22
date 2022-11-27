@@ -203,7 +203,21 @@ def home(pesquisaSQL = [], pesquisa = 0):
                                                     CampoFm=[1])
                 if pesquisaTotalBanco:
                     saldo = funcs.ValEmReal(session['saldo'])
-                    return render_template('requisicao.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
+                    saldo = f"{session['saldo']:.2f}".replace(".",",")
+                    caminhoLogin = 'loginG'
+                    cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '')
+                    pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+                                                               INNER JOIN tb_contabancaria 
+                                                               ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem 
+                                                               AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino 
+                                                               INNER JOIN tb_agencia 
+                                                               ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                                                               INNER JOIN tb_usuario 
+                                                               ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
+                                                               CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
+                                                               CampoBd=['status_transacao'],
+                                                               CampoFm=[0])
+                    return render_template('ListReq.html',requisicao='0', cabecalhoTabela = cabecalho,pesquisaSQL=pesquisaSQL)
                 else:
                     return cadastroTotalBanco()
             #endregion
