@@ -35,7 +35,7 @@
             <div class="scroll-object-tabela">
                 <main>
                     <div class="Tb">
-                    <table id="TabelaReq" class="tabelaRequisicao">
+                    <table id="TabelaReq" class="tabelaRequisicao display nowrap" style="width:100%">
                         <!-- Inicio da Tabela -->
                         <thead>
                             <tr class="linhaTabela">
@@ -108,12 +108,20 @@
 <script>
     $(document).ready(function () {
         $('#TabelaReq').DataTable({
+            "scrollX": true,
             "language": {
                 "lengthMenu": "Mostrando _MENU_ registros por página",
                 "zeroRecords": "Nada encontrado",
                 "info": "Mostrando página _PAGE_ de _PAGES_",
                 "infoEmpty": "Nenhum registro disponível",
-                "infoFiltered": "(filtrado de _MAX_ registros no total)"
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Pesquisar:",
+                "paginate": {
+                    "first": "Primeira",
+                    "last": "Última",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
             }
         });
     });

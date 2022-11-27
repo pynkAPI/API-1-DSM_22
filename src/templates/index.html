@@ -83,11 +83,13 @@
         <div class="div_input">
             <input type="password" id="SenhaId" name="senha" required>
             <label for="SenhaId">Senha</label>
+            <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultarid()" id="mostrarid">
         </div>
 
         <div class="div_input">
             <input type="password" id="RepetirsenhaId" name="Repetirsenha" required>
             <label for="RepetirsenhaId">Confirme sua Senha</label>
+            <!-- <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultaridconf()" id="mostraridconf"> -->
         </div>
 
         <div class="checkbox">
@@ -104,4 +106,6 @@
 <script src="../static/scripts/validarCPF.js"></script>
 <script src="../static/scripts/confirmarsenha.js"></script>
 <script src="../static/scripts/ValidarEmail.js"></script>
+<script src="/static/scripts/mostrarOcultarSenha.js"></script>
+
 {% endblock %}

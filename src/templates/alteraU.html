@@ -60,10 +60,12 @@
                         {% endif %}
                         <div class="inputValor">
                             <span id="textoInputElemento">Senha:</span>
+                            <!-- <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultarid()" id="mostrarid"> -->
                             <input required type="password" id="SenhaId" name="senha" required value="{{senha}}">
                         </div>
                         <div class="inputValor">
                             <span id="textoInputElemento">Confirmar senha:</span>
+                            <!-- <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultaridconf()" id="mostraridconf"> -->
                             <input type="password" value="{{senha}}" id="RepetirsenhaId" name="Repetirsenha" required>
                         </div>
         </div>
@@ -78,4 +80,6 @@
 </div>
 <script src="../static/scripts/confirmarsenha.js"></script>
 <script src="../static/scripts/validarCPF.js"></script>
+<script src="/static/scripts/mostrarOcultarSenha.js"></script>
+
 {% endblock %}

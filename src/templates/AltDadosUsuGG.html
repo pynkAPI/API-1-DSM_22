@@ -43,10 +43,12 @@
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Senha:</span>
+                    <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultarid()" id="mostrarid">
                     <input required type="password" id="SenhaId" name="senha" required value="{{row[5]}}">
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Confirmar senha:</span>
+                    <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultaridconf()" id="mostraridconf">
                     <input type="password" value="{{row[5]}}" id="RepetirsenhaId" name="Repetirsenha" required>
 
                 </div>
@@ -75,5 +77,6 @@
     genero = document.getElementById('teste').value
     document.getElementById('genero').value = genero;
 </script>
+<script src="/static/scripts/mostrarOcultarSenha.js"></script>
 
 {% endblock %}
