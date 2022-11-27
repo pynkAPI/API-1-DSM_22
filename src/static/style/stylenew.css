@@ -201,6 +201,7 @@ main .data input[type="date"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .btnd:hover {
@@ -215,8 +216,7 @@ main .Extrato {
 }
 
 main .Extrato .texto-extrato {
-    margin: 1rem 0 1rem 1rem;
-
+    margin: 3rem 0 2rem 0;
 }
 
 main .Extrato .tabelaRequisicao {
@@ -322,8 +322,8 @@ tr:hover {
 .btnFiltro {
     background-color: var(--color-primary);
     color: var(--color-white);
-    padding: 0.3vw;
-    border-radius: var(--border-radius-2);
+    padding: .5rem;
+    border-radius: 5px;
 }
 
 .texto-elemento-a {
@@ -505,10 +505,11 @@ td {
 }
 
 .scroll-object-tabela {
-    font-size: 0.9vw;
-    padding: 2vw;
+    font-size: 1rem;
+    padding: 1rem;
     justify-content: center;
     width: 100%;
+    overflow: auto;
 }
 
 .scroll-div-tabela::-webkit-scrollbar {
@@ -527,11 +528,11 @@ td {
 .btn_alterar {
     color: var(--color-white);
     cursor: pointer;
-    font-size: 0.9vw;
+    font-size: 1rem;
     background-color: var(--color-primary);
-    width: 5vw;
-    height: 2.5vh;
-    border-radius: var(--border-radius-2);
+    width: 5rem;
+    height: 2rem;
+    border-radius: 5px;
 }
 
 .btn_alterar:hover {
@@ -565,7 +566,7 @@ td {
     font-weight: 700;
     background-color: var(--color-primary);
     padding: 0.5vh 1vw;
-    border-radius: var(--border-radius-2);
+    border-radius: 5px;
 }
 
 .btn_elemento:hover {
@@ -609,12 +610,13 @@ td {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 50vh;
     padding: 2rem;
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
+    position: relative;
 }
+
 
 .valorsaldo {
     display: flex;
@@ -622,16 +624,18 @@ td {
     align-items: center;
     justify-content: center;
     width: 100%;
+    margin-top: 2rem;
 }
 
 .voltar {
-    font-size: 1rem;
+    font-size: 1.2rem;
     background-color: #FB1C7B;
     color: #fff;
     padding: .9rem;
     border-radius: 5px;
-    width: 50%;
+    width: 47%;
     text-transform: uppercase;
+    text-align: center;
 }
 
 select {
@@ -678,6 +682,11 @@ select:valid~label {
     align-items: center;
     width: 90%;
     margin: auto 0;
+    position: relative;
+}
+
+.inputElemento form {
+    width: 100%;
 }
 
 #textoInputElemento {
@@ -686,6 +695,7 @@ select:valid~label {
     font-size: 2vh;
     color: var(--color-dark-variant);
 }
+
 
 .inputValor {
     width: 100%;
@@ -698,6 +708,8 @@ select:valid~label {
     height: auto;
     text-align: left;
     border-bottom: 0.01vh solid black;
+    width: 100%;
+    position: relative;
 }
 
 .botaoElemento {
@@ -736,6 +748,7 @@ select:valid~label {
 .Extrato .btnd {
     width: 5rem;
     color: #fff;
+    cursor: pointer;
 }
 
 .saldo-dep {
@@ -781,6 +794,22 @@ hr {
     gap: 1vh;
 }
 
+.olhinho{
+
+    position: absolute;
+    width: 18px;
+    bottom: 0.25rem;
+    z-index: 10;
+    right: 0;
+
+    }
+
+
+    
+        
+    
+    
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -802,6 +831,65 @@ input[type=number] {
     height: 5vh;
     font-size: 2vh;
     font-weight: 600;
+}
+
+/* Tela Abrir Nova Conta */
+.inputElemento form .select-input {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.inputElemento form .select-input select {
+    margin-right: 1rem;
+}
+
+/* Botão criar conta */
+.solid { 
+    background-color: #FB1C7B;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Tela Cancelar Conta */
+.inputSenha-Btn {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.inputSenha {
+    width: 10rem;
+    border-bottom: 1px solid #FB1C7B;
+    margin-right: 1rem;
+}
+
+.btn_cancelar {
+    width: 10rem;
+    background-color: #FB1C7B;
+    color: #fff;
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 5px;
+}
+
+.texto-input {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem auto;
+    width: 60%;
+}
+
+.custom-select {
+    display: flex;
+    width: 15rem;
+    margin: 2rem 0;
+}
+
+.custom-select select {
+    margin-right: 1rem;
+    width: 10rem;
 }
 
 @media (max-width: 1024px) {

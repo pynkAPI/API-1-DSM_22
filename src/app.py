@@ -203,7 +203,7 @@ def home(pesquisaSQL = [], pesquisa = 0):
                                                     CampoFm=[1])
                 if pesquisaTotalBanco:
                     saldo = funcs.ValEmReal(session['saldo'])
-                    return render_template('homenewgg.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
+                    return render_template('requisicao.html',saldo=saldo,req=req,usuarios=tusuarios,caminhoLogin=caminhoLogin)
                 else:
                     return cadastroTotalBanco()
             #endregion
@@ -213,8 +213,6 @@ def home(pesquisaSQL = [], pesquisa = 0):
 def RequisicaoGerenteAgencia():
     if request.method == "POST":
         requisicao = request.form['requisicao']
-     
-       
         if requisicao == '0':
             botao = request.form.to_dict()
             IdTransacao =   request.form['Id']
@@ -411,7 +409,7 @@ def RequisicaoGerenteAgencia():
             if session['tipo'] == 2:
                 return homeG()
             else:
-                return render_template('ListReq.html',requisicao=requisicao)
+                return homeGG(requisicao=requisicao)
                 
         #endregion 
         #region Aceitar alteração de dados
@@ -439,7 +437,7 @@ def RequisicaoGerenteAgencia():
                 if session['tipo'] == 2:
                     return homeG()
                 else:
-                    return render_template('ListReq.html',requisicao=requisicao)
+                    return homeGG(requisicao=requisicao)
                 #endregion
                 
             elif botao['botao'] == 'Recusar':
@@ -452,20 +450,20 @@ def RequisicaoGerenteAgencia():
                 if session['tipo'] == 2:
                     return homeG()
                 else:
-                    return render_template('ListReq.html',requisicao=requisicao)
+                    return homeGG(requisicao=requisicao)
                 #endregion
             else:
                 #region VERMAIS
                 if session['tipo'] == 2:
                     return homeG()
                 else:
-                    return render_template('ListReq.html',requisicao=requisicao)
+                    return homeGG(requisicao=requisicao)
                 #endregion
         #endregion        
         if session['tipo'] == 2:
             return homeG()
         else:
-            return render_template('ListReq.html')
+            return homeGG(requisicao=requisicao)
           
     return homeG()
      
@@ -2385,6 +2383,68 @@ def download(id, idusuario):
         uploads = os.path.join(app.root_path)
 
         return send_from_directory(uploads, nomeArq, as_attachment=True)
+
+
+@app.route('/alterarGerenteGeral', methods = ['POST','GET'])
+def alterarGerenteGeral():
+    if request.method == 'POST':
+        idUsuario = request.form.get('idUsuario')
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        endereco = request.form.get('endereco')
+        cpf = request.form.get('cpf')
+        genero = request.form.get('genero')
+        dataNasc = request.form.get('datanasc')
+        login = request.form.get('login')
+        senha = request.form.get('senha')
+        
+        funcs.upMySQL(TabelaBd='tb_usuario',
+                      CampoBd=['nome', 'email', 'endereco', 'cpf', 'genero','datanascimento', 'senha'],
+                      CampoFm=[nome,email,endereco,cpf,genero,dataNasc,senha],
+                      CampoWr=['id_usuario'],
+                      CampoPs=[idUsuario])
+        funcs.upMySQL(TabelaBd='tb_funcionario',
+                      CampoBd=['login'],
+                      CampoFm=[login],
+                      CampoWr=['id_usuario'],
+                      CampoPs=[idUsuario])
+        return suaConta()
+
+@app.route('/criaUSU')
+def criaUSU():
+    tipoUsuario = session['tipo']
+    return render_template('criaUSU.html', tipoUsuario = tipoUsuario)
+
+@app.route('/criarUSU', methods = ['POST','GET'])
+def criarUSU():
+    if request.method == 'POST':
+        nome            = request.form['name']
+        cpf             = funcs.TirarPontoeTraco(request.form['cpf'])
+        endereco        = request.form['endereco']
+        dataNascimento  = request.form['datanasc']
+        genero          = request.form['genero']
+        senha           = request.form['senha']
+        tipoConta       = request.form['tipoconta']
+        email           = request.form['email']
+
+        funcs.InsMySQL('tb_usuario',CampoBd=['cpf', 'nome', 'genero', 'endereco', 'senha', 'datanascimento','ativo', 'email'],
+                       CampoFm=[cpf,nome,genero,endereco, senha,dataNascimento,'0', email])
+
+        resultado = funcs.SlcEspecificoMySQL('tb_usuario', CampoBd=['cpf'], CampoFm=[cpf], CampoEs=['id_usuario'])
+        for row in resultado:
+            id_usuario = row[0]
+        #Gera o numero da conta, usando o nome do usuário, id da agência e o cpf do usuário
+        numeroCampo = funcs.geraId(str(nome),str(1),str(cpf))
+        
+        idAgencia = funcs.verificaAgencia()
+        
+        funcs.InsMySQL('tb_contabancaria',
+                        CampoBd=['id_usuario', 'id_agencia', 'tipo', 'data_abertura', 'numeroconta', 'saldo', 'status_contabancaria'],
+                        CampoFm=[id_usuario, idAgencia, tipoConta, datetime.today(), numeroCampo, 0, '0'])
+        if session['tipo'] == 2:
+            return ListUsaGA()
+        else:
+            return ListUsa()
 
 # @app.errorhandler(Exception)
 # def excecao(e):
