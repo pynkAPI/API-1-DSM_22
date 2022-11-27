@@ -5,11 +5,9 @@
         <span id="tituloElemento">CANCELE SUA CONTA</span>
         <div class="inputElemento">
             <form action="{{ url_for('CancelamentoConta') }}" method="POST">
-                <input type="{{senha}}" class="textoInputElemento" placeholder="SENHA" id="SenhaId" name="senha" required>
-                <img src="/static/img/ocultar.png" width="20px" alt="" onclick="mostrarOcultarid()" id="mostrarid">
-
-                <div class="input-button">
-                    <input type="{{botao}}" value="CANCELAR CONTA" class="btnd solid"><br>
+                <div class="inputSenha-Btn">
+                    <input type="{{senha}}" class="inputSenha" placeholder="SENHA" id="SenhaId" name="senha" required>
+                    <input type="{{botao}}" value="CANCELAR CONTA" class="btn_cancelar">
                 </div>
             </form>
         </div>
@@ -18,8 +16,8 @@
                 <input type="button" id="botaoVoltar" value="Voltar">
             </a>
         </div>
+        <span id="mensagemErro"> {{ mensagem }}</span>
     </div>
-    <span id="mensagemErro"> {{ mensagem }}</span>
 </div>
 <script src="/static/scripts/mostrarOcultarSenha.js"></script>
 

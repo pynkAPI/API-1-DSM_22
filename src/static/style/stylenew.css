@@ -610,12 +610,13 @@ td {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 50vh;
     padding: 2rem;
     background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
+    position: relative;
 }
+
 
 .valorsaldo {
     display: flex;
@@ -679,6 +680,7 @@ select:valid~label {
     align-items: center;
     width: 90%;
     margin: auto 0;
+    position: relative;
 }
 
 .inputElemento form {
@@ -692,6 +694,7 @@ select:valid~label {
     color: var(--color-dark-variant);
 }
 
+
 .inputValor {
     display: flex;
     flex-direction: column;
@@ -703,6 +706,7 @@ select:valid~label {
     text-align: left;
     border-bottom: 0.01vh solid black;
     width: 100%;
+    position: relative;
 }
 
 .botaoElemento {
@@ -787,6 +791,22 @@ hr {
     gap: 1vh;
 }
 
+.olhinho{
+
+    position: absolute;
+    width: 18px;
+    bottom: 0.25rem;
+    z-index: 10;
+    right: 0;
+
+    }
+
+
+    
+        
+    
+    
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -828,6 +848,27 @@ input[type=number] {
     padding: .5rem;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* Tela Cancelar Conta */
+.inputSenha-Btn {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.inputSenha {
+    width: 10rem;
+    border-bottom: 1px solid #FB1C7B;
+    margin-right: 1rem;
+}
+
+.btn_cancelar {
+    width: 10rem;
+    background-color: #FB1C7B;
+    color: #fff;
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 5px;
 }
 
 @media (max-width: 1024px) {
