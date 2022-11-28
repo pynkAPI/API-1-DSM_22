@@ -325,6 +325,7 @@ def RequisicaoGerenteAgencia():
                           CampoFm=[valorTotalBanco],
                           CampoWr=['id_capitaltotal'],
                           CampoPs=[1]) 
+
                     if valorDevido >= 0:
                         funcs.upMySQL('tb_contabancaria',
                                   CampoBd=['saldo'],
@@ -365,6 +366,7 @@ def RequisicaoGerenteAgencia():
                               CampoFm=[1, datetime.today()],
                               CampoPs=[IdTransacao],
                               CampoWr=['id_transacao'])
+
                 funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
                           CampoFm=[valor],
@@ -413,6 +415,7 @@ def RequisicaoGerenteAgencia():
                                CampoFm=[1],
                                CampoWr=['id_conta'],
                                CampoPs=[IdConta])  
+
             else:    
                 funcs.upMySQL('tb_contabancaria',
                               CampoBd=['status_contabancaria'],
@@ -425,6 +428,7 @@ def RequisicaoGerenteAgencia():
             else:
                 return homeGG(requisicao=requisicao)
                 
+
         #endregion 
         #region Aceitar alteração de dados
         elif requisicao == '2':
@@ -465,6 +469,7 @@ def RequisicaoGerenteAgencia():
             return homeGG(requisicao=requisicao)
           
     return homeG()
+
      
 
 @app.route("/homeG", methods = ['POST', 'GET'])
@@ -803,7 +808,6 @@ def SaqueConta():
                                        CampoFm=[idConta[0][0],  datetime.today(), date.today(), valor, '1'])
 
                 funcs.Transacao(idConta[0][0], idConta[0][0], 'Saque', float(request.form['valor']), '1')
-                
 
                 for row in saldoAtualizado:
                     session['saldo'] = row[0]
@@ -1059,7 +1063,7 @@ def ConferenciaDeposito():
                           CampoFm=[1, datetime.today(), datetime.today()],
                           CampoPs=[IdTransacao],
                           CampoWr=['id_transacao'])
-                
+
                 #Verifica se ele conseguiu sair da dívida
                 if valorDevido > 0:
                     funcs.upMySQL('tb_contabancaria',
@@ -1104,8 +1108,7 @@ def ConferenciaDeposito():
                       CampoFm=[1, datetime.today(), datetime.today()],
                       CampoPs=[IdTransacao],
                       CampoWr=['id_transacao'])
-            
-    
+
 
             funcs.upMySQL('tb_contabancaria',
                           CampoBd=['saldo'],
@@ -1150,12 +1153,12 @@ def AceiteConta():
                            CampoFm=[1],
                            CampoWr=['id_conta'],
                            CampoPs=[IdConta])
-   
+
             return AceiteContaTabela()
         else:    
             funcs.upMySQL('tb_contabancaria',CampoBd=['status_contabancaria'],CampoFm=[2],
                                         CampoWr=['id_conta'],CampoPs=[IdConta])
-       
+
             return AceiteContaTabela()
        
 #------------------------------
@@ -1307,6 +1310,7 @@ def TransacaoConta():
                               CampoWr=['id_conta', 'ativo'],
                               CampoPs=[session['idContaBK'],1])
 
+
             if valorContaOrigem < 0:
                
                 pesquisaContaOrigemCheque = funcs.SlcEspecificoMySQL(TabelaBd='tb_cheque_especial',
@@ -1342,8 +1346,10 @@ def TransacaoConta():
                               CampoPs=[IdContaOrigem],
                               CampoWr=['id_conta'])
 
+
             session['saldo'] = valorContaOrigem
             funcs.Transacao(conta_origem=IdContaOrigem, conta_destino=IdContaDestino, tipo='Transferência', valor=float(request.form['valor']), status='1')
+
             return Transacao()
         else:
            return Transacao(mensagem='Não foi possível realziar a operação')
