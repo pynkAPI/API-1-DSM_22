@@ -1,49 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "template.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="src/img/iconp.ico" type="image/x-icon">
-    <title>Login|Py.nk</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> -->
-    <link rel="stylesheet" href="../static/style/style.css">
-    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-</head>
+{% block contents %}
+<nav class="navbar">
+    <a href="{{ url_for('paginaInicial') }}"><img src="../static/img/prosa.png" alt="logo"></a>
+    <ul>
+        <li><a href="{{ url_for('cadastro') }}">Cadastre-se</a></li>
+    </ul>
+</nav>
 
-<body>
-    <div class="container">
-        <div class="img">
-            <img id="logo" src="../static/img/pynkpng.png" alt=""><br>
-            <img id="cliente" src="../static/img/login.svg" alt="Cliente">
-        </div>
-        <div class="forms-container">
-            <div class="cadastro-login">
-                <form action="{{ url_for('login') }}" method="POST" class="form-login">
-                    <h2 class="title">FAÇA SEU LOGIN</h2>
-                    <div class="input-field">
-                        <i class='bx bxs-user'></i>
-                        <input type="text" placeholder="NÚMERO DA CONTA" name="numeroconta" required>
-                    </div>
-                    <div class="input-field">
-                        <i class='bx bxs-lock'></i>
-                        <input type="password" placeholder="SENHA" name="senha" required>
-                    </div>
-                    <input type="submit" value="ENTRAR" class="btn solid">
-                    <a id="linkCad" href="cadastro.html">NÃO TEM UMA CONTA? CADASTRE-SE</a>
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <label> Seu número da conta é {{ message }}</label>
-                    <label> GUARDE O NÚMERO DA CONTA EM UM LUGAR SEGURO</label>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                </form>
-            </div>
-        </div>
+<main class="login">
+    <div class="message">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <img src="../static/img/alert-icon.png" alt="alert">
+        <p> Seu número de conta é {{ message }}.</p>
+        <p> Guarde este número em um lugar seguro!</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
     </div>
-</body>
-
-</html>
+    <form action="{{ url_for('login') }}" method="POST" class="form">
+        <img src="../static/img/logorosa2.png" alt="logo">
+        <div class="div_input">
+            <input type="text" name="numeroconta" id="numeroConta" required>
+            <label for="numeroConta">Número da conta</label>
+        </div>
+        <div class="div_input">
+            <input type="password" name="senha" id="senha" required>
+            <label for="senha">Senha</label>
+            <img src="/static/img/ocultar.png" class="olhinho olhilhologin" alt="" onclick="mostrarOcultar()" id="mostrar">
+        </div>
+        <button type="submit" value="ENTRAR" class="entrar ripple">Entrar<i class='bx bx-right-arrow-alt bx-sm'
+                style='color:#ffffff'></i></button>
+    </form>
+</main>
+<!-- /login -->
+<script src="/static/scripts/mostrarOcultarSenha.js"></script>
+{% endblock %}

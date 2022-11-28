@@ -1,86 +1,121 @@
-{% extends "layout.html" %}
-    {% block conteudo %}
-        <main>
-            <div class="bloco-info">
-                <div class="saldo">
-                    <span class="material-symbols-outlined">attach_money</span>
-                    <div class="conteudo-saldo">
-                        <div class="text-saldo">
-                            <h3>Seu Saldo</h3>
-                            <h1>R$ {{saldo}}</h1>
-                        </div>
-                    </div>      
-                </div>
-                <div class="saldo">
-                    <span class="material-symbols-outlined">attach_money</span>
-                    <div class="conteudo-saldo">
-                        <div class="text-saldo">
-                            <h3>Juros Cheque Especial</h3>
-                            <h1>R$ {{chequeEspcial}}</h1>
-                        </div>
-                    </div>      
-                </div>
-                <div class="saldo">
-                    <span class="material-symbols-outlined">attach_money</span>
-                    <div class="conteudo-saldo">
-                        <div class="text-saldo">
-                            <h3>Valor Devido Total</h3>
-                            <h1>R$ {{valorDevidoTotal}}</h1>
-                        </div>
-                    </div>      
+{% extends "templateCliente.html" %}
+{% block conteudo %}
+<main>
+    <div class="bloco-info">
+        <div class="saldo">
+            <span class="material-symbols-outlined">attach_money</span>
+            <div class="conteudo-saldo">
+                <div class="text-saldo">
+                    <h3>Seu Saldo</h3>
+                    <h1>R$ {{saldo}}</h1>
                 </div>
             </div>
-                <div class="data">
-                    <form action="FiltroData" method="POST">
-                        <label class="form-date" for="input-date">De:</label>
-                        <input type="date" class="input-date" name="DataExtratoDe">
-                        <label class="form-date" for="input-date">Até:</label>
-                        <input type="date" class="input-date" name="DataExtratoAte">
-                        <input type="submit" class="btnd" value="Pesquisar">
-                    </form>
+        </div>
+        <div class="saldo">
+            <span class="material-symbols-outlined">attach_money</span>
+            <div class="conteudo-saldo">
+                <div class="text-saldo">
+                    <h3>Juros Cheque Especial</h3>
+                    <h1>R$ {{chequeEspcial}}</h1>
                 </div>
-                {% block Tabela %}
-                <div class="Extrato">
-                    <div class="texto-extrato">
-                        <h2>Extrato</h2>
-                    </div>
-                    <div class="scroll-div">
-                        <div class="scroll-object">
-                            <table class="tabelaRequisicao">
-                                <!-- Inicio da Tabela -->
-                                <tr class="linhaTabela">
-                                    <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)     -->
-                                    {% for header in cabecalhoTabela %}
-                                    <th>{{ header }}</th>
-                                    {% endfor %}
-                                </tr>
-                                {% for row in pesquisaSQLTabela %}
-                                <form action="{{ url_for('verMais') }} "  method="POST">
-                                <tr class="linhaTabela">
-                                    <!-- Forma as linhas da tabela -->
-                                    {% for cell in row %}
-                                    <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
-                                    <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
-                                    {% if cell == row[0] %}
-                                        <input type="hidden" value="{{ cell }}" name="IdTransacao">
-                                    {% else %}
-                                    <a href="#">
-                                        <td class="celula">{{ cell }}</td>
-                                    </a>
-                                    {% endif %}
-                                    {% endfor %}
-                                    <td> 
-                                        <input type="submit" name="verMais" value="Ver Mais" class="btnd solid">
-                                    </td> 
-                                </tr>
-                                </form>
+            </div>
+        </div>
+        <div class="saldo">
+            <span class="material-symbols-outlined">attach_money</span>
+            <div class="conteudo-saldo">
+                <div class="text-saldo">
+                    <h3>Valor Devido Total</h3>
+                    <h1>R$ {{valorDevidoTotal}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="data">
+        <form action="FiltroExtrato" method="POST">
+            <fieldset>
+                <label class="form-date" for="input-date">De:</label><br>
+                <input required type="date" class="input-date" name="DataExtratoDe">
+            </fieldset>
+            <fieldset>
+                <label class="form-date" for="input-date">Até:</label><br>
+                <input required type="date" class="input-date" name="DataExtratoAte">
+            </fieldset>
+            <button type="submit" class="btnd"><i class='bx bx-search-alt-2 bx-sm' style='color:#ffffff'  ></i></button>
+        </form>
+    </div>
+    {% block Tabela %}
+    <div class="Extrato">
+        <div class="texto-extrato">
+            <h2>Extrato</h2>
+        </div>
+        <div class="scroll-div">
+            <div class="scroll-object">
+                <table id="TabelaExt" class="tabelaRequisicao display nowrap" style="width:100%">
+                    <thead>
+                        <!-- Inicio da Tabela -->
+                        <tr class="linhaTabela">
+                            <!-- Forma o Cabeçalho de acordo com o que existe dentro de cabecalhoTabela (cabecalhoTabela é mandado pelo back)     -->
+                            {% for header in cabecalhoTabela %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in pesquisaSQLTabela %}
+                        <tr class="linhaTabela">
+                            <form action="{{ url_for('verMais') }}" method="POST">
+                                <!-- Forma as linhas da tabela -->
+                                {% for cell in row %}
+                                <!-- Sempre a 1° linha será o ID identificadora de alguma tabela -->
+                                <!-- A 1° Linha célula/coluna que é o ID não irá aparecer -->
+                                {% if cell == row[0] %}
+                                <input type="hidden" value="{{ cell }}" name="IdTransacao">
+                                <input type="hidden" value="{{ cell }}" name="IdUsuario">
+                                {% else %}
+                                <a href="#">
+                                    <td class="celula">{{ cell }}</td>
+                                </a>
+                                {% endif %}
                                 {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                {% endblock %}
+                                <td>
+                                    <input type="submit" name="verMais" value="Ver Mais" class="btnd solid">
+                                </td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </main>
-    {% endblock %}
-    </body>
-</html>
+            <a href="http://127.0.0.1:5000/download/ext{{pesquisaSQLTabela}}/{{IdUsuario}}">
+                <input type="button" value="Download Extrato" id="botaoSubmit">
+            </a>
+        </div>
+        {% endblock %}
+    </div>
+</main>
+<!-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.1/r-2.4.0/sc-2.0.7/datatables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#TabelaExt').DataTable({
+            "scrollX": true,
+            "language": {
+                "lengthMenu": "Mostrando _MENU_ registros por página",
+                "zeroRecords": "Nada encontrado",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Pesquisar:",
+                "paginate": {
+                    "first": "Primeira",
+                    "last": "Última",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
+            }
+        });
+    });
+</script>
+{% endblock %}

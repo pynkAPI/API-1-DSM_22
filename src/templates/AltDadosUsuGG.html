@@ -5,33 +5,32 @@
 {% endif %}
 {% block conteudo %}
 <div class="conteudo">
-    <h1>{{pagina}}</h1>
-    <span id="tituloElemento">Alterar Dados</span>
     <div class="blocoElementoAltera">
+        <span id="tituloElemento">Alterar Dados</span>
         <div class="inputElemento">
-            <form action="updateUsuGG" method="POST">
+            <form  action="updateUsuGG" method="POST">
                 {% for row in dados %}
                 <div class="inputValor">
                     <span id="textoInputElemento">Nome completo:</span>
-                    <input required type="hidden" name="IdUsu" value="{{row[8]}}">
-                    <input required type="text" name="nome" value="{{row[9]}}">
+                    <input required type="hidden" name="IdUsu" value="{{row[0]}}">
+                    <input required type="text" name="nome" value="{{row[2]}}">
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Email:</span>
-                    <input required type="text" name="email" value="{{row[10]}}">
+                    <input required type="text" name="email" value="{{row[1]}}">
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Endereço:</span>
-                    <input required type="text" name="endereco" value="{{row[13]}}">
+                    <input required type="text" name="endereco" value="{{row[3]}}">
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">CPF:</span>
                     <input required oninput="mascara(this)" onblur="ValidarCPF(this)" type="text" name="cpf"
-                        value="{{row[11]}}">
+                        value="{{row[6]}}">
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Sexo:</span>
-                    <input id="teste" type="hidden" value="{{row[12]}}">
+                    <input id="teste" type="hidden" value="{{row[7]}}">
                     <select class="input-selects" id="genero" name="genero" required>
                         <option value="F">FEMININO</option>
                         <option value="M">MASCULINO</option>
@@ -40,8 +39,20 @@
                 </div>
                 <div class="inputValor">
                     <span id="textoInputElemento">Data de Nascimento:</span>
-                    <input class="input-date" type="date" name="datanasc" required value="{{row[14]}}">
-                </div><br>
+                    <input class="input-date" type="date" name="datanasc" required value="{{row[4]}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Senha:</span>
+                    <img src="/static/img/ocultar.png" class="olhinho" alt="" onclick="mostrarOcultarid()" id="mostrarid">
+                    <input required type="password" id="SenhaId" name="senha" required value="{{row[5]}}">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Confirmar senha:</span>
+                    <img src="/static/img/ocultar.png" class="olhinho" alt="" onclick="mostrarOcultaridconf()" id="mostraridconf">
+                    <input type="password" value="{{row[5]}}" id="RepetirsenhaId" name="Repetirsenha" required>
+
+                </div>
+                <br>
                 {% endfor %}<br>
                 <div class="botaoElemento">
                     <input type="submit" id="botaoSubmit" value="Alterar">
@@ -66,5 +77,6 @@
     genero = document.getElementById('teste').value
     document.getElementById('genero').value = genero;
 </script>
+<script src="/static/scripts/mostrarOcultarSenha.js"></script>
 
 {% endblock %}

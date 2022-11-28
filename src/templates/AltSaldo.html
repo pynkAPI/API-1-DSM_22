@@ -2,23 +2,27 @@
 {% block conteudo %}
 <div class="conteudo">
     <div class="elemento">
-        <span id="tituloElemento">Alteração de capital</span>
         <div class="blocoElementoAltera">
+            <span id="tituloElemento">Alteração de capital</span>
             <div class="inputElemento">
-                <div class="h1">
-                    <h3>Saldo do Banco</h3>
-                    <h1>R$ {{saldo}}</h1><br>
-                    <h3>NOVO VALOR DO BANCO</h3>
+                <div class="AltSaldo">
+                    <div class="valorsaldo">
+                        <h2>Saldo do Banco</h2>
+                        <h1>R$ {{saldo}}</h1><br>
+                    </div>
                 </div>
                 <form action="AltSaldo" method="POST">
-                    <div class="input-field">
+                    <div class="texto-input">
+                        <h3>Insira um valor</h3>
                         <input required type="number" step="0.01" name="ValNovoSaldo" value="{{saldoV}}">
                     </div>
-                    <div class="input-button">
-                        <input type="submit" value="ALTERAR" class="btnd solid">
+
+                    <div class="input-button-altvalor">
+                        <a href="home" class="voltar">Voltar</a>
+                        <input type="submit" value=" Alterar " class="btn-altsaldo">
                     </div>
                 </form>
-                <a href="home">Voltar ao Menu</a>
+
             </div>
         </div>
     </div>

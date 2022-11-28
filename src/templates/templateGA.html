@@ -9,27 +9,24 @@
     
     <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico">
     <title>Py.nk</title>
+
     <link rel="stylesheet" href="../static/style/stylenew.css">
-    <link rel="stylesheet" href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css'>
+    <link rel="stylesheet" href="../static/style/sidebar.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
-    
+
+    <link rel="stylesheet" href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     {% endblock %}
 </head>
-{% block body %}
 
 <body>
     <div class="container">
         {% block sidebar %}
-        <aside>
+        <i class='bx bx-menu bx-md' id="btn_menu"></i>
+        <aside class="topo-sidebar">
             <div class="topo">
-                <div class="logo">
-                    <img src="../static/img/logorosa2.png">
-                </div>
-                <div class="fechar" id="fechar-btn">
-                    <span class="material-cons-sharp">close</span>
-                </div>
+                <img src="../static/img/logorosa2.png">
             </div>
             <div class="sidebar">
                 <a href="home">
@@ -40,30 +37,25 @@
                     <span class="material-symbols-outlined">person</span>
                     <h3>Sua Conta</h3>
                 </a>
-                <a href="deposito" class="req_btn">
-                    <span class="material-symbols-outlined">account_balance_wallet</span>
-                    <h3>Depósito</h3>
+                <a href="ListUsaGA" class="req_btn">
+                    <span class="material-symbols-outlined">folder_shared</span>
+                    <h3>Usuários</h3>
                 </a>
-                <a href="saque" class="req_btn">
-                    <span class="material-symbols-outlined">payments</span>
-                    <h3>Saque</h3>
-                </a>
-                <a href="Transacao" class="req_btn">
-                    <span class="material-symbols-outlined">currency_exchange</span>
-                    <h3>Transferência</h3>
-                </a>
-                <a href="{{ url_for('index') }}" class="logout">
+                <a href="loginG" class="logout">
                     <span class="material-symbols-outlined">logout</span>
                     <h3>Sair</h3>
                 </a>
             </div>
         </aside>
         {% endblock %}
-        <div class="pageContent">
+
+        <main class="pageContent">
             {% block conteudo %} {% endblock %}
-        </div>
+        </main>
     </div>
+
+    <!-- script do botão menu lateral (abrir e fechar) -->
+    <script src="../static/scripts/menu.js"></script>
 </body>
-{% endblock %}
 
 </html>

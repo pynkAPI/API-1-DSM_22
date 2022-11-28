@@ -1,0 +1,34 @@
+{% extends "templateCliente.html" %}
+{% block conteudo %}
+<div class="elemento">
+    <div class="blocoElemento">
+        <span id="tituloElemento">Transferência</span>
+        <div class="saldo-dep">
+            <span id="tituloSaldo">Seu saldo</span>
+            <span id="saldo">R$ {{saldo}}</span>
+        </div>
+        <div class="inputElemento">
+            <form action="{{ url_for('TransacaoConta') }}" method="POST">
+                <div class="inputPadrao">
+                    <span id="textoInputElemento">Número de conta:</span>
+                    <input required type="number" placeholder="" name="numeroConta">
+                    <span id="textoInputElemento">Agência:</span>
+                    <input required type="text" placeholder="" name="numeroAgencia">
+                </div>
+                <div class="inputValor">
+                    <span id="textoInputElemento">Insira o valor:</span>
+                    <input required type="number" placeholder="00,00" step="0.01" name="valor">
+                </div>
+        </div>
+        <div class="botaoElemento">
+            <input type="submit" id="botaoSubmit" value="Transfira">
+            </form>
+            <a href="home">
+                <input type="button" id="botaoVoltar" value="Voltar">
+            </a>
+        </div>
+
+    </div>
+    <span id="mensagemErro"> {{ mensagemTransacao }}</span>
+</div>
+{% endblock %}

@@ -18,36 +18,71 @@
     <div class="elemento-g">
         <div class="scroll-div-tabela">
             <div class="scroll-object-tabela">
-                        <table class="tabelaAgencias">
-                            <tr class="linhaTabela">
-                                {% for header in cabecalhoTabela %}
-                                <th>{{ header }}</th>
-                                {% endfor %}
-                            </tr>
-                            {% set p = namespace(value=0) %}
-                            {% for row in pesquisaSQL %}
-                            <form action="{{ url_for('alterarDesligar') }}" method="POST">
+                <main>
+                    <div class="Tb">
+                        <table id="TabelaGer" class="tabelaRequisicao display nowrap" style="width:100%">
+                            <thead>
                                 <tr class="linhaTabela">
-                                    {% for cell in row %}
-                                    {% if cell == row[0] %}
-                                    <input type="hidden" value="{{ cell }}" name="IdFuncionario">
-                                    {% else %}
-                                        <td class="celula">{{ cell }}</td>
-                                    {% endif %}
+                                    {% for header in cabecalhoTabela %}
+                                    <th>{{ header }}</th>
                                     {% endfor %}
-                                    <td class="celula">
-                                        <input type="submit" name="botao" value="Alterar" class="btn_alterar" id="btnConfirmar">
-                                    </td>
-                                    <td class="celula">
-                                        <input type="submit" name="botao" value="Desligar" class="btn_alterar" id="btnConfirmar">
-                                    </td>
                                 </tr>
-                            </form>
-                            {% set p.value = p.value + 1 %}
-                            {% endfor %}
+                            </thead>
+                            <tbody>
+                                {% set p = namespace(value=0) %}
+                                {% for row in pesquisaSQL %}
+                                <tr class="linhaTabela">
+                                    <form action="{{ url_for('alterarDesligar') }}" method="POST">
+                                        {% for cell in row %}
+                                        {% if cell == row[0] %}
+                                        <input type="hidden" value="{{ cell }}" name="IdFuncionario">
+                                        {% else %}
+                                        <td class="celula">{{ cell }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <td class="celula">
+                                            <input type="submit" name="botao" value="Alterar" class="btn_alterar"
+                                                id="btnConfirmar">
+                                        </td>
+                                        <td class="celula">
+                                            <input type="submit" name="botao" value="Desligar" class="btn_alterar"
+                                                id="btnConfirmar">
+                                        </td>
+                                    </form>
+                                </tr>
+                                {% set p.value = p.value + 1 %}
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
-                </div>
+                </main>
             </div>
+        </div>
+    </div>
 </div>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#TabelaGer').DataTable({
+            "scrollX": true,
+            "language": {
+                "lengthMenu": "Mostrando _MENU_ registros por página",
+                "zeroRecords": "Nada encontrado",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Pesquisar:",
+                "paginate": {
+                    "first": "Primeira",
+                    "last": "Última",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
+            }
+        });
+    });
+</script>
 {% endblock %}

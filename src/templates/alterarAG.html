@@ -2,23 +2,8 @@
 {% block conteudo %}
 <div class="conteudo">
     <div class="elemento">
-        <span id="tituloElemento">Dados Atuais</span>
         <div class="blocoElemento">
-            <div class="inputElemento">
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Localidade: <br>{{pesquisa[0][1]}}</span>
-                    </div>
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Número da agencia: <br>{{pesquisa[0][2]}}</span>
-                    </div>
-                    <div class="inputValor">
-                        <span id="textoInputElemento">Funcionário: <br>{{pesquisa[0][3]}}</span>
-                    </div>
-            </div>
-        </div>
-    </div>
-    <span id="tituloElemento">Alterar Dados</span>
-        <div class="blocoElemento">
+            <span id="tituloElemento">Alterar Dados</span>
             <div class="inputElemento">
                 <form action="UpdateAG" method="POST">
                     <input type="hidden" value="{{pesquisa[0][0]}}" name="Id_agencia">

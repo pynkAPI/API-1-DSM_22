@@ -1,0 +1,27 @@
+{% extends "templateCliente.html" %}
+{% block conteudo %}
+<div class="elemento">
+    <div class="blocoElemento">
+        <span id="tituloElemento">Saque</span>
+        <div class="saldo-dep">
+            <span id="tituloSaldo">Seu saldo</span>
+            <span id="saldo">R$ {{saldo}}</span>
+        </div>
+        <div class="inputElemento">
+            <form action="{{ url_for('SaqueConta') }}" method="POST">
+                <div class="inputValor">
+                    <span id="textoInputElemento">Insira o valor:</span>
+                    <input required type="number" placeholder="00,00" step="0.01" name="valor">
+                </div>
+        </div>
+        <div class="botaoElemento">
+            <input type="submit" id="botaoSubmit" value="Saque">
+            </form>
+            <a href="home">
+                <input type="button" id="botaoVoltar" value="Voltar">
+            </a>
+        </div>
+    </div>
+    <span id="mensagemErro"> {{ mensagemSaque }}</span>
+</div>
+{% endblock %}

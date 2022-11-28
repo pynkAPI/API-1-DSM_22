@@ -1,8 +1,11 @@
 from logging import raiseExceptions
 import math
 import os
+from dateutil.relativedelta import relativedelta
 from importlib.metadata import requires
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from importlib.metadata import requires
 from flask import Flask, render_template,request, url_for, redirect, session, abort
 from flask_mysqldb import MySQL
 from datetime import datetime
@@ -205,51 +208,6 @@ def Transacao(conta_origem, conta_destino, tipo, valor, status):
             CampoBd = ['id_conta_origem','id_conta_destino','Datatime','tipo','valor', 'status_transacao'],
             CampoFm = [conta_origem, conta_destino, data, tipo, valor, status])
 
-def criaComprovante (dicionario, numero_conta):
-    nome_comp = f"{dicionario['id']}{numero_conta}.pdf"
-    c = canvas.Canvas(nome_comp)
-    c.setFont("Helvetica", 12)
-    if dicionario ['tipo'] == 'Depósito':
-        c.drawString(80,750,"Py.NK Internet Banking")
-        c.drawString(80,720,"Comprovante de Depósito")
-        c.drawString(80,690,f"+R${dicionario['valor']} depositado.")
-        c.line(80,675,510,675)
-        c.drawString(80,650,f"Data do Depósito: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-        c.drawString(80,620,f"Horário do Depósito: {dicionario['hora']}")
-        c.drawString(80,590,f"ID da Transação: {dicionario['id']}")
-    elif dicionario ['tipo'] == 'Saque':
-        c.drawString(80,750,"Py.NK Internet Banking")
-        c.drawString(80,720,"Comprovante de Saque")
-        c.drawString(80,690,f"-R${dicionario['valor']} sacado.")
-        c.line(80,675,510,675)
-        c.drawString(80,650,f"Data do Saque: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-        c.drawString(80,620,f"Horário do Saque: {dicionario['hora']}")
-        c.drawString(80,590,f"ID da Transação: {dicionario['id']}")
-    elif dicionario['tipo'] == 'transferencia':
-        if numero_conta == dicionario['conta_origem']:
-            c.drawString(80,750,"Py.NK Internet Banking")
-            c.drawString(80,720,f"Comprovante de Transferência Realizada")
-            c.drawString(80,690,f"R${dicionario['valor']} transferido para {dicionario['nome_destino']}")
-            c.line(80,675,510,675)
-            c.drawString(80,650,f"Data da Transferência: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-            c.drawString(80,620,f"Horário da Transferência: {dicionario['hora']}")
-            c.drawString(80,590,f"Enviado para: {dicionario['nome_destino']}")
-            c.drawString(80,560,f"Numero de conta: {dicionario['conta_destino']}")
-            c.drawString(80,530,f"ID da Transação: {dicionario['id']}")
-        elif numero_conta == dicionario['conta_destino']:
-            c.drawString(80,750,"Py.NK Internet Banking")
-            c.drawString(80,720,f"Comprovante de Transferência Recebida")
-            c.drawString(80,690,f"R${dicionario['valor']} recebido de {dicionario['nome_origem']}")
-            c.line(80,675,510,675)
-            c.drawString(80,650,f"Data da Transferência: {dicionario['data'][3:5]}/{dicionario['data'][:2]}/{dicionario['data'][6:]}")
-            c.drawString(80,620,f"Horário da Transferência: {dicionario['hora']}")
-            c.drawString(80,590,f"Enviado por: {dicionario['nome_origem']}")
-            c.drawString(80,560,f"Numero de conta: {dicionario['conta_origem']}")
-            c.drawString(80,530,f"ID da Transação: {dicionario['id']}")
-    c.showPage()
-    c.save()
-    return nome_comp 
-
 def LoadConfig():
     config = {}
     conf = open("config.conf", "r")
@@ -276,18 +234,11 @@ def cancelMySQL(id_usuario, senha, numeroconta):
     saldo = pesquisa[0][0]
     senhaUsuario = pesquisa[0][1]
     if senha == senhaUsuario:
-        if saldo > 0: 
-            raise Exception('601')
-        elif saldo < 0:
-            raise Exception('602')
-        else:
             upMySQL(TabelaBd='tb_contabancaria',
                 CampoBd=['status_contabancaria'],
                 CampoFm=[2],
                 CampoWr=['id_usuario', 'numeroconta'],
                 CampoPs=[id_usuario, numeroconta])
-            raise Exception('603')
-
     else:
         raise Exception('401')
 
@@ -296,6 +247,21 @@ def periodoEntreDatas(data1, data2):
     data1 = datetime.strptime(data1, "%Y-%m-%d")
     data2 = datetime.strptime(data2, "%Y-%m-%d")
     return abs((data2 - data1).days)
+
+def verificaAniversarioDeposito(data1, data2):
+    aniversario = False
+    contadora = 0
+    data1 = data1 + relativedelta(months=1)
+    if data1 >= data2:
+        contadora += 1
+        aniversario = True
+        while data1 >= data2:
+            data1 = data1 + relativedelta(months=1)
+            contadora += 1    
+    retorna = [aniversario, contadora]
+    return retorna
+
+
 
      
 erro = {'400': 'O servidor não entendeu a requisição pois está com uma sintaxe inválida.',
@@ -318,6 +284,13 @@ def calculaChequeEspecial(valorDevido, tempo, porecentagem):
     #realiza a correção de acordo com a regra feita pelo cliente
     valorTruncado = valorTruncado - 0.005
     #realiza o truncamento para a correção do valor em duas casas decimais
+    valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
+    return valorTruncado
+
+def calculaPoupanca(valorPoupanca, tempo, porecentagem):
+    valor = ((1+porecentagem)**tempo)*valorPoupanca
+    valorTruncado = truncar(numero=valor,casaDecimal=3)
+    valorTruncado = valorTruncado - 0.005
     valorTruncado = truncar(numero=valorTruncado,casaDecimal=2)
     return valorTruncado
 
@@ -448,7 +421,7 @@ def dadosU(numeroConta, idFuncionario):
     #bloco funcionario
     if numeroConta == '':
         idUsuario = SlcEspecificoMySQL(TabelaBd='tb_funcionario',
-                                        CampoBd=['id_funcionario'],
+                                        CampoBd=['id_usuario'],
                                         CampoFm=[idFuncionario],
                                         CampoEs=['id_usuario'])
 
@@ -458,13 +431,16 @@ def dadosU(numeroConta, idFuncionario):
         ON tu.id_usuario = tf.id_usuario  
         WHERE tu.id_usuario = {idUsuario[0][0]};'''
         
+
         cursor = mysql.connection.cursor()
         cursor.execute(Select)
         pesquisaSQL = cursor.fetchall()
         mysql.connection.commit() 
         cursor.close()
 
+        
         dados = {
+        'numeroAgencia':'',
         'idUsuario':idUsuario[0][0],
         'idFuncionario':idFuncionario,
         'nome':pesquisaSQL[0][0],
@@ -482,14 +458,20 @@ def dadosU(numeroConta, idFuncionario):
         idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
                                         CampoBd=['numeroconta'],
                                         CampoFm=[numeroConta],
-                                        CampoEs=['id_usuario'])
+                                        CampoEs=['id_usuario', 'id_agencia'])
 
         pesquisaSQL = SlcEspecificoMySQL(TabelaBd='tb_usuario',
                                         CampoBd=['id_usuario'],
                                         CampoFm=[idUsuario[0][0]],
                                         CampoEs=['nome','email','cpf','genero','endereco','datanascimento','senha'])
         
+        numeroAgencia = SlcEspecificoMySQL(TabelaBd='tb_agencia',
+                                            CampoBd=['id_agencia'],
+                                            CampoFm=[idUsuario[0][1]],
+                                            CampoEs=['numero_agencia'])
+        
         dados = {
+        'numeroAgencia':numeroAgencia[0][0],
         'idUsuario':idUsuario[0][0],
         'idFuncionario':idFuncionario,
         'nome':pesquisaSQL[0][0],
@@ -569,28 +551,59 @@ def desligaGA(IdFuncionario, novoResp):
                     CampoFm=[IdFuncionario])
     return 
 
-def alteraU(novosDados,tipo):
+def verificaAgencia():
+    cursor = mysql.connection.cursor()
+    
+    Select = f'''SELECT tb_agencia.id_agencia,
+                 CASE WHEN count(tb_contabancaria.id_agencia) IS NOT NULL THEN count(tb_contabancaria.id_agencia)  ELSE 0 END as conta
+                 FROM tb_agencia  
+                 left JOIN  tb_contabancaria
+                 ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                 group by tb_agencia.id_agencia  
+                 order by count(tb_contabancaria.id_agencia) asc
+                 LIMIT 1;'''
+
+    cursor.execute(Select)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit() 
+    cursor.close()
+    idAgencia = pesquisaSQL[0][0]
+    return idAgencia
+
+def verificaAgenciaGerente(idGerente):
+    cursor = mysql.connection.cursor()
+    
+    Select = f'''SELECT id_agencia FROM tb_agencia 
+    INNER JOIN tb_funcionario 
+    ON tb_funcionario.id_funcionario = tb_agencia.id_funcionario      
+    where tb_funcionario.id_usuario = {idGerente};'''
+
+    cursor.execute(Select)
+    pesquisaSQL = cursor.fetchall()
+    mysql.connection.commit() 
+    cursor.close()
+    idAgencia = pesquisaSQL[0][0]
+    return idAgencia
+
+def alteraU(novosDados, tipo):
     #se o status alteração for 0 esta em aguardo e se for 1 foi resolvido
     #se a requisicao tem id do usuario e não tem id do funcionario aparece pro GA e pro GG
     #se a requisicao tem id do usuario e id do funcionario aparece para o GG
     novosDados['cpf'] = novosDados['cpf'].replace('.','')
     novosDados['cpf'] = novosDados['cpf'].replace('-','')
+    text = '['
+    for chave, valor in novosDados.items():
+        text += f'{str(chave)}:{str(valor)} , '
+    text += ']'
+    print(text, tipo)
     if tipo == 2:
-        text = '['
-        for chave, valor in novosDados.items():
-            text += f'{str(chave)}:{str(valor)} , '
-        text += ']'
-        return InsMySQL( TabelaBd='tb_requisicoes',
+        return InsMySQL(TabelaBd='tb_requisicoes',
                 CampoBd=['status_alteracao','id_usuario','id_funcionario','descricao'],
                 CampoFm=[0,novosDados['idUsuario'], novosDados['idFuncionario'],text])
-    elif tipo == 1:
-        text = '['
-        for chave, valor in novosDados.items():
-            text += f'{str(chave)}:{str(valor)} , '
-        text += ']'
+    else: 
         return InsMySQL(TabelaBd='tb_requisicoes',
                 CampoBd=['status_alteracao','id_usuario','descricao'],
-                CampoFm=[0,novosDados['idUsuario'],text])
+                CampoFm=[0,novosDados['idUsuario'], text])
 
 
 #Pode gerar letras, numeros ou letras e numeros aleatorios 
@@ -616,6 +629,15 @@ def geraValor(qtdCaracteres, tipo):
 
     return senha
 
+def verificaQuantidadeRendimento(data1, data2):
+    contadora = 0
+    dataSoma = data1
+    while dataSoma < data2:
+        contadora += 1
+        dataSoma = data1 + relativedelta(months=contadora)
+    return contadora
+
+
 def altAG(id_agencia):
     upMySQL(TabelaBd='tb_agencia',
             CampoBd=['localidade','id_funcionario'],
@@ -625,21 +647,235 @@ def altAG(id_agencia):
     
     return 0
 
-# def DelAG(id_agencia):
-#    pesquisa = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
-#                                 CampoBd= ['id_agencia'],
-#                                 CampoFm= [id_agencia],
-#                                 CampoEs= ['id_conta']) 
-#     for id_conta in pesquisa: 
-#          upMySQL(TabelaBd='tb_contabancaria',
-#             CampoBd=['id_agencia'],
-#             CampoFm=[id_agencia],
-#             CampoWr=['id_conta'],
-#             CampoPs=[id_conta])
+def geraComprovante(dados):
+    nomeArq = f"movimentacao_{dados[0][2]}_{dados[0][1]}.pdf"
+    nomeArq = nomeArq.replace(":","")
+    nomeArq = nomeArq.replace("/","_")
+    c = canvas.Canvas(nomeArq, pagesize=A4)
+    c.setFont('Courier', 11)
+    width, height = A4
+    line = 0.9
+    c.drawCentredString(width*0.5, height*line,'PYNKSYS - SISTEMA DE EMISSÃO DE COMPROVANTES DIGITAIS')
+    line-=0.02
+    c.drawCentredString(width*0.5, height*0.1, 'PY.NK, o seu banco em qualquer lugar a qualquer hora.')
+    if dados[0][0] == 'Depósito':
+        if dados[0][4] == 'Em Aprovação':
+            c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE DEPÓSITO (EM APROVAÇÃO)')
+            line-=0.04
+        else:
+            c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE DEPÓSITO')
+            line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'DATA: {str(dados[0][2]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
+        line-=0.02
+        c.showPage()
+        c.save()
+        return nomeArq
+    elif dados[0][0] == 'Saque':
+        c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE SAQUE')
+        line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'DATA: {str(dados[0][2]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
+        line-=0.02
+        c.showPage()
+        c.save()
+        return nomeArq
+    elif dados[0][0] == 'Transferência':
+        c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE TRANSFERÊNCIA')
+        line-=0.04
+        c.drawString(width*0.1, height*line, f'CLIENTE: {str(dados[0][10]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][11]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DA MOVIMENTAÇÃO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'VALOR: R${str(dados[0][3]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'DATA: {str(dados[0][2]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'HORA: {str(dados[0][1]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'ID DA MOVIMENTAÇÃO: {str(dados[0][12]).upper()}')
+        line-=0.02
+        c.line(width*0.1, height*line, width*0.9, height*line)
+        line-=0.02
+        c.drawCentredString(width*0.5, height*line, 'DADOS DO DESTINATÁRIO')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'TRANSFERIDO PARA: {str(dados[0][8]).upper()}')
+        line-=0.02
+        c.drawString(width*0.1, height*line, f'NÚMERO DA CONTA: {str(dados[0][9]).upper()}')
+        line-=0.02
+        c.showPage()
+        c.save()
+        return nomeArq
 
-#     upMySQL(TabelaBd='tb_agencia',
-#         CampoBd=['status_agencia'],
-#         CampoFm=[0],
-#         CampoWr=['id_agencia'],
-#         CampoPs=[id_agencia])
-#     return
+def geraExtrato(dados, id):
+    nomeArq = f"extrato_{dados[0][3]}_{dados[0][4]}.pdf"
+    nomeArq = nomeArq.replace(":","")
+    nomeArq = nomeArq.replace("/","_")
+    c = canvas.Canvas(nomeArq, pagesize=A4)
+    c.setFont('Courier', 11)
+    width, height = A4
+    line = 0.9
+    c.drawCentredString(width*0.5, height*line,'PYNKSYS - SISTEMA DE EMISSÃO DE COMPROVANTES DIGITAIS')
+    line-=0.02
+    c.drawCentredString(width*0.5, height*line,'COMPROVANTE DE EXTRATO')
+    line-=0.04  
+    c.drawCentredString(width*0.5, height*0.1, 'PY.NK, o seu banco em qualquer lugar a qualquer hora.')
+    c.drawCentredString(width*0.18, height*line, 'DATA/HORA')
+    c.drawCentredString(width*0.5, height*line, 'DESCRIÇÃO')
+    c.drawCentredString(width*0.82, height*line, 'VALOR')
+    line-=0.012
+    c.setFont('Courier', 9)
+
+    for row in dados:
+        if line < 0.148:
+            c.line(width*0.1, height*line, width*0.9, height*line)
+            c.showPage()
+            c.setFont('Courier', 11)
+            line = 0.9
+            c.drawCentredString(width*0.18, height*line, 'DATA/HORA')
+            c.drawCentredString(width*0.5, height*line, 'DESCRIÇÃO')
+            c.drawCentredString(width*0.82, height*line, 'VALOR')
+            c.drawCentredString(width*0.5, height*0.1, 'PY.NK, o seu banco em qualquer lugar a qualquer hora.')
+            line-=0.012
+            c.setFont('Courier', 9)
+        else:
+            if row[1] == 'Depósito':
+                c.line(width*0.1, height*line, width*0.9, height*line)
+                c.line(width*0.26, height*line, width*0.26, height*(line-0.036))
+                c.line(width*0.74, height*line, width*0.74, height*(line-0.036))
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.001), f'{row[3]}')
+                c.drawString(width*0.27, height*(line-0.001), f'{row[1]}({row[5]})')
+                if row[5]== 'Aguardando':
+                    c.drawString(width*0.75, height*(line-0.001), f'[#]R${row[2]}')
+                else:
+                    c.drawString(width*0.75, height*(line-0.001), f'[+]R${row[2]}')
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                c.drawString(width*0.27, height*(line-0.001), f'Depósito em conta')
+                line-=0.012
+            elif row[1] == 'Saque':
+                c.line(width*0.1, height*line, width*0.9, height*line)
+                c.line(width*0.26, height*line, width*0.26, height*(line-0.036))
+                c.line(width*0.74, height*line, width*0.74, height*(line-0.036))
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.003), f'{row[3]}')
+                c.drawString(width*0.27, height*(line-0.003), f'{row[1]}')
+                c.drawString(width*0.75, height*(line-0.003), f'[-]R${row[2]}')
+                line-=0.012
+                c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                c.drawString(width*0.27, height*(line-0.003), f'Saque em conta')
+                line-=0.012
+            else:
+                c.line(width*0.1, height*line, width*0.9, height*line)
+                c.line(width*0.26, height*line, width*0.26, height*(line-0.048))
+                c.line(width*0.74, height*line, width*0.74, height*(line-0.048))
+                line-=0.012
+                if row[8] == 'Origem':
+                    c.drawString(width*0.11, height*(line-0.003), f'{row[3]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'{row[1]} Realizada')
+                    c.drawString(width*0.75, height*(line-0.003), f'[-]R${row[2]}')
+                    line-=0.012
+                    c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'Origem: {row[6]}')
+                    line-=0.012
+                    c.drawString(width*0.27, height*(line-0.003), f'Destino: {row[7]}')
+                    line-=0.012
+                else:
+                    c.drawString(width*0.11, height*(line-0.003), f'{row[3]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'{row[1]} Recebida')
+                    c.drawString(width*0.75, height*(line-0.003), f'[+]R${row[2]}')
+                    line-=0.012
+                    c.drawString(width*0.11, height*(line-0.001), f'{row[4]}')
+                    c.drawString(width*0.27, height*(line-0.003), f'Origem: {row[6]}')
+                    line-=0.012
+                    c.drawString(width*0.27, height*(line-0.003), f'Destino: {row[7]}')
+                    line-=0.012
+    c.line(width*0.1, height*line, width*0.9, height*line)
+
+    c.showPage()
+    c.save() 
+
+    return nomeArq
+
+def temReq(idContaBancaria, tipo):
+    # Se for usuario
+    if tipo == 1:
+        idUsuario = SlcEspecificoMySQL(TabelaBd='tb_contabancaria',
+                                        CampoBd=['id_conta'],
+                                        CampoFm=[idContaBancaria],
+                                        CampoEs=['id_usuario'])
+        
+        cursor = mysql.connection.cursor()
+        
+        Select = f'''SELECT MAX(id_requisicao)
+                    FROM tb_requisicoes
+                    WHERE id_usuario = {idUsuario[0][0]};'''
+
+        cursor.execute(Select)
+        ultimaReq = cursor.fetchall()
+        mysql.connection.commit() 
+        cursor.close()
+        
+
+    # Se for Gerente
+    else:
+        idUsuario = idContaBancaria
+            
+        cursor = mysql.connection.cursor()
+        
+        Select = f'''SELECT MAX(id_requisicao)
+                    FROM tb_requisicoes
+                    WHERE id_usuario = {idUsuario};'''
+
+        cursor.execute(Select)
+        ultimaReq = cursor.fetchall()
+        mysql.connection.commit() 
+        cursor.close()
+
+
+    if ultimaReq != []:
+        statusAlteracao = SlcEspecificoMySQL(TabelaBd='tb_requisicoes',
+                                            CampoBd=['id_requisicao'],
+                                            CampoFm=[ultimaReq[0][0]],
+                                            CampoEs=['status_alteracao'])
+
+        print(statusAlteracao)
+        if statusAlteracao != ():
+            if str(statusAlteracao [0][0]) == '0':
+                return True
+            else: 
+                return False
+    else:
+        return False
+
