@@ -457,26 +457,6 @@ def RequisicaoGerenteAgencia():
                                                         idRequisicao=IdRequisicao,
                                                         pagina = 2)    
 
-               
-                
-            elif botao['botao'] == 'Recusar':
-                #region RECUSAR ALTERACAO
-                funcs.upMySQL('tb_requisicoes',
-                               CampoBd=['status_alteracao'],
-                               CampoFm=[2],
-                               CampoWr=['id_requisicao'],
-                               CampoPs=[IdConta])
-                if session['tipo'] == 2:
-                    return homeG()
-                else:
-                    return homeGG(requisicao=requisicao)
-                #endregion
-            else:
-                #region VERMAIS
-                if session['tipo'] == 2:
-                    return homeG()
-                else:
-                    return homeGG(requisicao=requisicao)
                 #endregion
         #endregion        
         if session['tipo'] == 2:
@@ -574,6 +554,19 @@ def homeGG(requisicao='0'):
         requisicao = request.form.get('requisicao1')
         #Tabela de Conferencia de Deposito
         #region
+        cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
+ 
+        pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='''tb_transacao 
+                                                               INNER JOIN tb_contabancaria 
+                                                               ON tb_contabancaria.id_conta = tb_transacao.id_conta_origem 
+                                                               AND tb_contabancaria.id_conta = tb_transacao.id_conta_destino 
+                                                               INNER JOIN tb_agencia 
+                                                               ON tb_agencia.id_agencia = tb_contabancaria.id_agencia
+                                                               INNER JOIN tb_usuario 
+                                                               ON  tb_usuario.id_usuario = tb_contabancaria.id_usuario''',
+                                                               CampoEs=['tb_transacao.id_transacao','tb_usuario.nome','tb_contabancaria.numeroconta' ,'tb_transacao.valor', 'tb_transacao.Datatime',],
+                                                               CampoBd=['status_transacao'],
+                                                               CampoFm=[0])    
         if requisicao == '0':
             cabecalho = ('Nome', 'Número Conta', 'Valor', 'Data', '', '')
 
@@ -600,7 +593,7 @@ def homeGG(requisicao='0'):
             return render_template('ListReq.html',pesquisaSQL=pesquisaSQL,cabecalhoTabela=cabecalho,requisicao=requisicao)
         elif requisicao == '2':
             cabecalho = ('Nome', 'CPF', 'Descrição')
-            pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario  INNER JOIN tb_contabancaria  ON tb_usuario.id_usuario = tb_contabancaria.id_usuario INNER JOIN tb_agencia ON tb_contabancaria.id_agencia = tb_agencia.id_agencia',
+            pesquisaSQL = funcs.SlcEspecificoMySQL(TabelaBd='tb_requisicoes  INNER JOIN tb_usuario  ON tb_usuario.id_usuario = tb_requisicoes.id_usuario',
                                                    CampoEs=['tb_requisicoes.id_requisicao','tb_usuario.nome', 'tb_usuario.cpf', 'tb_requisicoes.descricao'],
                                                    CampoBd=['tb_requisicoes.status_alteracao'],
                                                    CampoFm=['0'])
@@ -1609,7 +1602,7 @@ def criaAgencia():
 # Página Sua Conta
 @app.route("/suaConta")
 def suaConta():
-    print(funcs.temReq(session['idFunc'], session['tipo']))
+
     if session['tipo'] == 2:
         dadosUsuario = funcs.dadosU('', session['idFunc'])
         cpf = dadosUsuario['cpf'][0:3] + '.' + dadosUsuario['cpf'][3:6] + '.' + dadosUsuario['cpf'][6:9] +'-'+ dadosUsuario['cpf'][9:]
@@ -1783,7 +1776,7 @@ def alteraUReq():
                 'endereco': request.form['endereco'],
                 'dataNasc': request.form['datanasc'],
                 'login': request.form['login'],
-                'senha': request.form['senha']
+                'senha': request.form['senha'].replace(" ","")
                 }
                 funcs.upMySQL(TabelaBd='tb_usuario',
                               CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
@@ -1817,7 +1810,7 @@ def alteraUReq():
                     'endereco': request.form['endereco'],
                     'dataNasc': request.form['datanasc'],
                     'login': request.form['login'],
-                    'senha': request.form['senha']
+                    'senha': request.form['senha'].replace(" ","")
                 }
                 funcs.upMySQL(TabelaBd='tb_usuario',
                               CampoBd=['nome', 'email', 'cpf', 'genero', 'endereco', 'datanascimento', 'senha'],
@@ -1835,14 +1828,14 @@ def alteraUReq():
                               CampoFm=[1],
                               CampoWr=['id_requisicao'],
                               CampoPs=[novosDados['idRequisicao']])
-                return homeGG(requisicao='2')
+                return homeGG()
             else:
                 funcs.upMySQL(TabelaBd='tb_requisicoes',
                               CampoBd=['status_alteracao'],
                               CampoFm=[2],
                               CampoWr=['id_requisicao'],
                               CampoPs=[request.form['idRequisicao']])
-                return homeGG(requisicao='2')
+                return homeGG()
 
 @app.route("/alteraU", methods = ['POST', 'GET'])
 def alteraU():
