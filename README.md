@@ -41,9 +41,9 @@ A Sprint 2 apresentou mudanças muito claras em relação a Sprint 1, muitas del
 
 <img src="/doc/img/Burndown Sprint 2.png">
 
-**GIF do Produto entregue na Sprint 2**:
+**Vídeo Explicativo da Sprint 2**:
 
-<img src="/doc/img/Gif Programa Sprint 2.gif">
+https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
 
 #### :black_flag: Sprint 3
 A Sprint 3 foi uma sprint extremamente produtiva, nela foram realizadas maior parte das tarefas densas com várias regras de negócio de forma a praticamente finalizar o produto. Sobrando assim para a Sprint 4 as atividades que são em sua maioria somente melhorias de qualidade de vida, reformulação de algumas partes que não contemplam mais a situação do projeto e algumas alterações nas regras de negócio que foram questionadas pelo cliente.
@@ -56,10 +56,9 @@ Os acertos percebidos foram **produtividade** e **comprometimento**. Enquanto qu
 
 <img src="/doc/img/Burndown Sprint 3.png">
 
-**GIF do Produto entregue na Sprint 3**:
+**Vídeo Explicativo da Sprint 3**:
 
-<img src="/doc/img/Gif Programa Sprint 3.gif">
-
+https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
 #### :black_flag: Sprint 4
 
 A Sprint 4 foi, em suma, uma etapa de refatoração, tanto das funcionalidades quanto do visual do projeto. Além disso foram implementados os requisitos restantes da aplicação, como o sistema de conta poupança e a responsividade para qualquer dispositivo, visando assim atender à todas as exigências do cliente.
@@ -67,9 +66,14 @@ Os acertos percebidos foram na **organização** e **adaptabilidade perante as c
 
 **Destaque da Sprint 4**:
 
+https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
+
+
 :chart_with_upwards_trend: **Burndown Chart da Sprint 4**:
 
-**GIF do Produto entregue na Sprint 4**:
+<img src="/doc/img/Burndown Sprint 4.png">
+
+**Vídeo Explicativo da Sprint 3**:
 
 • [To the top ↑](#top)
 
@@ -143,8 +147,8 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 |      3     |    US18   |      F.22     |     RF.4, RF.5    | Alteração do capital total do banco de acordo com os saques e Depósitos                   |      BAIXA     |     Feito    |
 |      3     |    US19   |      F.23     |    RF.12, RF.13   | Função de cheque especial                                                                 |      BAIXA     |     Feito    |
 |      3     |    US20   |      F.24     |        RF.7       | Truncamento dos valores com as correções apropriadas para evitar inconsistência de dados. |      BAIXA     |     Feito    |
-|      4     |           |      F.23     |        RF.9       | Remuneração da poupança                                                                   |      BAIXA     |  Em Aguardo  |
-|      4     |           |      F.24     |        RF.10      | Remuneração da poupança configurável                                                      |      BAIXA     |  Em Aguardo  |
+|      4     |           |      F.23     |        RF.9       | Remuneração da poupança                                                                   |      BAIXA     |  Feito  |
+|      4     |           |      F.24     |        RF.10      | Remuneração da poupança configurável                                                      |      BAIXA     |  Feito  |
 
 
 
