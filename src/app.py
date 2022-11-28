@@ -1809,7 +1809,7 @@ def alteraUReq():
                     'genero': request.form['genero'],
                     'endereco': request.form['endereco'],
                     'dataNasc': request.form['datanasc'],
-                    'login': request.form['login'],
+                    'login': request.form['login'].replace(" ",""),
                     'senha': request.form['senha'].replace(" ","")
                 }
                 funcs.upMySQL(TabelaBd='tb_usuario',
