@@ -66,14 +66,16 @@ Os acertos percebidos foram na **organização** e **adaptabilidade perante as c
 
 **Destaque da Sprint 4**:
 
-https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
+
 
 
 :chart_with_upwards_trend: **Burndown Chart da Sprint 4**:
 
 <img src="/doc/img/Burndown Sprint 4.png">
 
-**Vídeo Explicativo da Sprint 3**:
+**Vídeo Explicativo da Sprint 4**:
+
+https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
 
 • [To the top ↑](#top)
 
@@ -264,6 +266,47 @@ Também achamos pertinente adotar um método de **estimativa de tempo de desenvo
 
 - Entrando na aplicação
   - Abra o navegador e digite a url que aparecerá no terminal após a execução do 'app.py'.
+
+
+  - O caminho <url>/loginG da acesso a tela login de funcionarios, os acessos padrão que vem inseridos para login são:
+    - Gerente Geral
+        - Login: GG
+        - Senha: senha
+    - Gerente de Agencia 1
+        - Login: GA1
+        - Senha: senha
+    - Gerente de Agencia 2
+        - Login: GA2
+        - Senha: senha
+    - Usuario 1
+        - Login: 1234
+        - Senha: teste
+    - Usuario 2
+        - Login: 4321
+        - Senha: teste
+
+  
+  - Para manipular as datas e fazer testes com a poupança e o cheque especial realize o procedimento a seguir:
+    - No sgdb utilizado para subir o banco copie o seguinte código e execute:
+        ```console
+            SELECT TC.id_conta, TC.numeroconta, tch.id_cheque_especial
+            FROM tb_contabancaria TC
+            Inner join tb_cheque_especial tch
+            On tch.id_conta = TC.id_conta
+            WHERE ativo = 1 
+       ```
+        - Este código retorna quais são as contas que estão em situação de cheque, escolha a que faz sentido pro teste.
+        
+
+    - E então para adicionar um espaço de tempo:
+    ```console
+            UPDATE tb_cheque_especial SET data_atualizacao = <data>
+            WHERE id_cheque = <id do cheque mostrado no ultimo select>
+       ```
+
+
+    - A data colocada no código tem de ser MENOR do que a data em que foi feita a requisição, portanto, para simular um mês de cheque pra uma movimentação feita no dia 28/11/22 preencha data com o valor 28/10/22. (LEMBRANDO QUE O FORMATO DA DATA É aaaa-mm-dd)
+
   - **IMPORTANTE:** Não feche a janela do terminal enquanto estiver utilizando a aplicação.
 
 • [To the top ↑](#top)
