@@ -67,15 +67,20 @@ Os acertos percebidos foram na **organização** e **adaptabilidade perante as c
 **Destaque da Sprint 4**:
 
 
+https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
+
 
 
 :chart_with_upwards_trend: **Burndown Chart da Sprint 4**:
 
 <img src="/doc/img/Burndown Sprint 4.png">
 
+
 **Vídeo Explicativo da Sprint 4**:
 
 https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
+
+**Vídeo Explicativo da Sprint 3**:
 
 • [To the top ↑](#top)
 
