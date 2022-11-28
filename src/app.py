@@ -1483,7 +1483,7 @@ def ListUsa():
     cabecalho = ("Nome", "Email", "CPF", "Gênero", "Endereço", "Data de nascimento","Tipo conta","Status","Alterar dados")
     
     SelectGA = f"""SELECT TU.id_usuario,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TC.tipo,IF(TC.status_contabancaria='1', "ativo", "desativado")
-    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia group by id_usuario;"""
+    FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU ON TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia group by TU.id_usuario,TU.nome,TU.email,TU.cpf,TU.genero,TU.endereco,TU.datanascimento,TC.tipo,IF(TC.status_contabancaria='1', "ativo", "desativado");"""
 
 
     cursor.execute(SelectGA)
@@ -1516,7 +1516,7 @@ def ListUsaGA():
     SelectGA = f"""SELECT TU.id_usuario,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,TU.endereco,IF(TC.status_contabancaria='1', "ativo", "desativado")
     FROM tb_contabancaria as TC INNER JOIN tb_usuario as TU on TC.id_usuario=TU.id_usuario INNER JOIN tb_agencia as TA ON TA.id_agencia=TC.id_agencia 
     where TC.id_agencia={pesquisaAgen[0][0]}
-    group by id_usuario""" 
+    group by TU.id_usuario,TU.nome,TU.email,TU.cpf,TU.genero,TC.tipo,TC.data_abertura,TU.endereco,IF(TC.status_contabancaria='1', "ativo", "desativado")""" 
     cursor.execute(SelectGA)
     pesquisaSQL = cursor.fetchall()
     
