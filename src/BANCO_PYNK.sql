@@ -109,69 +109,13 @@ frequencia VARCHAR(55) NOT NULL);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_origem) REFERENCES tb_contabancaria (id_conta);
 ALTER TABLE tb_transacao ADD FOREIGN KEY(id_conta_destino) REFERENCES tb_contabancaria (id_conta);
 
-INSERT INTO tb_regra_operacoes(descricao, porcentagem, valor_fixo, frequencia) VALUES('CHEQUE ESPECIAL',  0.10, 0, 'Diário');
-INSERT INTO tb_regra_operacoes(descricao, porcentagem, valor_fixo, frequencia) VALUES('CONTA POUPANÇA',  0.5, 0, 'Mensal');
+INSERT INTO tb_regra_operacoes(descricao, porcentagem, valor_fixo, frequencia) VALUES('CHEQUE ESPECIAL',  0, 0, 'Diário');
+INSERT INTO tb_regra_operacoes(descricao, porcentagem, valor_fixo, frequencia) VALUES('CONTA POUPANÇA',  0, 0, 'Mensal');
 
-INSERT INTO tb_capitaltotal 
-VALUES(1, 10,0);
-
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('GERENTE AGÊNCIA', '2',  'O', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'teste@gmail.com');
-
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('GERENTE AGÊNCIA 2', '3',  'O', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'teste@gmail.com');
 
 INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
 VALUES('GERENTE GERAL', '1',  'O', 'ENDERECO DOS BOBOS', curdate(), 'senha', '1', 'teste@gmail.com');
 
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('Miguel Carvalho', '23207568092',  'O', 'TESTE1', curdate(), 'teste', '1', 'doxito007@gmail.com');
-
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('Felipe Augusto Graciano', '91074953070',  'M', 'TESTE2', '2003-09-08', '123', '1', 'felipe98ju@hotmail.com');
-
-INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(4, 1, 'CONTA CORRENTE', 1234, curdate(), 0, '1');
-
-INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(5, 1, 'CONTA CORRENTE', 4321, curdate(), 0, '1');
-
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('João', '232341',  'O', 'TESTE1', curdate(), 'teste', '1', 'doxito007@gmail.com');
-
-INSERT INTO tb_usuario (nome, cpf, genero, endereco, datanascimento, senha, ativo, email) 
-VALUES('Carlos', '2320756',  'O', 'TESTE1', curdate(), 'teste', '1', 'doxito007@gmail.com');
-
-INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(6, 1, 'CONTA CORRENTE', 0002, curdate(), 0, '1');
-
-INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(6, 1, 'CONTA POUPANÇA', 4, curdate(), 0, '1');
-
-INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(6, 1, 'CONTA POUPANÇA', 5, curdate(), 0, '1');
-
-
-INSERT INTO tb_contabancaria(id_usuario, id_agencia, tipo, numeroconta, data_abertura, saldo, status_contabancaria)
-VALUES(7, 1, 'CONTA CORRENTE', 0001, curdate(), 0, '1');
 
 INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
-VALUES('GERENTE DE AGÊNCIA', '0', 1, 'GA1');
-
-INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
-VALUES('GERENTE DE AGÊNCIA', '0', 2, 'GA2');
-
-INSERT INTO tb_funcionario(papel, num_matricula, id_usuario, login) 
-VALUES('GERENTE GERAL', '0', 3, 'GG');
-
-INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)
-VALUES('SP',2, '0001', 1);
-
-INSERT INTO tb_agencia(localidade, id_funcionario, numero_agencia, status_agencia)
-VALUES('RJ',1,'0002', 1);
-
-INSERT INTO tb_requisicoes(status_alteracao, id_usuario, descricao)
-VALUES ('0',4,'desejo alterar meu cpf para ...');
-
-INSERT INTO tb_cheque_especial(id_conta, data_inicio, data_atualizacao,data_final, valor_devido, ativo) VALUES(1, '2022-10-01','2022-10-01', NULL, 0, 0);
-
+VALUES('GERENTE GERAL', '0', 1, 'GG');
