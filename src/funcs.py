@@ -374,6 +374,10 @@ def criaGA(dados):
                                       CampoBd=['num_matricula'],
                                       CampoFm=[matricula])
 
+        idGerente = SlcEspecificoMySQL(TabelaBd='tb_usuario',
+                                       CampoEs=['id_usuario'],
+                                       CampoBd=['cpf'],
+                                       CampoFm=[cpf])
         InsMySQL(TabelaBd='tb_funcionario',
                 CampoBd=['id_usuario','papel','num_matricula','login'],
                 CampoFm=[str(idGerente[0][0]),'GERENTE DE AGÊNCIA', matricula, matricula])
