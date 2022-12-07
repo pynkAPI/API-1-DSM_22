@@ -64,7 +64,7 @@ https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
 A Sprint 4 foi, em suma, uma etapa de refatoração, tanto das funcionalidades quanto do visual do projeto. Além disso foram implementados os requisitos restantes da aplicação, como o sistema de conta poupança e a responsividade para qualquer dispositivo, visando assim atender à todas as exigências do cliente.
 Os acertos percebidos foram na **organização** e **adaptabilidade perante as constantes mudanças no pranejamento**. Enquanto que os erros observados foram as **cerimônias SCRUM pouco enfatizadas** e **engajamento inferior ao esperado**.
 
-**Destaque da Sprint 4**:
+**Destaque da Sprint 4**: Miguel Carvalho Soares e Elaine Aparecida dos Santos.
 
 
 https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
@@ -79,8 +79,6 @@ https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
 **Vídeo Explicativo da Sprint 4**:
 
 https://youtube.com/playlist?list=PLRXTJkGiG2dCUPO1bKY9gwbTKAaoF9Kdp
-
-**Vídeo Explicativo da Sprint 3**:
 
 • [To the top ↑](#top)
 
